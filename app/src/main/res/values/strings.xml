@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Peach</string>
+    <string name="action_settings">Settings</string>
+    <string name="section_format">Hello World from section: %1$d</string>
+    <string name="senator_vote_desc">Voto do Senador</string>
+    <string name="senator_image_desc">Imagem do Senador</string>
+</resources>
