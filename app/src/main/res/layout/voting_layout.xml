@@ -4,21 +4,64 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_centerInParent="true"
+    android:layout_marginBottom="30dp"
     android:gravity="center"
     android:orientation="vertical">
 
-    <TextView
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="SIM 45" />
+        android:layout_marginBottom="20dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/voting_yes"
+            android:textColor="@color/voting_yes"
+            android:textSize="50sp" />
+
+        <TextView
+            android:id="@+id/voting_count_yes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="25dp"
+            android:layout_marginStart="25dp"
+            android:text="45"
+            android:textColor="@color/voting_yes"
+            android:textSize="50sp" />
+    </LinearLayout>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="x" />
+        android:text="@string/voting_versus"
+        android:textSize="40sp"
+        android:textColor="#000000" />
 
-    <TextView
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="NÃO 13" />
+        android:layout_margin="20dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/voting_no"
+            android:textColor="@color/voting_no"
+            android:textSize="50sp" />
+
+        <TextView
+            android:id="@+id/voting_count_no"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="50dp"
+            android:layout_marginLeft="25dp"
+            android:layout_marginStart="25dp"
+            android:text="13"
+            android:textColor="@color/voting_no"
+            android:textSize="50sp" />
+    </LinearLayout>
+
 </LinearLayout>

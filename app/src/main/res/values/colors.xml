@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">#16B83E</color>
-    <color name="colorPrimaryDark">#FFE11F</color>
+    <color name="colorPrimaryDark">#EED11D</color>
     <color name="colorAccent">#FF2200</color>
+    <color name="voting_yes">#1122FF</color>
+    <color name="voting_no">#FF2211</color>
 </resources>

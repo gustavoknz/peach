@@ -4,4 +4,9 @@
     <string name="section_format">Hello World from section: %1$d</string>
     <string name="senator_vote_desc">Voto do Senador</string>
     <string name="senator_image_desc">Imagem do Senador</string>
+    <string name="voting_versus">x</string>
+    <string name="voting_yes">SIM</string>
+    <string name="voting_no">NÃO</string>
+    <string name="page_title_voting">Votação</string>
+    <string name="page_title_senators">Senadores</string>
 </resources>

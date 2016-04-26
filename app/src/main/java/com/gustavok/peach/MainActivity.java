@@ -1,8 +1,6 @@
 package com.gustavok.peach;
 
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -12,8 +10,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 
+//TODO: animações pro: "Tchau, querida", "+1 coxinha"
+//TODO: animações contra: "Golpe não", "+1 mortadela"
 public class MainActivity extends AppCompatActivity {
 
     @Override
@@ -36,17 +35,6 @@ public class MainActivity extends AppCompatActivity {
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         if (tabLayout != null) {
             tabLayout.setupWithViewPager(mViewPager);
-        }
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        if (fab != null) {
-            fab.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                            .setAction("Action", null).show();
-                }
-            });
         }
     }
 
@@ -102,9 +90,9 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public CharSequence getPageTitle(int position) {
             if (position == 0) {
-                return "Votação";
+                return getString(R.string.page_title_voting);
             } else {
-                return "Senadores";
+                return getString(R.string.page_title_senators);
             }
         }
     }
