@@ -66,4 +66,8 @@ public class Senator {
     public String getImageSrc() {
         return imageSrc;
     }
+
+    public void setVoteYes(boolean voteYes) {
+        this.voteYes = voteYes;
+    }
 }

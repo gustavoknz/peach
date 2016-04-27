@@ -1,34 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="horizontal"
-    android:padding="12dp">
+    android:padding="20dp">
 
     <ImageView
         android:id="@+id/senator_image"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@mipmap/ic_launcher"
-        android:contentDescription="@string/senator_image_desc" />
+        android:contentDescription="@string/senator_image_desc"
+        android:src="@mipmap/ic_launcher" />
 
-    <TextView
-        android:id="@+id/senator_name"
-        android:layout_width="match_parent"
+    <LinearLayout
+        android:id="@+id/layout_name_party"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center" />
+        android:layout_toEndOf="@id/senator_image"
+        android:layout_toRightOf="@id/senator_image"
+        android:orientation="vertical"
+        android:paddingEnd="0dp"
+        android:paddingLeft="15dp"
+        android:paddingRight="0dp"
+        android:paddingStart="15dp">
 
-    <TextView
-        android:id="@+id/senator_party_state"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="end" />
+        <TextView
+            android:id="@+id/senator_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/senator_party_state"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
 
     <ImageView
         android:id="@+id/senator_vote"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@mipmap/ic_launcher"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
         android:contentDescription="@string/senator_vote_desc" />
 
-</LinearLayout>
+</RelativeLayout>

@@ -1,13 +1,11 @@
 package com.gustavok.peach;
 
 import android.app.Activity;
-import android.app.AlarmManager;
-import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
@@ -33,8 +31,10 @@ public class SenatorsArrayAdapter extends ArrayAdapter<Senator> {
         }
         TextView tvName = (TextView) convertView.findViewById(R.id.senator_name);
         TextView tvHome = (TextView) convertView.findViewById(R.id.senator_party_state);
+        ImageView imgView = (ImageView) convertView.findViewById(R.id.senator_vote);
         tvName.setText(sen.getName());
         tvHome.setText(String.format("%s-%s", sen.getParty(), sen.getState()));
+        imgView.setImageResource(sen.isVoteYes() ? R.mipmap.vote_yes : R.mipmap.vote_no);
 
         return convertView;
     }

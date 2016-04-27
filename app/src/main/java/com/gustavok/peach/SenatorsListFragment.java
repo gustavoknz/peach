@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 
 import java.util.List;
+import java.util.Random;
 
 public class SenatorsListFragment extends ListFragment {
     private static final String TAG = "SenatorsListFragment";
@@ -16,11 +17,14 @@ public class SenatorsListFragment extends ListFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Log.d(TAG, "getAllSenators is being called");
-        new RestClient().getAllSenators();
+        //new RestClient().getAllSenators();
         Log.d(TAG, "getAllSenators called");
         View view = inflater.inflate(R.layout.senators_list_layout, container, false);
         ListView listView = (ListView) view.findViewById(android.R.id.list);
         List<Senator> senatorsList = SenatorsManager.getInstance().getSenatorsList();
+        for (Senator s : senatorsList) {
+            s.setVoteYes(new Random().nextBoolean());
+        }
         SenatorsArrayAdapter adapter = new SenatorsArrayAdapter(getActivity(), senatorsList);
         listView.setAdapter(adapter);
 
