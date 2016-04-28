@@ -7,9 +7,12 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.ScaleAnimation;
+import android.widget.TextView;
+
+import java.util.Locale;
 
 //TODO: animações pro: "Fora Dilma!", "Tchau, querida!", "+1 coxinha"
 //TODO: animações contra: "Golpe não!", "Vai ter luta!", "+1 mortadela"
@@ -34,6 +37,32 @@ public class MainActivity extends AppCompatActivity {
         if (tabLayout != null) {
             tabLayout.setupWithViewPager(mViewPager);
         }
+    }
+
+    public void yesTapped(View view) {
+        TextView tvYes = (TextView) view.findViewById(R.id.voting_count_yes);
+        int yesCount = Integer.parseInt(tvYes.getText().toString());
+        tvYes.setText(String.format(Locale.getDefault(), "%d", ++yesCount));
+
+        TextView tvAnimation = (TextView) view.getRootView().findViewById(R.id.voting_animation_yes);
+        Animation anim = new ScaleAnimation(1, 1, 1, 1, Animation.ABSOLUTE, 0, Animation.ABSOLUTE, 0);
+        anim.setFillAfter(false);
+        tvAnimation.setAnimation(anim);
+        anim.setDuration(2000);
+        tvAnimation.startAnimation(anim);
+    }
+
+    public void noTapped(View view) {
+        TextView tvNo = (TextView) view.findViewById(R.id.voting_count_no);
+        int noCount = Integer.parseInt(tvNo.getText().toString());
+        tvNo.setText(String.format(Locale.getDefault(), "%d", ++noCount));
+
+        TextView tvAnimation = (TextView) view.getRootView().findViewById(R.id.voting_animation_no);
+        Animation anim = new ScaleAnimation(1, 1, 1, 1, Animation.ABSOLUTE, 0, Animation.ABSOLUTE, 0);
+        anim.setFillAfter(false);
+        tvAnimation.setAnimation(anim);
+        anim.setDuration(2000);
+        tvAnimation.startAnimation(anim);
     }
 
     /**

@@ -1,15 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/senators_list_layout"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_centerInParent="true"
-    android:gravity="center"
-    android:orientation="vertical">
+    android:background="#EDEDFF">
 
-    <LinearLayout
+    <TextView
+        android:id="@+id/voting_versus"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="@string/voting_versus"
+        android:textColor="#000000"
+        android:textSize="40sp"
+        android:padding="50dp" />
+
+    <LinearLayout
+        android:id="@+id/voting_layout_yes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/voting_versus"
+        android:layout_centerHorizontal="true"
         android:orientation="horizontal">
 
         <TextView
@@ -17,30 +28,37 @@
             android:layout_height="wrap_content"
             android:text="@string/voting_yes"
             android:textColor="@color/voting_yes"
-            android:textSize="50sp" />
+            android:textSize="@dimen/yes_no_text_size" />
 
         <TextView
             android:id="@+id/voting_count_yes"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="25dp"
             android:layout_marginStart="25dp"
-            android:text="45"
+            android:onClick="yesTapped"
+            android:text="@string/voting_init"
             android:textColor="@color/voting_yes"
-            android:textSize="50sp" />
+            android:textSize="@dimen/yes_no_text_size" />
     </LinearLayout>
 
     <TextView
+        android:id="@+id/voting_animation_yes"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/voting_versus"
-        android:textColor="#000000"
-        android:textSize="40sp" />
+        android:layout_above="@+id/voting_layout_yes"
+        android:layout_marginEnd="0dp"
+        android:layout_marginStart="-20dp"
+        android:layout_toEndOf="@+id/voting_layout_yes"
+        android:animateLayoutChanges="true"
+        android:text="+1 coxinha"
+        android:visibility="invisible" />
 
     <LinearLayout
+        android:id="@+id/voting_layout_no"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="20dp"
+        android:layout_below="@+id/voting_versus"
+        android:layout_centerHorizontal="true"
         android:orientation="horizontal">
 
         <TextView
@@ -48,17 +66,28 @@
             android:layout_height="wrap_content"
             android:text="@string/voting_no"
             android:textColor="@color/voting_no"
-            android:textSize="50sp" />
+            android:textSize="@dimen/yes_no_text_size" />
 
         <TextView
             android:id="@+id/voting_count_no"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="25dp"
             android:layout_marginStart="25dp"
-            android:text="13"
+            android:onClick="noTapped"
+            android:text="@string/voting_init"
             android:textColor="@color/voting_no"
-            android:textSize="50sp" />
+            android:textSize="@dimen/yes_no_text_size" />
     </LinearLayout>
 
-</LinearLayout>
+    <TextView
+        android:id="@+id/voting_animation_no"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/voting_layout_no"
+        android:layout_marginEnd="0dp"
+        android:layout_marginStart="-20dp"
+        android:layout_toEndOf="@+id/voting_layout_no"
+        android:animateLayoutChanges="true"
+        android:text="+1 mortadela"
+        android:visibility="invisible" />
+</RelativeLayout>
