@@ -2,13 +2,15 @@ package com.gustavok.peach;
 
 import android.util.Log;
 
+import com.google.gson.Gson;
 import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.SaxAsyncHttpResponseHandler;
+import com.loopj.android.http.JsonHttpResponseHandler;
 
-import org.xml.sax.Attributes;
-import org.xml.sax.helpers.DefaultHandler;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
@@ -23,43 +25,97 @@ public class RestClient {
         return BASE_URL + relativeUrl;
     }
 
-    public void getAllSenators() {
-        SaxAsyncHttpResponseHandler saxAsyncHttpResponseHandler = new SaxAsyncHttpResponseHandler<SAXTreeStructure>(new SAXTreeStructure()) {
-            @Override
-            public void onStart() {
-                Log.d(TAG, "Starting getting senators");
-            }
+    public List<Senator> getAllSenators() {
+        final List<Senator> senators = new ArrayList<>();
 
+        // SaxAsyncHttpResponseHandler saxAsyncHttpResponseHandler = new SaxAsyncHttpResponseHandler<SAXTreeStructure>(new SAXTreeStructure()) {
+        JsonHttpResponseHandler jsonHttpResponseHandler = new JsonHttpResponseHandler() {
             @Override
-            public void onSuccess(int statusCode, Header[] headers, SAXTreeStructure saxTreeStructure) {
-                Log.d(TAG, "statusCode: " + statusCode);
-                debugHeaders(headers);
-                debugHandler(saxTreeStructure);
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                Log.d(TAG, String.format("Received %s as response", response));
             }
 
             @Override
-            public void onFailure(int statusCode, Header[] headers, SAXTreeStructure saxTreeStructure) {
-                Log.d(TAG, "statusCode: " + statusCode);
-                debugHeaders(headers);
-                debugHandler(saxTreeStructure);
+            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+                Log.d(TAG, String.format("Found %d senators", response.length()));
+                Senator[] senatorsArray = new Gson().fromJson(response.toString(), Senator[].class);
+                senators.addAll(Arrays.asList(senatorsArray));
+                Log.d(TAG, String.format("Added %d senators to my list", senators.size()));
             }
 
-            private void debugHeaders(Header[] headers) {
-                Log.d(TAG, "Headers: " + headers);
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                Log.d(TAG, String.format("Received %s as responseString", responseString));
             }
 
-            private void debugHandler(SAXTreeStructure handler) {
-                for (Tuple t : handler.responseViews) {
-                    Log.d(TAG, String.format("%d - %s", t.color, t.text));
-                }
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                Log.e(TAG, String.format("Failure 1. statusCode: %d; errorResponse: %s", statusCode, errorResponse), throwable);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
+                Log.e(TAG, String.format("Failure 2. statusCode: %d; errorResponse: %s", statusCode, errorResponse), throwable);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                Log.e(TAG, String.format("Failure 3. statusCode: %d; responseString: %s", statusCode, responseString), throwable);
             }
         };
 
-        String url = "senador/lista/atual";
-        client.get(getAbsoluteUrl(url), null, saxAsyncHttpResponseHandler);
+        //String url = "senador/lista/atual";
+        String url = "1.1.1.1:5050/getSenators";
+        client.get(getAbsoluteUrl(url), jsonHttpResponseHandler);
+        return senators;
     }
 
-    private class Tuple {
+    public List<SenatorVote> getAllVotes() {
+        final List<SenatorVote> senatorsVotes = new ArrayList<>();
+
+        // SaxAsyncHttpResponseHandler saxAsyncHttpResponseHandler = new SaxAsyncHttpResponseHandler<SAXTreeStructure>(new SAXTreeStructure()) {
+        JsonHttpResponseHandler jsonHttpResponseHandler = new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                Log.d(TAG, String.format("Received %s as response", response));
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+                Log.d(TAG, String.format("Found %d senators votes", response.length()));
+                SenatorVote[] senatorsArray = new Gson().fromJson(response.toString(), SenatorVote[].class);
+                senatorsVotes.addAll(Arrays.asList(senatorsArray));
+                Log.d(TAG, String.format("Added %d senators votes to my list", senatorsVotes.size()));
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                Log.d(TAG, String.format("Received %s as responseString", responseString));
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                Log.e(TAG, String.format("Failure 1. statusCode: %d; errorResponse: %s", statusCode, errorResponse), throwable);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
+                Log.e(TAG, String.format("Failure 2. statusCode: %d; errorResponse: %s", statusCode, errorResponse), throwable);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                Log.e(TAG, String.format("Failure 3. statusCode: %d; responseString: %s", statusCode, responseString), throwable);
+            }
+        };
+
+        //String url = "senador/lista/atual";
+        String url = "1.1.1.1:5050/getSenators";
+        client.get(getAbsoluteUrl(url), jsonHttpResponseHandler);
+        return senatorsVotes;
+    }
+
+    /*private class Tuple {
         public final Integer color;
         public final String text;
 
@@ -85,5 +141,5 @@ public class RestClient {
                 responseViews.add(new Tuple(453, "Characters:  " + new String(data, off, length)));
             }
         }
-    }
+    }*/
 }

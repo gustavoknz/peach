@@ -8,8 +8,9 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
-import android.view.animation.ScaleAnimation;
+import android.view.animation.TranslateAnimation;
 import android.widget.TextView;
 
 import java.util.Locale;
@@ -36,6 +37,8 @@ public class MainActivity extends AppCompatActivity {
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         if (tabLayout != null) {
             tabLayout.setupWithViewPager(mViewPager);
+            tabLayout.setTabMode(TabLayout.MODE_FIXED);
+            tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
         }
     }
 
@@ -45,10 +48,10 @@ public class MainActivity extends AppCompatActivity {
         tvYes.setText(String.format(Locale.getDefault(), "%d", ++yesCount));
 
         TextView tvAnimation = (TextView) view.getRootView().findViewById(R.id.voting_animation_yes);
-        Animation anim = new ScaleAnimation(1, 1, 1, 1, Animation.ABSOLUTE, 0, Animation.ABSOLUTE, 0);
+        Animation anim = new AlphaAnimation(1, 0.5F);
         anim.setFillAfter(false);
         tvAnimation.setAnimation(anim);
-        anim.setDuration(2000);
+        anim.setDuration(3000);
         tvAnimation.startAnimation(anim);
     }
 
@@ -58,10 +61,14 @@ public class MainActivity extends AppCompatActivity {
         tvNo.setText(String.format(Locale.getDefault(), "%d", ++noCount));
 
         TextView tvAnimation = (TextView) view.getRootView().findViewById(R.id.voting_animation_no);
-        Animation anim = new ScaleAnimation(1, 1, 1, 1, Animation.ABSOLUTE, 0, Animation.ABSOLUTE, 0);
+        Animation anim = new TranslateAnimation(
+                TranslateAnimation.RELATIVE_TO_SELF, 0f,
+                TranslateAnimation.RELATIVE_TO_SELF, 0f,
+                TranslateAnimation.RELATIVE_TO_SELF, 0f,
+                TranslateAnimation.RELATIVE_TO_SELF, -0.5f);
         anim.setFillAfter(false);
         tvAnimation.setAnimation(anim);
-        anim.setDuration(2000);
+        anim.setDuration(3000);
         tvAnimation.startAnimation(anim);
     }
 
