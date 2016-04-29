@@ -15,10 +15,12 @@
         android:paddingTop="@dimen/appbar_padding_top"
         android:theme="@style/AppTheme.AppBarOverlay">
 
-        <android.support.design.widget.TabLayout
+        <com.gustavok.peach.CustomTabLayout
             android:id="@+id/tabs"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:fitsSystemWindows="true"
+            app:tabMinWidth="10000dp" />
 
     </android.support.design.widget.AppBarLayout>
 

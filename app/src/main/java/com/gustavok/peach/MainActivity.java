@@ -1,16 +1,19 @@
 package com.gustavok.peach;
 
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.Locale;
@@ -34,11 +37,9 @@ public class MainActivity extends AppCompatActivity {
             mViewPager.setAdapter(mSectionsPagerAdapter);
         }
 
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
+        CustomTabLayout tabLayout = (CustomTabLayout) findViewById(R.id.tabs);
         if (tabLayout != null) {
             tabLayout.setupWithViewPager(mViewPager);
-            tabLayout.setTabMode(TabLayout.MODE_FIXED);
-            tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
         }
     }
 
@@ -48,11 +49,11 @@ public class MainActivity extends AppCompatActivity {
         tvYes.setText(String.format(Locale.getDefault(), "%d", ++yesCount));
 
         TextView tvAnimation = (TextView) view.getRootView().findViewById(R.id.voting_animation_yes);
-        Animation anim = new AlphaAnimation(1, 0.5F);
-        anim.setFillAfter(false);
-        tvAnimation.setAnimation(anim);
-        anim.setDuration(3000);
-        tvAnimation.startAnimation(anim);
+        Animation alphaAnimation = new AlphaAnimation(1, 0.5F);
+        alphaAnimation.setFillAfter(false);
+        tvAnimation.setAnimation(alphaAnimation);
+        alphaAnimation.setDuration(3000);
+        tvAnimation.startAnimation(alphaAnimation);
     }
 
     public void noTapped(View view) {
@@ -61,15 +62,15 @@ public class MainActivity extends AppCompatActivity {
         tvNo.setText(String.format(Locale.getDefault(), "%d", ++noCount));
 
         TextView tvAnimation = (TextView) view.getRootView().findViewById(R.id.voting_animation_no);
-        Animation anim = new TranslateAnimation(
+        Animation translateAnimation = new TranslateAnimation(
                 TranslateAnimation.RELATIVE_TO_SELF, 0f,
                 TranslateAnimation.RELATIVE_TO_SELF, 0f,
                 TranslateAnimation.RELATIVE_TO_SELF, 0f,
                 TranslateAnimation.RELATIVE_TO_SELF, -0.5f);
-        anim.setFillAfter(false);
-        tvAnimation.setAnimation(anim);
-        anim.setDuration(3000);
-        tvAnimation.startAnimation(anim);
+        translateAnimation.setFillAfter(false);
+        tvAnimation.setAnimation(translateAnimation);
+        translateAnimation.setDuration(2000);
+        tvAnimation.startAnimation(translateAnimation);
     }
 
     /**
@@ -108,4 +109,6 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
+
+
 }
