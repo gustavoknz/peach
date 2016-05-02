@@ -44,24 +44,19 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void yesTapped(View view) {
-        TextView tvYes = (TextView) view.findViewById(R.id.voting_count_yes);
-        int yesCount = Integer.parseInt(tvYes.getText().toString());
-        tvYes.setText(String.format(Locale.getDefault(), "%d", ++yesCount));
-
-        TextView tvAnimation = (TextView) view.getRootView().findViewById(R.id.voting_animation_yes);
-        Animation alphaAnimation = new AlphaAnimation(1, 0.5F);
-        alphaAnimation.setFillAfter(false);
-        tvAnimation.setAnimation(alphaAnimation);
-        alphaAnimation.setDuration(3000);
-        tvAnimation.startAnimation(alphaAnimation);
+        animate(view, R.id.voting_count_yes, R.id.voting_animation_yes);
     }
 
     public void noTapped(View view) {
-        TextView tvNo = (TextView) view.findViewById(R.id.voting_count_no);
-        int noCount = Integer.parseInt(tvNo.getText().toString());
-        tvNo.setText(String.format(Locale.getDefault(), "%d", ++noCount));
+        animate(view, R.id.voting_count_no, R.id.voting_animation_no);
+    }
 
-        TextView tvAnimation = (TextView) view.getRootView().findViewById(R.id.voting_animation_no);
+    private void animate (View view, int votingCountId, int votingAnimationId) {
+        TextView tv = (TextView) view.findViewById(votingCountId);
+        int count = Integer.parseInt(tv.getText().toString());
+        tv.setText(String.format(Locale.getDefault(), "%d", ++count));
+
+        TextView tvAnimation = (TextView) view.getRootView().findViewById(votingAnimationId);
         Animation translateAnimation = new TranslateAnimation(
                 TranslateAnimation.RELATIVE_TO_SELF, 0f,
                 TranslateAnimation.RELATIVE_TO_SELF, 0f,
@@ -109,6 +104,4 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
-
-
 }

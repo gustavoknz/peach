@@ -32,9 +32,17 @@ public class SenatorsArrayAdapter extends ArrayAdapter<Senator> {
         TextView tvName = (TextView) convertView.findViewById(R.id.senator_name);
         TextView tvHome = (TextView) convertView.findViewById(R.id.senator_party_state);
         ImageView imgView = (ImageView) convertView.findViewById(R.id.senator_vote);
-        tvName.setText(sen.getName());
-        tvHome.setText(String.format("%s-%s", sen.getParty(), sen.getState()));
-        imgView.setImageResource(sen.isVoteYes() ? R.mipmap.vote_yes : R.mipmap.vote_no);
+        tvName.setText(sen.getNome());
+        tvHome.setText(String.format("%s-%s", sen.getPartido(), sen.getEstado()));
+        if (Vote.YES.toString().equals(sen.getVoto())) { // SIM
+            imgView.setImageResource(R.mipmap.vote_yes);
+        } else if (Vote.NO.toString().equals(sen.getVoto())) {
+            imgView.setImageResource(R.mipmap.vote_no);
+        } else if (Vote.ABSENCES.toString().equals(sen.getVoto())) {
+            imgView.setImageResource(R.mipmap.vote_no);
+        } else if (Vote.ABSTENTIONS.toString().equals(sen.getVoto())) {
+            imgView.setImageResource(R.mipmap.vote_no);
+        }
 
         return convertView;
     }

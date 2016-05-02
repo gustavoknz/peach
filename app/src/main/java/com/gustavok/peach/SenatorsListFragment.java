@@ -17,16 +17,11 @@ public class SenatorsListFragment extends ListFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Log.d(TAG, "getAllSenators is being called");
-        new RestClient().getAllSenators();
+        List<Senator> senatorsList = RestClient.getAllSenators();
         Log.d(TAG, "getAllSenators called");
         View view = inflater.inflate(R.layout.senators_list_layout, container, false);
-        ListView listView = (ListView) view.findViewById(android.R.id.list);
-        List<Senator> senatorsList = SenatorsManager.getInstance().getSenatorsList();
-        Random r = new Random();
-        for (Senator s : senatorsList) {
-            s.setVoteYes(r.nextBoolean());
-        }
         SenatorsArrayAdapter adapter = new SenatorsArrayAdapter(getActivity(), senatorsList);
+        ListView listView = (ListView) view.findViewById(android.R.id.list);
         listView.setAdapter(adapter);
 
         return view;

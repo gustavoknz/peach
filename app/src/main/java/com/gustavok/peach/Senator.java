@@ -3,71 +3,37 @@ package com.gustavok.peach;
 import java.util.Calendar;
 
 public class Senator {
-    private boolean voteYes;
-    private String name;
-    private Calendar birthDate;
-    private String bornCity;
-    private String party;
-    private String state;
-    private String phone;
-    private String email;
-    private String site;
-    private String imageSrc;
+    private int id;
+    private String nome;
+    private String partido;
+    private String estado;
+    private String voto;
 
-    public Senator(String name, Calendar birthDate, String bornCity, String party, String state,
-                   String phone, String email, String site, String imageSrc) {
-        this.name = name;
-        this.bornCity = bornCity;
-        this.birthDate = birthDate;
-        this.party = party;
-        this.state = state;
-        this.phone = phone;
-        this.email = email;
-        this.site = site;
-        this.imageSrc = imageSrc;
+    public Senator(int id, String nome, String partido, String estado, String voto) {
+        this.id = id;
+        this.nome = nome;
+        this.partido = partido;
+        this.estado = estado;
+        this.voto = voto;
     }
 
-    public boolean isVoteYes() {
-        return voteYes;
+    public int getId() {
+        return id;
     }
 
-    public String getName() {
-        return name;
+    public String getNome() {
+        return nome;
     }
 
-    public Calendar getBirthDate() {
-        return birthDate;
+    public String getPartido() {
+        return partido;
     }
 
-    public String getBornCity() {
-        return bornCity;
+    public String getEstado() {
+        return estado;
     }
 
-    public String getParty() {
-        return party;
-    }
-
-    public String getState() {
-        return state;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getSite() {
-        return site;
-    }
-
-    public String getImageSrc() {
-        return imageSrc;
-    }
-
-    public void setVoteYes(boolean voteYes) {
-        this.voteYes = voteYes;
+    public String getVoto() {
+        return voto;
     }
 }
