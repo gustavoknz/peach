@@ -38,9 +38,9 @@ public class SenatorsArrayAdapter extends ArrayAdapter<Senator> {
             imgView.setImageResource(R.mipmap.vote_yes);
         } else if (Vote.NO.toString().equals(sen.getVoto())) {
             imgView.setImageResource(R.mipmap.vote_no);
-        } else if (Vote.ABSENCES.toString().equals(sen.getVoto())) {
+        } else if (Vote.ABSENCE.toString().equals(sen.getVoto())) {
             imgView.setImageResource(R.mipmap.vote_no);
-        } else if (Vote.ABSTENTIONS.toString().equals(sen.getVoto())) {
+        } else if (Vote.ABSTENTION.toString().equals(sen.getVoto())) {
             imgView.setImageResource(R.mipmap.vote_no);
         }
 

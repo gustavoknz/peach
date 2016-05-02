@@ -50,10 +50,17 @@ public class VotingFragment extends Fragment {
         tvNo.setText(countNo);
 
         if (countYes + countNo + countAbstention + countAbsence >= VotingSingleton.TOTAL_VOTES) {
-            DateFormat dateFormatter = DateFormat.getDateInstance(DateFormat.DEFAULT, Locale.getDefault());
-            String dateOut = dateFormatter.format(new Date());
+            if (countYes > countNo) {
+                DateFormat dateFormatter = DateFormat.getDateInstance(DateFormat.DEFAULT, Locale.getDefault());
+                String dateOut = dateFormatter.format(new Date());
 
-            //Dilma is out till dateOut
+                //Dilma is out till dateOut
+
+            } else {
+                // The process will be archived
+
+            }
+
 
 
             /*Calendar c = Calendar.getInstance();

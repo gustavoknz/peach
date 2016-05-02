@@ -5,4 +5,6 @@
     <color name="colorAccent">#FF2200</color>
     <color name="voting_yes">#1122FF</color>
     <color name="voting_no">#FF2211</color>
+    <color name="voting_absence">#666666</color>
+    <color name="voting_abstention">#666666</color>
 </resources>

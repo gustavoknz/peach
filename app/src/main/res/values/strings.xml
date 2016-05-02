@@ -10,4 +10,10 @@
     <string name="voting_no">NÃO</string>
     <string name="page_title_voting">Votação</string>
     <string name="page_title_senators">Senadores</string>
+    <string name="voting_abstention">Abstenção:</string>
+    <string name="voting_absence">Ausência:</string>
+    <string name="voting_plus_yes">+1 coxinha</string>
+    <string name="voting_plus_no">+1 mortadela</string>
+    <string name="voting_plus_abstention">+1 abstente</string>
+    <string name="voting_plus_absence">+1 ausente</string>
 </resources>
