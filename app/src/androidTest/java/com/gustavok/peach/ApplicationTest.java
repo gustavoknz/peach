@@ -24,14 +24,16 @@ public class ApplicationTest extends ApplicationTestCase<Application> {
 
     @Test
     public void testParse() throws Exception {
-        JSONObject json = new JSONObject("{\"senadores\":[{\"id\":1,\"nome\":\"Acir\",\"estado\":\"TO\",\"partido\":\"PDT\",\"voto\":\"\u0001\"}]}");
+        JSONObject json = new JSONObject("{\"senadores\":[{\"id\":1,\"nome\":\"Acir Gurgacz\",\"estado\":\"TO\",\"partido\":\"PDT\",\"voto\":\"1\",\"url\":\"http://www.senado.leg.br/senadores/img/fotos-oficiais/senador4981.jpg\"}]}");
         JSONArray jsonArray = json.getJSONArray("senadores");
         Senator[] senatorsArray = new Gson().fromJson(jsonArray.toString(), Senator[].class);
+        Senator s = senatorsArray[0];
         Assert.assertEquals("Expected different number of senators", 1, senatorsArray.length);
-        Assert.assertEquals("Expected different id.", 1, senatorsArray[0].getId());
-        Assert.assertEquals("Expected different name.", "Acir", senatorsArray[0].getNome());
-        Assert.assertEquals("Expected different state.", "TO", senatorsArray[0].getEstado());
-        Assert.assertEquals("Expected different party.", "PDT", senatorsArray[0].getPartido());
-        Assert.assertEquals("Expected different vote.", "", senatorsArray[0].getVoto());
+        Assert.assertEquals("Expected different id.", 1, s.getId());
+        Assert.assertEquals("Expected different name.", "Acir Gurgacz", s.getNome());
+        Assert.assertEquals("Expected different state.", "TO", s.getEstado());
+        Assert.assertEquals("Expected different party.", "PDT", s.getPartido());
+        Assert.assertEquals("Expected different vote.", "1", s.getVoto());
+        Assert.assertEquals("Expected different url.", "http://www.senado.leg.br/senadores/img/fotos-oficiais/senador4981.jpg", s.getUrl());
     }
 }

@@ -1,39 +1,84 @@
 package com.gustavok.peach;
 
+import android.content.Context;
+import android.content.ContextWrapper;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Log;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 public final class SenatorsManager {
-    static {
-        /*
-        Calendar c = Calendar.getInstance();
-        c.set(25, 1, 1962);
-        senatorsList.add(new Senator("Acir Gurgacz", c, "Cascavel (PR)", "PDT", "RO", "(61) 3303-3132 / 3131", "acir@senador.leg.br", "http://www.senado.leg.br/senadores/senador/acirgurgacz/default.htm", "senador4981.jpg"));
-        c.set(10, 2, 1960);
-        senatorsList.add(new Senator("Aécio Neves da Cunha", c, "Belo Horizonte (MG)", "PSDB", "MG", "(61) 3303-6049 / 6050", "aecio.neves@senador.leg.br", "", "senador391.jpg"));
-        c.set(5, 3, 1945);
-        senatorsList.add(new Senator("Aloysio Nunes Ferreira", c, "São José do Rio Preto (SP)", "PSDB", "SP", "(61) 3303-6063 / 6064", "aloysionunes.ferreira@senador.leg.br", "", "senador846.jpg"));
-        senatorsList.add(new Senator("3Aloysio Nunes Ferreira", c, "São José do Rio Preto (SP)", "PSDB", "SP", "(61) 3303-6063 / 6064", "aloysionunes.ferreira@senador.leg.br", "", "senador846.jpg"));
-        senatorsList.add(new Senator("A34loysio Nunes Ferreira", c, "São José do Rio Preto (SP)", "PSDB", "SP", "(61) 3303-6063 / 6064", "aloysionunes.ferreira@senador.leg.br", "", "senador846.jpg"));
-        senatorsList.add(new Senator("Alo453ysio Nunes Ferreira", c, "São José do Rio Preto (SP)", "PSDB", "SP", "(61) 3303-6063 / 6064", "aloysionunes.ferreira@senador.leg.br", "", "senador846.jpg"));
-        senatorsList.add(new Senator("Aloysi45o Nunes Ferreira", c, "São José do Rio Preto (SP)", "PSDB", "SP", "(61) 3303-6063 / 6064", "aloysionunes.ferreira@senador.leg.br", "", "senador846.jpg"));
-        senatorsList.add(new Senator("Aloysio 45Nunes Ferreira", c, "São José do Rio Preto (SP)", "PSDB", "SP", "(61) 3303-6063 / 6064", "aloysionunes.ferreira@senador.leg.br", "", "senador846.jpg"));
-        senatorsList.add(new Senator("Aloysio Nu45nes Ferreira", c, "São José do Rio Preto (SP)", "PSDB", "SP", "(61) 3303-6063 / 6064", "aloysionunes.ferreira@senador.leg.br", "", "senador846.jpg"));
-        senatorsList.add(new Senator("Aloysio Nu435nes Ferreira", c, "São José do Rio Preto (SP)", "PSDB", "SP", "(61) 3303-6063 / 6064", "aloysionunes.ferreira@senador.leg.br", "", "senador846.jpg"));
-        senatorsList.add(new Senator("Aloysio Nun45es Ferreira", c, "São José do Rio Preto (SP)", "PSDB", "SP", "(61) 3303-6063 / 6064", "aloysionunes.ferreira@senador.leg.br", "", "senador846.jpg"));
-        senatorsList.add(new Senator("Aloysio Nune45s Ferreira", c, "São José do Rio Preto (SP)", "PSDB", "SP", "(61) 3303-6063 / 6064", "aloysionunes.ferreira@senador.leg.br", "", "senador846.jpg"));
-        senatorsList.add(new Senator("Aloysio Nunes45 Ferreira", c, "São José do Rio Preto (SP)", "PSDB", "SP", "(61) 3303-6063 / 6064", "aloysionunes.ferreira@senador.leg.br", "", "senador846.jpg"));
-        senatorsList.add(new Senator("Aloysio Nunes 45Ferreira", c, "São José do Rio Preto (SP)", "PSDB", "SP", "(61) 3303-6063 / 6064", "aloysionunes.ferreira@senador.leg.br", "", "senador846.jpg"));
-        senatorsList.add(new Senator("Aloysio Nunes F453erreira", c, "São José do Rio Preto (SP)", "PSDB", "SP", "(61) 3303-6063 / 6064", "aloysionunes.ferreira@senador.leg.br", "", "senador846.jpg"));
-        senatorsList.add(new Senator("Aloysio Nunes Fer435reira", c, "São José do Rio Preto (SP)", "PSDB", "SP", "(61) 3303-6063 / 6064", "aloysionunes.ferreira@senador.leg.br", "", "senador846.jpg"));
-        senatorsList.add(new Senator("Aloysio Nunes Ferre435ira", c, "São José do Rio Preto (SP)", "PSDB", "SP", "(61) 3303-6063 / 6064", "aloysionunes.ferreira@senador.leg.br", "", "senador846.jpg"));
-        senatorsList.add(new Senator("Aloysio Nunes Ferreira", c, "São José do Rio Preto (SP)", "PSDB", "SP", "(61) 3303-6063 / 6064", "aloysionunes.ferreira@senador.leg.br", "", "senador846.jpg"));
-        senatorsList.add(new Senator("Aloysio Nunes Ferrei43ra", c, "São José do Rio Preto (SP)", "PSDB", "SP", "(61) 3303-6063 / 6064", "aloysionunes.ferreira@senador.leg.br", "", "senador846.jpg"));
-        */
+    private static final String TAG = "SenatorsManager";
+    private static final SenatorsManager INSTANCE = new SenatorsManager();
+    private static Context context;
+
+    private static List<Senator> senators = new ArrayList<>();
+
+    public static SenatorsManager getInstance() {
+        return INSTANCE;
     }
 
-    private List<Senator> getVotes() {
+    private SenatorsManager() {
+        loadFromStorage();
+        if (senators.size() <= 0) {
+            loadFromUrl();
+        }
+    }
+
+    private void loadFromUrl() {
+        senators = RestClient.getAllSenators(context);
+    }
+
+    private List<Senator> loadFromStorage() {
+
+        return new ArrayList<>();
+    }
+
+    public void saveToInternalStorage(String imageName, Bitmap bitmapImage, Context context) {
+        ContextWrapper cw = new ContextWrapper(context);
+        File directory = cw.getDir("imageDir", Context.MODE_PRIVATE);
+        File path = new File(directory, imageName);
+
+        FileOutputStream fos = null;
+        try {
+            fos = new FileOutputStream(path);
+            // Use the compress method on the BitMap object to write image to the OutputStream
+            bitmapImage.compress(Bitmap.CompressFormat.PNG, 100, fos);
+        } catch (Exception e) {
+            Log.e(TAG, "Error saving image", e);
+        } finally {
+            if (fos != null) {
+                try {
+                    fos.close();
+                } catch (IOException e) {
+                    Log.e(TAG, "Error closing output", e);
+                }
+            }
+        }
+    }
+
+    public Bitmap loadImageFromStorage(String path) {
+        try {
+            File f = new File(path);
+            return BitmapFactory.decodeStream(new FileInputStream(f));
+        } catch (FileNotFoundException e) {
+            Log.e(TAG, "", e);
+        }
+        return null;
+    }
+
+    public void setContext(Context context) {
+        SenatorsManager.context = context;
+    }
+
+    public List<Senator> getVotes() {
         return RestClient.getAllVotes();
     }
 }

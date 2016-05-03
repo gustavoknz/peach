@@ -19,7 +19,9 @@ public class SenatorsListFragment extends ListFragment {
         Log.d(TAG, "getAllSenators is being called");
         List<Senator> senatorsList = RestClient.getAllSenators();
         Log.d(TAG, "getAllSenators called");
+
         View view = inflater.inflate(R.layout.senators_list_layout, container, false);
+        Log.d(TAG, String.format("Building screen with %d senators", senatorsList.size()));
         SenatorsArrayAdapter adapter = new SenatorsArrayAdapter(getActivity(), senatorsList);
         ListView listView = (ListView) view.findViewById(android.R.id.list);
         listView.setAdapter(adapter);

@@ -8,6 +8,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
@@ -29,19 +31,21 @@ public class SenatorsArrayAdapter extends ArrayAdapter<Senator> {
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.senator_item_layout, parent, false);
         }
+        //ImageView imageView = (ImageView) convertView.findViewById(R.id.senator_image);
         TextView tvName = (TextView) convertView.findViewById(R.id.senator_name);
         TextView tvHome = (TextView) convertView.findViewById(R.id.senator_party_state);
-        ImageView imgView = (ImageView) convertView.findViewById(R.id.senator_vote);
+        ImageView voteView = (ImageView) convertView.findViewById(R.id.senator_vote);
+        //Picasso.with(getContext()).load(sen.getUrl()).into(imageView);
         tvName.setText(sen.getNome());
         tvHome.setText(String.format("%s-%s", sen.getPartido(), sen.getEstado()));
-        if (Vote.YES.toString().equals(sen.getVoto())) { // SIM
-            imgView.setImageResource(R.mipmap.vote_yes);
+        if (Vote.YES.toString().equals(sen.getVoto())) {
+            voteView.setImageResource(R.mipmap.vote_yes);
         } else if (Vote.NO.toString().equals(sen.getVoto())) {
-            imgView.setImageResource(R.mipmap.vote_no);
+            voteView.setImageResource(R.mipmap.vote_no);
         } else if (Vote.ABSENCE.toString().equals(sen.getVoto())) {
-            imgView.setImageResource(R.mipmap.vote_no);
+            voteView.setImageResource(R.mipmap.vote_no);
         } else if (Vote.ABSTENTION.toString().equals(sen.getVoto())) {
-            imgView.setImageResource(R.mipmap.vote_no);
+            voteView.setImageResource(R.mipmap.vote_no);
         }
 
         return convertView;

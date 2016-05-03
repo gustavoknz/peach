@@ -1,5 +1,8 @@
 package com.gustavok.peach;
 
+import android.content.Context;
+import android.content.ContextWrapper;
+import android.graphics.Bitmap;
 import android.util.Log;
 
 import com.google.gson.Gson;
@@ -11,9 +14,13 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
 import cz.msebera.android.httpclient.Header;
 
@@ -27,15 +34,21 @@ public final class RestClient {
         return BASE_URL + method;
     }
 
-    public static List<Senator> getAllSenators() {
-        return getSenatorsList("all");
+    public static List<Senator> getAllSenators(Context context) {
+        List<Senator> senators = getSenatorsList(null);
+        for (Senator senator: senators) {
+            String imageName = String.format(Locale.getDefault(), "%d.jpg", senator.getId());
+            SenatorsManager.getInstance().saveToInternalStorage(imageName, senator.getImagem(), context);
+        }
+        return senators;
     }
 
     public static List<Senator> getAllVotes() {
-        return getSenatorsList("lala");
+        RequestParams params = new RequestParams("info", "");
+        return getSenatorsList(params);
     }
 
-    private static List<Senator> getSenatorsList(String param) {
+    private static List<Senator> getSenatorsList(RequestParams params) {
         final List<Senator> senators = new ArrayList<>();
 
         // SaxAsyncHttpResponseHandler saxAsyncHttpResponseHandler = new SaxAsyncHttpResponseHandler<SAXTreeStructure>(new SAXTreeStructure()) {
@@ -60,7 +73,6 @@ public final class RestClient {
         };
 
         String method = "senadores";
-        RequestParams params = new RequestParams("info", param);
         CLIENT.get(getAbsoluteUrl(method), params, jsonHttpResponseHandler);
         return senators;
     }
