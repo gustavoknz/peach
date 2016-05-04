@@ -79,6 +79,6 @@ public final class SenatorsManager {
     }
 
     public List<Senator> getVotes() {
-        return RestClient.getAllVotes();
+        return senators;
     }
 }

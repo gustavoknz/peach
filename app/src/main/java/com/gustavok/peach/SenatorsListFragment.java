@@ -17,7 +17,7 @@ public class SenatorsListFragment extends ListFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Log.d(TAG, "getAllSenators is being called");
-        List<Senator> senatorsList = RestClient.getAllSenators();
+        List<Senator> senatorsList = SenatorsManager.getInstance().getVotes();
         Log.d(TAG, "getAllSenators called");
 
         View view = inflater.inflate(R.layout.senators_list_layout, container, false);
