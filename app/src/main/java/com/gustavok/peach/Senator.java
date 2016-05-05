@@ -9,7 +9,7 @@ public class Senator {
     private String estado;
     private String voto;
     private String url;
-    private Bitmap imagem;
+    private transient Bitmap imagem;
 
     public Senator(int id, String nome, String partido, String estado, String voto, String url) {
         this.id = id;

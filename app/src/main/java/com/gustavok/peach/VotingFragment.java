@@ -9,7 +9,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+
 import java.text.DateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -25,7 +29,13 @@ public class VotingFragment extends Fragment {
         if (VotingSingleton.isVotingGoingOn()) {
             Runnable runnable = new Runnable() {
                 public void run() {
-                    updateVotes(RestClient.getAllVotes(), votingView);
+                    RestResponse response = RestClient.getAllVotes();
+                    String json = response.getResponse().toString();
+                    Senator[] senatorsArray = new Gson().fromJson(json, Senator[].class);
+                    List<Senator> senatorVotes = new ArrayList<>();
+                    Collections.addAll(senatorVotes, senatorsArray);
+
+                    updateVotes(senatorVotes, votingView);
                 }
             };
             handler.postDelayed(runnable, PULLING_INTERVAL);
@@ -34,17 +44,17 @@ public class VotingFragment extends Fragment {
         return votingView;
     }
 
-    private void updateVotes(List<Senator> votes, View votingView) {
-        int countYes = getCount(votes, Vote.YES);
-        int countNo = getCount(votes, Vote.NO);
-        int countAbstention = getCount(votes, Vote.ABSTENTION);
-        int countAbsence = getCount(votes, Vote.ABSENCE);
+    private void updateVotes(List<Senator> senatorVotes, View votingView) {
+        int countYes = getCount(senatorVotes, VoteEnum.YES);
+        int countNo = getCount(senatorVotes, VoteEnum.NO);
+        int countAbstention = getCount(senatorVotes, VoteEnum.ABSTENTION);
+        int countAbsence = getCount(senatorVotes, VoteEnum.ABSENCE);
 
         TextView tvYes = (TextView) votingView.findViewById(R.id.voting_count_yes);
         TextView tvNo = (TextView) votingView.findViewById(R.id.voting_count_no);
-        //Vote.ABSTENTIONS
-        //Vote.ABSENCES
-        Log.d(TAG, String.format("Updating votes to yes=%d; no=%d; abstention=%d; absence:%d",
+        //VoteEnum.ABSTENTIONS
+        //VoteEnum.ABSENCES
+        Log.d(TAG, String.format("Updating senatorVotes to yes=%d; no=%d; abstention=%d; absence:%d",
                 countYes, countNo, countAbstention, countAbsence));
         tvYes.setText(countYes);
         tvNo.setText(countNo);
@@ -70,10 +80,10 @@ public class VotingFragment extends Fragment {
         }
     }
 
-    private int getCount(List<Senator> votes, Vote vote) {
+    private int getCount(List<Senator> votes, VoteEnum voteEnum) {
         int count = 0;
         for (Senator s : votes) {
-            if (vote.toString().equals(s.getVoto())) {
+            if (voteEnum.toString().equals(s.getVoto())) {
                 ++count;
             }
         }

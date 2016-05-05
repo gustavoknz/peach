@@ -1,6 +1,6 @@
 package com.gustavok.peach;
 
-public enum Vote {
+public enum VoteEnum {
     YES, //SIM
     NO, //NAO
     ABSTENTION, //ABSTENCAO

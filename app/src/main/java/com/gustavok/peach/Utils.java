@@ -6,7 +6,7 @@ import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.WindowManager;
 
-public class Utils {
+public final class Utils {
 
     private static final int WIDTH_INDEX = 0;
     private static final int HEIGHT_INDEX = 1;

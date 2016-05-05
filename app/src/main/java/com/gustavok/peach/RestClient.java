@@ -1,26 +1,14 @@
 package com.gustavok.peach;
 
-import android.content.Context;
-import android.content.ContextWrapper;
-import android.graphics.Bitmap;
 import android.util.Log;
 
-import com.google.gson.Gson;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
+import com.loopj.android.http.SyncHttpClient;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Locale;
 
 import cz.msebera.android.httpclient.Header;
 
@@ -28,53 +16,47 @@ public final class RestClient {
     private static final String BASE_URL = "http://ojur.com.br:2002/";
     private static final String TAG = "RestClient";
 
-    private static final AsyncHttpClient CLIENT = new AsyncHttpClient();
+    private static final SyncHttpClient CLIENT = new SyncHttpClient();
 
     private static String getAbsoluteUrl(String method) {
         return BASE_URL + method;
     }
 
-    public static List<Senator> getAllSenators(Context context) {
-        List<Senator> senators = getSenatorsList(null);
-        for (Senator senator: senators) {
-            String imageName = String.format(Locale.getDefault(), "%d.jpg", senator.getId());
-            SenatorsManager.getInstance().saveToInternalStorage(imageName, senator.getImagem(), context);
-        }
-        return senators;
+    public static RestResponse getAllSenators() {
+        return getSenatorsList(null);
     }
 
-    public static List<Senator> getAllVotes() {
+    public static RestResponse getAllVotes() {
         RequestParams params = new RequestParams("info", "");
         return getSenatorsList(params);
     }
 
-    private static List<Senator> getSenatorsList(RequestParams params) {
-        final List<Senator> senators = new ArrayList<>();
+    private static RestResponse getSenatorsList(RequestParams params) {
+        final RestResponse restResponse = new RestResponse();
 
         // SaxAsyncHttpResponseHandler saxAsyncHttpResponseHandler = new SaxAsyncHttpResponseHandler<SAXTreeStructure>(new SAXTreeStructure()) {
         JsonHttpResponseHandler jsonHttpResponseHandler = new JsonHttpResponseHandler() {
+
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 Log.d(TAG, String.format("Received %s as response", response));
-                try {
-                    JSONArray jsonArray = response.getJSONArray("senadores");
-                    Senator[] senatorsArray = new Gson().fromJson(jsonArray.toString(), Senator[].class);
-                    senators.addAll(Arrays.asList(senatorsArray));
-                } catch (JSONException e) {
-                    Log.e(TAG, "Error parsing JSON. Response: " + response, e);
-                }
-                Log.d(TAG, String.format("Added %d senators to my list", senators.size()));
+                restResponse.setResponse(response);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                Log.e(TAG, String.format("Failure 1. statusCode: %d; errorResponse: %s", statusCode, responseString), throwable);
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                Log.e(TAG, String.format("Failure 1. statusCode: %d; errorResponse: %s", statusCode, errorResponse), throwable);
+                Log.e(TAG, String.format("Failure 2. statusCode: %d; errorResponse: %s", statusCode, errorResponse), throwable);
             }
         };
 
         String method = "senadores";
         CLIENT.get(getAbsoluteUrl(method), params, jsonHttpResponseHandler);
-        return senators;
+        return restResponse;
     }
 
     /*private class Tuple {
