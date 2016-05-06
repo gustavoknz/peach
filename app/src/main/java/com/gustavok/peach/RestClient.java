@@ -7,16 +7,15 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import com.loopj.android.http.SyncHttpClient;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import cz.msebera.android.httpclient.Header;
 
 public final class RestClient {
-    private static final String BASE_URL = "http://ojur.com.br:2002/";
+    private static final String BASE_URL = "http://ojur.com.br";
     private static final String TAG = "RestClient";
 
-    private static final SyncHttpClient CLIENT = new SyncHttpClient();
+    private static final AsyncHttpClient CLIENT = new AsyncHttpClient(2002);
 
     private static String getAbsoluteUrl(String method) {
         return BASE_URL + method;
@@ -39,7 +38,7 @@ public final class RestClient {
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                Log.d(TAG, String.format("Received %s as response", response));
+                Log.d(TAG, String.format("Received a response: %s", response));
                 restResponse.setResponse(response);
             }
 
@@ -53,8 +52,9 @@ public final class RestClient {
                 Log.e(TAG, String.format("Failure 2. statusCode: %d; errorResponse: %s", statusCode, errorResponse), throwable);
             }
         };
+        //jsonHttpResponseHandler.setUseSynchronousMode(true);
 
-        String method = "senadores";
+        String method = "/senadores";
         CLIENT.get(getAbsoluteUrl(method), params, jsonHttpResponseHandler);
         return restResponse;
     }

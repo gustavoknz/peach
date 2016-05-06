@@ -8,6 +8,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
@@ -33,6 +35,7 @@ public class SenatorsArrayAdapter extends ArrayAdapter<Senator> {
         TextView tvName = (TextView) convertView.findViewById(R.id.senator_name);
         TextView tvHome = (TextView) convertView.findViewById(R.id.senator_party_state);
         ImageView voteView = (ImageView) convertView.findViewById(R.id.senator_vote);
+        Picasso.with(getContext()).load(sen.getUrl()).into(imageView);
         tvName.setText(sen.getNome());
         tvHome.setText(String.format("%s-%s", sen.getPartido(), sen.getEstado()));
         if (VoteEnum.YES.toString().equals(sen.getVoto())) {
@@ -42,6 +45,8 @@ public class SenatorsArrayAdapter extends ArrayAdapter<Senator> {
         } else if (VoteEnum.ABSENCE.toString().equals(sen.getVoto())) {
             voteView.setImageResource(R.mipmap.vote_no);
         } else if (VoteEnum.ABSTENTION.toString().equals(sen.getVoto())) {
+            voteView.setImageResource(R.mipmap.vote_no);
+        } else {
             voteView.setImageResource(R.mipmap.vote_no);
         }
 

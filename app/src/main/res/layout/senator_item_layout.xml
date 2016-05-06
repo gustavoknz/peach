@@ -7,10 +7,9 @@
 
     <ImageView
         android:id="@+id/senator_image"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:contentDescription="@string/senator_image_desc"
-        android:src="@mipmap/ic_launcher" />
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:contentDescription="@string/senator_image_desc" />
 
     <LinearLayout
         android:id="@+id/layout_name_party"

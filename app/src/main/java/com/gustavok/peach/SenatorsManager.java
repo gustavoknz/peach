@@ -3,6 +3,7 @@ package com.gustavok.peach;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.Intent;
+import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -32,21 +33,57 @@ import java.util.Locale;
 public final class SenatorsManager {
     private static final String TAG = "SenatorsManager";
     private static final SenatorsManager INSTANCE = new SenatorsManager();
-    private static final List<Senator> senators = new ArrayList<>();
     private static final String JSON_FILE_NAME = "senators.json";
+    private final List<Senator> senators = new ArrayList<>();
 
     private SenatorsManager() {
-        Log.d(TAG, "Trying to load from storage...");
+        Log.d(TAG, "Loading from static JSON file");
+        loadFromStaticJson();
+
+        /*Log.d(TAG, "Trying to load from storage...");
         loadFromStorage();
         if ((senators == null) || senators.isEmpty()) {
             Log.d(TAG, "Trying to load from REST API...");
             loadFromUrl();
-        }
+        }*/
     }
 
     public static SenatorsManager getInstance() {
         return INSTANCE;
     }
+
+    //region Load info from static json
+    private void loadFromStaticJson() {
+        String jsonString = getJSONString(ContextHolder.getContext());
+
+        try {
+            JSONArray jsonArray = new JSONObject(jsonString).getJSONArray("senadores");
+            Senator[] senatorsArray = new Gson().fromJson(jsonArray.toString(), Senator[].class);
+            Collections.addAll(senators, senatorsArray);
+        } catch (JSONException e) {
+            Log.e(TAG, "Error loading JSON", e);
+        }
+    }
+
+    private String getJSONString(Context context) {
+        String str = "";
+        try {
+            AssetManager assetManager = context.getAssets();
+            InputStream in = assetManager.open("senators.json");
+            InputStreamReader isr = new InputStreamReader(in);
+            char[] inputBuffer = new char[100];
+
+            int charRead;
+            while ((charRead = isr.read(inputBuffer)) > 0) {
+                str += String.copyValueOf(inputBuffer, 0, charRead);
+            }
+        } catch (IOException e) {
+            Log.e(TAG, "Error loading JSON", e);
+        }
+
+        return str;
+    }
+    //endregion
 
     //region Load info from storage
     private void loadFromStorage() {
@@ -132,11 +169,13 @@ public final class SenatorsManager {
 
     private void serializeJson(JSONObject senatorsJson) {
         String filename = JSON_FILE_NAME;
+        Log.d(TAG, "Writing JSON file: " + JSON_FILE_NAME);
         try {
             FileOutputStream fos = ContextHolder.getContext().openFileOutput(filename, Context.MODE_PRIVATE);
             fos.write(senatorsJson.toString().getBytes());
             fos.close();
             File filePath = new File(ContextHolder.getContext().getFilesDir(), filename);
+            Log.d(TAG, String.format("File '%s' added? %b" + filePath.getName(), filePath.exists()));
             notifyFileAdded(filePath);
         } catch (Exception e) {
             Log.e(TAG, "Error writing json file", e);
@@ -144,10 +183,12 @@ public final class SenatorsManager {
     }
 
     private Bitmap downloadBitmap(String senatorUrl) {
+        Log.d(TAG, "Downloading image from " + senatorUrl);
         RequestCreator rc = Picasso.with(ContextHolder.getContext()).load(senatorUrl);
         Bitmap image = null;
         try {
             image = rc.get();
+            Log.d(TAG, String.format("Image downloaded with size %d", image.getByteCount()));
         } catch (IOException e) {
             Log.e(TAG, "Error downloading image from " + senatorUrl, e);
         }
@@ -155,6 +196,7 @@ public final class SenatorsManager {
     }
 
     private void saveImagesToInternalStorage(int senatorId, Bitmap bitmapImage, Context context) {
+        Log.d(TAG, "Saving image id " + senatorId);
         ContextWrapper cw = new ContextWrapper(context);
         File directory = cw.getDir("imageDir", Context.MODE_PRIVATE);
         File path = new File(directory, String.format(Locale.getDefault(), "%d.jpg", senatorId));
@@ -165,6 +207,7 @@ public final class SenatorsManager {
             bitmapImage.compress(Bitmap.CompressFormat.PNG, 100, fos);
             fos.close();
             notifyFileAdded(path);
+            Log.d(TAG, String.format("Image with id %d saved successfully", senatorId));
         } catch (Exception e) {
             Log.e(TAG, "Error saving image", e);
         }
