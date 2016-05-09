@@ -1,7 +1,5 @@
 package com.gustavok.peach;
 
-import android.graphics.Bitmap;
-
 public class Senator {
     private int id;
     private String nome;
@@ -9,7 +7,6 @@ public class Senator {
     private String estado;
     private String voto;
     private String url;
-    private transient Bitmap imagem;
 
     public Senator(int id, String nome, String partido, String estado, String voto, String url) {
         this.id = id;
@@ -44,11 +41,7 @@ public class Senator {
         return url;
     }
 
-    public Bitmap getImagem() {
-        return imagem;
-    }
-
-    public void setImagem(Bitmap imagem) {
-        this.imagem = imagem;
+    public void setVoto(String voto) {
+        this.voto = voto;
     }
 }

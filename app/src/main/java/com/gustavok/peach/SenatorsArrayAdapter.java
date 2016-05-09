@@ -1,6 +1,7 @@
 package com.gustavok.peach;
 
 import android.app.Activity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +15,7 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
 
-public class SenatorsArrayAdapter extends ArrayAdapter<Senator> {
+public final class SenatorsArrayAdapter extends ArrayAdapter<Senator> {
 
     private static final String TAG = "InteractiveArrayAdapter";
     private final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", new Locale("pt", "BR"));
@@ -37,17 +38,30 @@ public class SenatorsArrayAdapter extends ArrayAdapter<Senator> {
         ImageView voteView = (ImageView) convertView.findViewById(R.id.senator_vote);
         Picasso.with(getContext()).load(sen.getUrl()).into(imageView);
         tvName.setText(sen.getNome());
-        tvHome.setText(String.format("%s-%s", sen.getPartido(), sen.getEstado()));
-        if (VoteEnum.YES.toString().equals(sen.getVoto())) {
-            voteView.setImageResource(R.mipmap.vote_yes);
-        } else if (VoteEnum.NO.toString().equals(sen.getVoto())) {
-            voteView.setImageResource(R.mipmap.vote_no);
-        } else if (VoteEnum.ABSENCE.toString().equals(sen.getVoto())) {
-            voteView.setImageResource(R.mipmap.vote_no);
-        } else if (VoteEnum.ABSTENTION.toString().equals(sen.getVoto())) {
-            voteView.setImageResource(R.mipmap.vote_no);
-        } else {
-            voteView.setImageResource(R.mipmap.vote_no);
+        tvHome.setText(String.format("%s - %s", sen.getPartido(), sen.getEstado()));
+        /*switch (new Random().nextInt(4)) {
+            case 0:
+                voteView.setImageResource(R.drawable.vote_yes);
+                break;
+            case 1:
+                voteView.setImageResource(R.drawable.vote_no);
+                break;
+            case 2:
+                voteView.setImageResource(R.drawable.vote_absence);
+                break;
+            case 3:
+                voteView.setImageResource(R.drawable.vote_abstention);
+                break;
+        }*/
+        Log.d(TAG, "Senator id " + sen.getId() + " voted " + sen.getVoto() + "; YES=" + VoteEnum.YES.getVote());
+        if (Integer.toString(VoteEnum.YES.getVote()).equals(sen.getVoto())) {
+            voteView.setImageResource(R.drawable.vote_yes);
+        } else if (Integer.toString(VoteEnum.NO.getVote()).equals(sen.getVoto())) {
+            voteView.setImageResource(R.drawable.vote_no);
+        } else if (Integer.toString(VoteEnum.ABSENCE.getVote()).equals(sen.getVoto())) {
+            voteView.setImageResource(R.drawable.vote_absence);
+        } else if (Integer.toString(VoteEnum.ABSTENTION.getVote()).equals(sen.getVoto())) {
+            voteView.setImageResource(R.drawable.vote_abstention);
         }
 
         return convertView;

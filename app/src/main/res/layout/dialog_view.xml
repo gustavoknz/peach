@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:id="@+id/dialog_view_id"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal">
+
+        <TextView
+            android:id="@+id/dialog_senator_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:paddingTop="10dp"
+            android:textSize="30sp" />
+
+        <ImageView
+            android:id="@+id/dialog_senator_image"
+            android:layout_width="250dp"
+            android:layout_height="250dp"
+            android:layout_below="@+id/dialog_senator_name"
+            android:layout_centerHorizontal="true"
+            android:contentDescription="@string/senator_image_desc"
+            android:paddingTop="10dp" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/dialog_senator_image"
+            android:gravity="center_horizontal"
+            android:paddingTop="10dp">
+
+            <TextView
+                android:id="@+id/dialog_senator_state_party_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Filiação:"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/dialog_senator_state_party"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@+id/dialog_senator_state_party_title"
+                android:layout_toRightOf="@+id/dialog_senator_state_party_title"
+                android:paddingEnd="0dp"
+                android:paddingLeft="5dp"
+                android:paddingRight="0dp"
+                android:paddingStart="5dp"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/dialog_senator_vote_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/dialog_senator_state_party_title"
+                android:paddingTop="20dp"
+                android:text="Voto:"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/dialog_senator_vote"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@+id/dialog_senator_vote_title"
+                android:layout_toRightOf="@+id/dialog_senator_vote_title"
+                android:paddingEnd="0dp"
+                android:paddingLeft="5dp"
+                android:paddingRight="0dp"
+                android:paddingStart="5dp"
+                android:textSize="20sp" />
+        </RelativeLayout>
+    </RelativeLayout>
+</ScrollView>

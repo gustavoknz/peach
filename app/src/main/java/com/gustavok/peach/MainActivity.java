@@ -1,5 +1,6 @@
 package com.gustavok.peach;
 
+import android.app.Dialog;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -15,6 +16,7 @@ import java.util.Locale;
 
 //TODO: animações pro: "Fora Dilma!", "Tchau, querida!", "+1 coxinha"
 //TODO: animações contra: "Golpe não!", "Vai ter luta!", "+1 mortadela"
+//TODO: animações neutra: "+1 (Nome do Fulano)", "(miniatura da foto)"
 public class MainActivity extends AppCompatActivity {
 
     @Override

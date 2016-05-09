@@ -2,7 +2,7 @@ package com.gustavok.peach;
 
 public class VotingSingleton {
     public static final int TOTAL_VOTES = 81;
-    public static final int REMOVED = 180; //dias
+    public static final int REMOVED_DAYS = 180; //dias
 
     private static VotingSingleton ourInstance = new VotingSingleton();
     private static boolean votingGoingOn;
