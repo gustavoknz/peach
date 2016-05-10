@@ -1,6 +1,7 @@
 package com.gustavok.peach;
 
 import android.app.Activity;
+import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,39 +17,58 @@ import java.util.Locale;
 
 public final class SenatorsArrayAdapter extends ArrayAdapter<Senator> {
     private static final String TAG = "SenatorsArrayAdapter";
+    private Context context;
+    private int layoutResId;
+    private List<Senator> data = null;
 
-    public SenatorsArrayAdapter(Activity context, List<Senator> senatorsListView) {
-        super(context, R.layout.senator_item_layout, senatorsListView);
+    public SenatorsArrayAdapter(Activity context, int layoutResId, List<Senator> data) {
+        super(context, layoutResId, data);
+        this.context = context;
+        this.layoutResId = layoutResId;
+        this.data = data;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+        SenatorHolder holder;
 
-        //http://stackoverflow.com/questions/13970397/android-listview-not-working-images-are-changing-when-scrollling-the-list
         // Check if an existing view is being reused, otherwise inflate the view
-        //if (convertView == null) {
-            convertView = LayoutInflater.from(getContext()).inflate(R.layout.senator_item_layout, parent, false);
-        //}
-        Senator sen = getItem(position);
-        ImageView imageView = (ImageView) convertView.findViewById(R.id.senator_image);
-        TextView tvName = (TextView) convertView.findViewById(R.id.senator_name);
-        TextView tvPartyState = (TextView) convertView.findViewById(R.id.senator_party_state);
-        ImageView voteView = (ImageView) convertView.findViewById(R.id.senator_vote);
-        Picasso.with(getContext()).load(sen.getUrl()).into(imageView);
-        tvName.setText(sen.getNome());
-        tvPartyState.setText(String.format("%s - %s", sen.getPartido(), sen.getEstado()));
+        if (convertView == null) {
+            convertView = LayoutInflater.from(context).inflate(layoutResId, parent, false);
+
+            holder = new SenatorHolder();
+            holder.imageUrl = (ImageView) convertView.findViewById(R.id.senator_image);
+            holder.name = (TextView) convertView.findViewById(R.id.senator_name);
+            holder.partyState = (TextView) convertView.findViewById(R.id.senator_party_state);
+            holder.vote = (ImageView) convertView.findViewById(R.id.senator_vote);
+            convertView.setTag(holder);
+        } else {
+            holder = (SenatorHolder) convertView.getTag();
+        }
+        Senator sen = data.get(position);
+        Picasso.with(context).load(sen.getUrl()).into(holder.imageUrl);
+        holder.name.setText(sen.getNome());
+        holder.partyState.setText(String.format("%s - %s", sen.getPartido(), sen.getEstado()));
 
         Log.d(TAG, String.format(Locale.getDefault(), "Senator id=%d (%s) voted %d", sen.getId(), sen.getNome(), sen.getVoto()));
+        holder.vote.setImageResource(0);
         if (VotingUtils.YES == sen.getVoto()) {
-            voteView.setImageResource(R.drawable.vote_yes);
+            holder.vote.setImageResource(R.drawable.vote_yes);
         } else if (VotingUtils.NO == sen.getVoto()) {
-            voteView.setImageResource(R.drawable.vote_no);
+            holder.vote.setImageResource(R.drawable.vote_no);
         } else if (VotingUtils.ABSTENTION == sen.getVoto()) {
-            voteView.setImageResource(R.drawable.vote_abstention);
+            holder.vote.setImageResource(R.drawable.vote_abstention);
         } else if (VotingUtils.ABSENCE == sen.getVoto()) {
-            voteView.setImageResource(R.drawable.vote_absence);
+            holder.vote.setImageResource(R.drawable.vote_absence);
         }
 
         return convertView;
+    }
+
+    class SenatorHolder {
+        ImageView imageUrl;
+        TextView name;
+        TextView partyState;
+        ImageView vote;
     }
 }

@@ -37,7 +37,7 @@ public class SenatorsListFragment extends ListFragment {
         View view = inflater.inflate(R.layout.senators_list_layout, container, false);
         Log.d(TAG, String.format("Building screen with %d senators", senatorsList.size()));
 
-        adapter = new SenatorsArrayAdapter(getActivity(), senatorsList);
+        adapter = new SenatorsArrayAdapter(getActivity(), R.layout.senator_item_layout, senatorsList);
         ListView listView = (ListView) view.findViewById(android.R.id.list);
         listView.setAdapter(adapter);
 
