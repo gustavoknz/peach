@@ -42,7 +42,6 @@
                     android:layout_marginLeft="25dp"
                     android:layout_marginStart="25dp"
                     android:layout_weight="1"
-                    android:onClick="yesTapped"
                     android:text="@string/voting_init"
                     android:textColor="@color/voting_yes"
                     android:textSize="@dimen/yes_no_text_size" />
@@ -103,7 +102,6 @@
                     android:layout_marginLeft="25dp"
                     android:layout_marginStart="25dp"
                     android:layout_weight="1"
-                    android:onClick="noTapped"
                     android:text="@string/voting_init"
                     android:textColor="@color/voting_no"
                     android:textSize="@dimen/yes_no_text_size" />
@@ -161,7 +159,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="15dp"
                     android:layout_marginStart="15dp"
-                    android:onClick="abstentionTapped"
                     android:text="@string/voting_init"
                     android:textColor="@color/voting_abstention"
                     android:textSize="@dimen/other_votes_text_size" />
@@ -212,7 +209,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="15dp"
                     android:layout_marginStart="15dp"
-                    android:onClick="absenceTapped"
                     android:text="@string/voting_init"
                     android:textColor="@color/voting_absence"
                     android:textSize="@dimen/other_votes_text_size" />
