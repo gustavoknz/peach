@@ -43,10 +43,10 @@ public final class SenatorsArrayAdapter extends ArrayAdapter<Senator> {
             voteView.setImageResource(R.drawable.vote_yes);
         } else if (VotingUtils.NO == sen.getVoto()) {
             voteView.setImageResource(R.drawable.vote_no);
-        } else if (VotingUtils.ABSENCE == sen.getVoto()) {
-            voteView.setImageResource(R.drawable.vote_absence);
         } else if (VotingUtils.ABSTENTION == sen.getVoto()) {
             voteView.setImageResource(R.drawable.vote_abstention);
+        } else if (VotingUtils.ABSENCE == sen.getVoto()) {
+            voteView.setImageResource(R.drawable.vote_absence);
         }
 
         return convertView;

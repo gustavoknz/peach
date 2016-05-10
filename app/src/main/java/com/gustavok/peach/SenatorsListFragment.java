@@ -22,7 +22,9 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 import java.util.Locale;
 
+//TODO: filtros
 public class SenatorsListFragment extends ListFragment {
+    private static final int UPDATE_LIST_INTERVAL = 10000;
     private static final String TAG = "SenatorsListFragment";
     private SenatorsArrayAdapter adapter;
 
@@ -48,13 +50,13 @@ public class SenatorsListFragment extends ListFragment {
 
                     if (VotingUtils.isVotingGoingOn()) {
                         adapter.notifyDataSetChanged();
-                        handler.postDelayed(this, 7000);
+                        handler.postDelayed(this, UPDATE_LIST_INTERVAL);
                     } else {
                         Log.d(TAG, "Voting ended. No need to update");
                     }
                 }
             };
-            handler.postDelayed(runnable, 7000);
+            handler.postDelayed(runnable, UPDATE_LIST_INTERVAL);
         }
 
         return view;
