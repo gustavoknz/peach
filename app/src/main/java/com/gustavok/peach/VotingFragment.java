@@ -1,37 +1,126 @@
 package com.gustavok.peach;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.HandlerThread;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
+import android.widget.TextView;
 
-public class VotingFragment extends Fragment {
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Locale;
+
+public class VotingFragment extends Fragment implements SenatorsCallbackInterface {
+    private static final int VOTE_POSITION_YES = 0;
+    private static final int VOTE_POSITION_NO = 1;
+    private static final int VOTE_POSITION_ABSTINENT = 2;
+    private static final int VOTE_POSITION_ABSENCE = 3;
+    private static final int VOTE_POSITION_UNKNOWN = 4;
     private static final int PULLING_INTERVAL = 15 * 1000;
     private static final String TAG = "VotingFragment";
+    private View votingView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        final View votingView = inflater.inflate(R.layout.voting_layout, container, false);
-        //if (VotingSingleton.isVotingGoingOn()) {
+        votingView = inflater.inflate(R.layout.voting_layout, container, false);
 
-        final Handler handler = new Handler();
-        Runnable runnable = new Runnable() {
-            @Override
-            public void run() {
-                Log.d(TAG, "Searching for new votes...");
-                Toast.makeText(getContext(), "checking...", Toast.LENGTH_SHORT).show();
-                RestClient.getAllVotes(votingView, getContext());
-                handler.postDelayed(this, PULLING_INTERVAL);
-            }
-        };
-        handler.postDelayed(runnable, 1);
-        //}
+        if (VotingUtils.isVotingGoingOn()) {
+            final Handler handler = new Handler();
+            Runnable runnable = new Runnable() {
+                @Override
+                public void run() {
+                    Log.d(TAG, "Searching for new votes...");
+
+                    if (VotingUtils.isVotingGoingOn()) {
+                        RestClient.getAllVotes(VotingFragment.this);
+                        handler.postDelayed(this, PULLING_INTERVAL);
+                    } else {
+                        Log.d(TAG, "Voting finished");
+                    }
+                }
+            };
+            handler.postDelayed(runnable, 1);
+        }
 
         return votingView;
+    }
+
+    @Override
+    public void onSuccess(Senator[] senators) {
+        Log.d(TAG, "Callback successfully called");
+        SenatorsManager.getInstance().setSenatorVotes(senators);
+        updateVotes(senators);
+    }
+
+    private void updateVotes(Senator[] senatorVotes) {
+        Log.d(TAG, "Updating votes...");
+        SenatorsManager.getInstance().setSenatorVotes(senatorVotes);
+        int[] votes = countVotes(senatorVotes);
+        int countYes = votes[VOTE_POSITION_YES];
+        int countNo = votes[VOTE_POSITION_NO];
+        int countAbstention = votes[VOTE_POSITION_ABSTINENT];
+        int countAbsence = votes[VOTE_POSITION_ABSENCE];
+        int countUnknown = votes[VOTE_POSITION_UNKNOWN];
+        int total = countYes + countNo + countAbstention + countAbsence + countUnknown;
+
+        TextView tvYes = (TextView) votingView.findViewById(R.id.voting_count_yes);
+        TextView tvNo = (TextView) votingView.findViewById(R.id.voting_count_no);
+        TextView tvAbstention = (TextView) votingView.findViewById(R.id.voting_count_abstention);
+        TextView tvAbsence = (TextView) votingView.findViewById(R.id.voting_count_absence);
+        Log.d(TAG, String.format("Updating senatorVotes to (%d) yes=%d; no=%d; abstention=%d; absence:%d; unknown:%d",
+                total, countYes, countNo, countAbstention, countAbsence, countUnknown));
+        tvYes.setText(String.format(Locale.getDefault(), "%d", countYes));
+        tvNo.setText(String.format(Locale.getDefault(), "%d", countNo));
+        tvAbstention.setText(String.format(Locale.getDefault(), "%d", countAbstention));
+        tvAbsence.setText(String.format(Locale.getDefault(), "%d", countAbsence));
+
+        if (total >= VotingUtils.TOTAL_VOTES) {
+            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
+            alertDialogBuilder.setTitle("Votação encerrada");
+            alertDialogBuilder
+                    .setCancelable(true)
+                    .setNeutralButton("OK", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            dialog.cancel();
+                        }
+                    });
+
+            if (countYes > countNo + countAbstention + countAbsence + countUnknown) {
+                Calendar calendar = Calendar.getInstance();
+                calendar.add(Calendar.DAY_OF_YEAR, VotingUtils.REMOVED_DAYS);
+                SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+                String dateOut = sdf.format(calendar.getTime());
+
+                alertDialogBuilder.setMessage("Dilma será afastada do seu cargo e terá seu julgamento final até o dia " + dateOut);
+            } else {
+                alertDialogBuilder.setMessage("Este processo será arquivado.");
+            }
+            AlertDialog alertDialog = alertDialogBuilder.create();
+            alertDialog.show();
+            VotingUtils.votingFinished();
+        }
+    }
+
+    private int[] countVotes(Senator[] senators) {
+        int[] count = new int[5];
+        for (Senator s : senators) {
+            if (s.getVoto() == VotingUtils.YES) {
+                ++count[VOTE_POSITION_YES];
+            } else if (s.getVoto() == VotingUtils.NO) {
+                ++count[VOTE_POSITION_NO];
+            } else if (s.getVoto() == VotingUtils.ABSTENTION) {
+                ++count[VOTE_POSITION_ABSTINENT];
+            } else if (s.getVoto() == VotingUtils.ABSENCE) {
+                ++count[VOTE_POSITION_ABSENCE];
+            } else if (s.getVoto() == VotingUtils.UNKNOWN) {
+                ++count[VOTE_POSITION_UNKNOWN];
+            }
+        }
+        return count;
     }
 }

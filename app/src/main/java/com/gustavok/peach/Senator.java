@@ -5,10 +5,10 @@ public class Senator {
     private String nome;
     private String partido;
     private String estado;
-    private String voto;
+    private int voto;
     private String url;
 
-    public Senator(int id, String nome, String partido, String estado, String voto, String url) {
+    public Senator(int id, String nome, String partido, String estado, int voto, String url) {
         this.id = id;
         this.nome = nome;
         this.partido = partido;
@@ -33,7 +33,7 @@ public class Senator {
         return estado;
     }
 
-    public String getVoto() {
+    public int getVoto() {
         return voto;
     }
 
@@ -41,7 +41,7 @@ public class Senator {
         return url;
     }
 
-    public void setVoto(String voto) {
+    public void setVoto(int voto) {
         this.voto = voto;
     }
 }

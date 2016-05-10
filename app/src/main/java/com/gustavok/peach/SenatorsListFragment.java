@@ -6,14 +6,16 @@ import android.os.Handler;
 import android.support.v4.app.ListFragment;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.ScrollView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
@@ -37,31 +39,35 @@ public class SenatorsListFragment extends ListFragment {
         ListView listView = (ListView) view.findViewById(android.R.id.list);
         listView.setAdapter(adapter);
 
-        final Handler handler = new Handler();
-        Runnable runnable = new Runnable() {
-            @Override
-            public void run() {
-                Log.d(TAG, "Updating adapter...");
-                Toast.makeText(getContext(), "updating adapter...", Toast.LENGTH_SHORT).show();
-                adapter.notifyDataSetChanged();
-                handler.postDelayed(this, 7000);
-            }
-        };
-        handler.postDelayed(runnable, 7000);
+        if (VotingUtils.isVotingGoingOn()) {
+            final Handler handler = new Handler();
+            Runnable runnable = new Runnable() {
+                @Override
+                public void run() {
+                    Log.d(TAG, "Updating adapter...");
+
+                    if (VotingUtils.isVotingGoingOn()) {
+                        adapter.notifyDataSetChanged();
+                        handler.postDelayed(this, 7000);
+                    } else {
+                        Log.d(TAG, "Voting ended. No need to update");
+                    }
+                }
+            };
+            handler.postDelayed(runnable, 7000);
+        }
 
         return view;
     }
 
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
-        Log.i(TAG, String.format("Senator clicked. position: %d; id: %d", position, id));
-
         Senator item = adapter.getItem(position);
-        Log.d(TAG, "Selected senator " + item.getNome());
+        Log.i(TAG, String.format("Senator (%s) clicked. position: %d; id: %d", item.getNome(), position, id));
 
         LayoutInflater factory = LayoutInflater.from(v.getContext());
 
-        ScrollView dialogView = (ScrollView) factory.inflate(R.layout.dialog_view, null);
+        RelativeLayout dialogView = (RelativeLayout) factory.inflate(R.layout.dialog_view, null);
 
         TextView nameView = (TextView) dialogView.findViewById(R.id.dialog_senator_name);
         nameView.setText(item.getNome());
@@ -70,7 +76,17 @@ public class SenatorsListFragment extends ListFragment {
         TextView statePartyView = (TextView) dialogView.findViewById(R.id.dialog_senator_state_party);
         statePartyView.setText(String.format(Locale.getDefault(), "%s-%s", item.getPartido(), item.getEstado()));
         TextView voteView = (TextView) dialogView.findViewById(R.id.dialog_senator_vote);
-        voteView.setText("Ainda não votou esse vagabundo!");
+        if (item.getVoto() == VotingUtils.YES) {
+            voteView.setText(R.string.dialog_voting_yes);
+        } else if (item.getVoto() == VotingUtils.NO) {
+            voteView.setText(R.string.dialog_voting_no);
+        } else if (item.getVoto() == VotingUtils.ABSTENTION) {
+            voteView.setText(R.string.dialog_voting_abstention);
+        } else if (item.getVoto() == VotingUtils.ABSENCE) {
+            voteView.setText(R.string.dialog_voting_absence);
+        } else if (item.getVoto() == VotingUtils.DEFAULT_VALUE) {
+            voteView.setText(R.string.dialog_voting_not_yet);
+        }
 
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
         alertDialogBuilder.setView(dialogView);
@@ -83,5 +99,11 @@ public class SenatorsListFragment extends ListFragment {
                 });
         AlertDialog alertDialog = alertDialogBuilder.create();
         alertDialog.show();
+
+        // TODO: not working
+        final Button positiveButton = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
+        LinearLayout.LayoutParams positiveButtonLL = (LinearLayout.LayoutParams) positiveButton.getLayoutParams();
+        positiveButtonLL.gravity = Gravity.CENTER;
+        positiveButton.setLayoutParams(positiveButtonLL);
     }
 }

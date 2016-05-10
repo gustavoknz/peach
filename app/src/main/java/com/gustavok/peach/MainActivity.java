@@ -1,6 +1,5 @@
 package com.gustavok.peach;
 
-import android.app.Dialog;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -50,6 +49,14 @@ public class MainActivity extends AppCompatActivity {
         upVote(view, R.id.voting_count_no, R.id.voting_animation_no);
     }
 
+    public void abstentionTapped(View view) {
+        upVote(view, R.id.voting_count_abstention, R.id.voting_animation_abstention);
+    }
+
+    public void absenceTapped(View view) {
+        upVote(view, R.id.voting_count_absence, R.id.voting_animation_absence);
+    }
+
     private void upVote(View view, int votingCountId, int votingAnimationId) {
         TextView tv = (TextView) view.findViewById(votingCountId);
         int count = Integer.parseInt(tv.getText().toString());
@@ -65,14 +72,6 @@ public class MainActivity extends AppCompatActivity {
         tvAnimation.setAnimation(translateAnimation);
         translateAnimation.setDuration(2000);
         tvAnimation.startAnimation(translateAnimation);
-    }
-
-    public void abstentionTapped(View view) {
-        upVote(view, R.id.voting_count_abstention, R.id.voting_animation_abstention);
-    }
-
-    public void absenceTapped(View view) {
-        upVote(view, R.id.voting_count_absence, R.id.voting_animation_absence);
     }
 
     /**

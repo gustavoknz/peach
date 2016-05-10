@@ -3,8 +3,13 @@
     <color name="colorPrimary">#16B83E</color>
     <color name="colorPrimaryDark">#EED11D</color>
     <color name="colorAccent">#FF2200</color>
+
     <color name="voting_yes">#1122FF</color>
     <color name="voting_no">#FF2211</color>
     <color name="voting_absence">#666666</color>
     <color name="voting_abstention">#666666</color>
+
+    <color name="dialog_senator_name">#CC2211</color>
+    <color name="dialog_senator_party_state">#1122CC</color>
+    <color name="dialog_senator_vote">#BBC11C</color>
 </resources>
