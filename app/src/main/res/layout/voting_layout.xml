@@ -211,6 +211,7 @@
                     android:layout_marginStart="15dp"
                     android:text="@string/voting_init"
                     android:textColor="@color/voting_absence"
+
                     android:textSize="@dimen/other_votes_text_size" />
             </LinearLayout>
 
