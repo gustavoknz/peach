@@ -11,6 +11,13 @@ public final class VotingUtils {
     public static final int ABSTENTION = 4;
     public static final int UNKNOWN = 5;
 
+    public static final int CONSTRAINT_ALL = 0;
+    public static final int CONSTRAINT_NO_VOTE = 1;
+    public static final int CONSTRAINT_YES = 2;
+    public static final int CONSTRAINT_NO = 3;
+    public static final int CONSTRAINT_ABSTENTION = 4;
+    public static final int CONSTRAINT_ABSENCE = 5;
+
     private static boolean votingGoingOn = true;
 
     public static boolean isVotingGoingOn() {

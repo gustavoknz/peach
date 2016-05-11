@@ -20,12 +20,14 @@ public final class SenatorsArrayAdapter extends ArrayAdapter<Senator> {
     private Context context;
     private int layoutResId;
     private List<Senator> data = null;
+    //private List<Senator> originalData = null;
 
     public SenatorsArrayAdapter(Activity context, int layoutResId, List<Senator> data) {
         super(context, layoutResId, data);
         this.context = context;
         this.layoutResId = layoutResId;
         this.data = data;
+        //this.originalData = new ArrayList<>(data);
     }
 
     @Override
