@@ -25,6 +25,7 @@ import java.util.Locale;
 public class SenatorsListFragment extends ListFragment {
     private static final int UPDATE_LIST_INTERVAL = 10000;
     private static final String TAG = "SenatorsListFragment";
+
     private SenatorsArrayAdapter adapter;
     private Spinner spinnerParty;
     private Spinner spinnerState;
@@ -41,10 +42,7 @@ public class SenatorsListFragment extends ListFragment {
         Log.d(TAG, "getAllSenators is being called");
         senatorsList = SenatorsManager.getInstance().getVotes();
         originalSenatorsList = new ArrayList<>(senatorsList);
-        Log.d(TAG, "getAllSenators called");
-
         View view = inflater.inflate(R.layout.senators_list_layout, container, false);
-        Log.d(TAG, String.format("Building screen with %d senators", senatorsList.size()));
 
         adapter = new SenatorsArrayAdapter(getActivity(), R.layout.senator_item_layout, senatorsList);
         ListView listView = (ListView) view.findViewById(android.R.id.list);

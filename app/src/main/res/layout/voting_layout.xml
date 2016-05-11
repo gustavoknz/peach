@@ -16,7 +16,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1">
+            android:layout_weight="2">
 
             <LinearLayout
                 android:id="@+id/voting_layout_yes"
@@ -27,13 +27,12 @@
                 android:gravity="center"
                 android:orientation="horizontal">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                <ImageView
+                    android:layout_width="108dp"
+                    android:layout_height="108dp"
                     android:layout_weight="1"
-                    android:text="@string/voting_yes"
-                    android:textColor="@color/voting_yes"
-                    android:textSize="@dimen/yes_no_text_size" />
+                    android:background="@drawable/ic_background"
+                    android:src="@drawable/ic_yes" />
 
                 <TextView
                     android:id="@+id/voting_count_yes"
@@ -76,7 +75,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1">
+            android:layout_weight="2">
 
             <LinearLayout
                 android:id="@+id/voting_layout_no"

@@ -59,7 +59,6 @@ public class VotingFragment extends Fragment implements SenatorsCallbackInterfac
 
     private void updateVotes(Senator[] senatorVotes) {
         Log.d(TAG, "Updating votes...");
-        SenatorsManager.getInstance().setSenatorVotes(senatorVotes);
         int[] votes = countVotes(senatorVotes);
         int countYes = votes[VOTE_POSITION_YES];
         int countNo = votes[VOTE_POSITION_NO];
