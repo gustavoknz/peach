@@ -8,8 +8,8 @@ android {
         applicationId "com.gustavok.peach"
         minSdkVersion 8
         targetSdkVersion 23
-        versionCode 3
-        versionName "Notificação no término"
+        versionCode 4
+        versionName "Versões anteriores do Android"
     }
     buildTypes {
         release {
