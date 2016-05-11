@@ -2,6 +2,7 @@ package com.gustavok.peach;
 
 import android.content.Context;
 import android.graphics.Point;
+import android.os.Build;
 import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.WindowManager;
@@ -19,8 +20,7 @@ public final class Utils {
         WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         Display display = windowManager.getDefaultDisplay();
 
-        Point size = new Point();
-        display.getSize(size);
+        Point size = getDisplaySize(display);
         widthHeight[WIDTH_INDEX] = size.x;
         widthHeight[HEIGHT_INDEX] = size.y;
 
@@ -39,6 +39,18 @@ public final class Utils {
 
         return widthHeight;
     }
+
+    private static Point getDisplaySize(final Display display) {
+        Point point = new Point();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) { //API LEVEL 13
+            display.getSize(point);
+        } else {
+            point.x = display.getWidth();
+            point.y = display.getHeight();
+        }
+        return point;
+    }
+
 
     private static boolean isScreenSizeRetrieved(int[] widthHeight) {
         return widthHeight[WIDTH_INDEX] != 0 && widthHeight[HEIGHT_INDEX] != 0;

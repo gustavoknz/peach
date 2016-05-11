@@ -16,7 +16,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="2">
+            android:layout_weight="3">
 
             <LinearLayout
                 android:id="@+id/voting_layout_yes"
@@ -27,12 +27,13 @@
                 android:gravity="center"
                 android:orientation="horizontal">
 
-                <ImageView
-                    android:layout_width="108dp"
-                    android:layout_height="108dp"
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:background="@drawable/ic_background"
-                    android:src="@drawable/ic_yes" />
+                    android:text="@string/voting_yes"
+                    android:textColor="@color/voting_yes"
+                    android:textSize="@dimen/yes_no_text_size" />
 
                 <TextView
                     android:id="@+id/voting_count_yes"
@@ -57,7 +58,6 @@
                 android:layout_marginStart="0dp"
                 android:layout_toEndOf="@+id/voting_layout_yes"
                 android:layout_toRightOf="@+id/voting_layout_yes"
-                android:animateLayoutChanges="true"
                 android:text="@string/voting_plus_yes"
                 android:visibility="invisible" />
         </RelativeLayout>
@@ -75,7 +75,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="2">
+            android:layout_weight="3">
 
             <LinearLayout
                 android:id="@+id/voting_layout_no"
@@ -117,7 +117,6 @@
                 android:layout_marginStart="0dp"
                 android:layout_toEndOf="@+id/voting_layout_no"
                 android:layout_toRightOf="@+id/voting_layout_no"
-                android:animateLayoutChanges="true"
                 android:text="@string/voting_plus_no"
                 android:visibility="invisible" />
         </RelativeLayout>
@@ -174,7 +173,6 @@
                 android:layout_marginTop="10dp"
                 android:layout_toEndOf="@+id/voting_layout_abstention"
                 android:layout_toRightOf="@+id/voting_layout_abstention"
-                android:animateLayoutChanges="true"
                 android:text="@string/voting_plus_abstention"
                 android:visibility="invisible" />
         </RelativeLayout>
@@ -224,7 +222,6 @@
                 android:layout_marginTop="10dp"
                 android:layout_toEndOf="@+id/voting_layout_absence"
                 android:layout_toRightOf="@+id/voting_layout_absence"
-                android:animateLayoutChanges="true"
                 android:text="@string/voting_plus_absence"
                 android:visibility="invisible" />
         </RelativeLayout>

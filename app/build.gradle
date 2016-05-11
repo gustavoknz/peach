@@ -6,10 +6,10 @@ android {
 
     defaultConfig {
         applicationId "com.gustavok.peach"
-        minSdkVersion 14
+        minSdkVersion 8
         targetSdkVersion 23
-        versionCode 2
-        versionName "Filtros; Rolagem"
+        versionCode 3
+        versionName "Notificação no término"
     }
     buildTypes {
         release {

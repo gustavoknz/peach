@@ -1,9 +1,15 @@
 package com.gustavok.peach;
 
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,6 +19,7 @@ import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 
 public class VotingFragment extends Fragment implements SenatorsCallbackInterface {
@@ -79,6 +86,7 @@ public class VotingFragment extends Fragment implements SenatorsCallbackInterfac
         tvAbsence.setText(String.format(Locale.getDefault(), "%d", countAbsence));
 
         if (total >= VotingUtils.TOTAL_VOTES) {
+            buildNotification(String.format(Locale.getDefault(), "Votação encerrada! Sim: %d; Não: %d", countYes, countNo));
             AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
             alertDialogBuilder.setTitle("Votação encerrada");
             alertDialogBuilder
@@ -92,8 +100,8 @@ public class VotingFragment extends Fragment implements SenatorsCallbackInterfac
             if (countYes > countNo + countAbstention + countAbsence + countUnknown) {
                 Calendar calendar = Calendar.getInstance();
                 calendar.add(Calendar.DAY_OF_YEAR, VotingUtils.REMOVED_DAYS);
-                SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
-                String dateOut = sdf.format(calendar.getTime());
+                SimpleDateFormat sdfFinal = new SimpleDateFormat("HH:mm dd/MM/yyyy", Locale.getDefault());
+                String dateOut = sdfFinal.format(calendar.getTime());
 
                 alertDialogBuilder.setMessage("Dilma será afastada do seu cargo e terá seu julgamento final até o dia " + dateOut);
             } else {
@@ -103,6 +111,22 @@ public class VotingFragment extends Fragment implements SenatorsCallbackInterfac
             alertDialog.show();
             VotingUtils.votingFinished();
         }
+    }
+
+    private void buildNotification(String text) {
+        NotificationCompat.Builder mBuilder =
+                new NotificationCompat.Builder(getContext())
+                        .setSmallIcon(R.mipmap.ic_logo)
+                        .setContentTitle(getResources().getString(R.string.app_name))
+                        .setContentText(text);
+        Intent resultIntent = new Intent(getContext(), MainActivity.class);
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(getContext());
+        stackBuilder.addParentStack(MainActivity.class);
+        stackBuilder.addNextIntent(resultIntent);
+        PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+        mBuilder.setContentIntent(resultPendingIntent);
+        NotificationManager mNotificationManager = (NotificationManager) getContext().getSystemService(Context.NOTIFICATION_SERVICE);
+        mNotificationManager.notify(1, mBuilder.build());
     }
 
     private int[] countVotes(Senator[] senators) {
