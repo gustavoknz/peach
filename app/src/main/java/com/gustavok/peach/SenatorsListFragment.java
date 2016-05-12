@@ -63,7 +63,7 @@ public class SenatorsListFragment extends ListFragment {
                     }
                 }
             };
-            handler.postDelayed(runnable, UPDATE_LIST_INTERVAL);
+            handler.postDelayed(runnable, 1);
         }
 
         spinnerParty = (Spinner) view.findViewById(R.id.spinner_parties);
