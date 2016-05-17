@@ -1,4 +1,4 @@
-package com.gustavok.peach;
+package com.gustavok.peach.tab_voting;
 
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -17,9 +17,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.gustavok.peach.MainActivity;
+import com.gustavok.peach.R;
+import com.gustavok.peach.RestClient;
+import com.gustavok.peach.Senator;
+import com.gustavok.peach.SenatorsCallbackInterface;
+import com.gustavok.peach.SenatorsManager;
+import com.gustavok.peach.VotingUtils;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.Locale;
 
 public class VotingFragment extends Fragment implements SenatorsCallbackInterface {

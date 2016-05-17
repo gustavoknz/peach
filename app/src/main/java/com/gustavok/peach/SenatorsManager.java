@@ -1,9 +1,7 @@
 package com.gustavok.peach;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.res.AssetManager;
-import android.net.Uri;
 import android.util.Log;
 
 import com.google.gson.Gson;
@@ -12,8 +10,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -54,7 +50,7 @@ public final class SenatorsManager {
         String str = "";
         try {
             AssetManager assetManager = context.getAssets();
-            InputStream in = assetManager.open("senators.json");
+            InputStream in = assetManager.open(JSON_FILE_NAME);
             InputStreamReader isr = new InputStreamReader(in);
             char[] inputBuffer = new char[100];
 
@@ -69,24 +65,6 @@ public final class SenatorsManager {
         return str;
     }
     //endregion
-
-    private void serializeJson(JSONObject senatorsJson) {
-        Log.d(TAG, "Writing JSON file: " + JSON_FILE_NAME);
-        try {
-            FileOutputStream fos = ContextHolder.getContext().openFileOutput(JSON_FILE_NAME, Context.MODE_PRIVATE);
-            fos.write(senatorsJson.toString().getBytes());
-            fos.close();
-            File filePath = new File(ContextHolder.getContext().getFilesDir(), JSON_FILE_NAME);
-            Log.d(TAG, String.format("File '%s' added? %b" + filePath.getName(), filePath.exists()));
-            notifyFileAdded(filePath);
-        } catch (Exception e) {
-            Log.e(TAG, "Error writing json file", e);
-        }
-    }
-
-    private void notifyFileAdded(File path) {
-        ContextHolder.getContext().sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(path)));
-    }
 
     public List<Senator> getVotes() {
         return senators;

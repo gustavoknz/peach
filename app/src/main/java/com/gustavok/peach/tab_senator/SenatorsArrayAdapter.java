@@ -1,4 +1,4 @@
-package com.gustavok.peach;
+package com.gustavok.peach.tab_senator;
 
 import android.app.Activity;
 import android.content.Context;
@@ -10,6 +10,9 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.gustavok.peach.R;
+import com.gustavok.peach.Senator;
+import com.gustavok.peach.VotingUtils;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;

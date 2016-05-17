@@ -1,4 +1,4 @@
-package com.gustavok.peach;
+package com.gustavok.peach.tab_senator;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -16,6 +16,10 @@ import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.gustavok.peach.R;
+import com.gustavok.peach.Senator;
+import com.gustavok.peach.SenatorsManager;
+import com.gustavok.peach.VotingUtils;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;

@@ -1,4 +1,4 @@
-package com.gustavok.peach;
+package com.gustavok.peach.tabs;
 
 import android.content.Context;
 import android.graphics.Typeface;

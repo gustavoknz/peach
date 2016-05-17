@@ -1,9 +1,11 @@
-package com.gustavok.peach;
+package com.gustavok.peach.tabs;
 
 import android.content.Context;
 import android.support.design.widget.TabLayout;
 import android.util.AttributeSet;
 import android.util.Log;
+
+import com.gustavok.peach.Utils;
 
 import java.lang.reflect.Field;
 

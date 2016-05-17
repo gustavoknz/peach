@@ -11,6 +11,10 @@ import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.widget.TextView;
 
+import com.gustavok.peach.tab_senator.SenatorsListFragment;
+import com.gustavok.peach.tab_voting.VotingFragment;
+import com.gustavok.peach.tabs.CustomTabLayout;
+
 import java.util.Locale;
 
 //TODO: animações pro: "Fora Dilma!", "Tchau, querida!", "+1 coxinha"
