@@ -1,4 +1,4 @@
-package com.gustavok.peach.tab_voting;
+package com.gustavok.peach.tabs.voting;
 
 import android.app.NotificationManager;
 import android.app.PendingIntent;

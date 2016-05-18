@@ -1,4 +1,4 @@
-package com.gustavok.peach.tab_senator;
+package com.gustavok.peach.tabs.senators;
 
 import android.app.Activity;
 import android.content.Context;

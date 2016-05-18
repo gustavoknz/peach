@@ -11,8 +11,8 @@ import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.widget.TextView;
 
-import com.gustavok.peach.tab_senator.SenatorsListFragment;
-import com.gustavok.peach.tab_voting.VotingFragment;
+import com.gustavok.peach.tabs.senators.SenatorsListFragment;
+import com.gustavok.peach.tabs.voting.VotingFragment;
 import com.gustavok.peach.tabs.CustomTabLayout;
 
 import java.util.Locale;
@@ -20,6 +20,7 @@ import java.util.Locale;
 //TODO: animações pro: "Fora Dilma!", "Tchau, querida!", "+1 coxinha"
 //TODO: animações contra: "Golpe não!", "Vai ter luta!", "+1 mortadela"
 //TODO: animações neutra: "+1 (Nome do Fulano)", "(miniatura da foto)"
+//TODO: Check for Google Play Services APK
 public class MainActivity extends AppCompatActivity {
 
     @Override
