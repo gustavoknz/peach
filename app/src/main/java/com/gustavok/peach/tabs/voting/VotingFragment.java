@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
@@ -19,14 +18,11 @@ import android.widget.TextView;
 
 import com.gustavok.peach.MainActivity;
 import com.gustavok.peach.R;
-import com.gustavok.peach.RestClient;
 import com.gustavok.peach.Senator;
 import com.gustavok.peach.SenatorsCallbackInterface;
 import com.gustavok.peach.SenatorsManager;
 import com.gustavok.peach.VotingUtils;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Locale;
 
 public class VotingFragment extends Fragment implements SenatorsCallbackInterface {
@@ -35,31 +31,13 @@ public class VotingFragment extends Fragment implements SenatorsCallbackInterfac
     private static final int VOTE_POSITION_ABSTINENT = 2;
     private static final int VOTE_POSITION_ABSENCE = 3;
     private static final int VOTE_POSITION_UNKNOWN = 4;
-    private static final int PULLING_INTERVAL = 15 * 1000;
     private static final String TAG = "VotingFragment";
     private View votingView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         votingView = inflater.inflate(R.layout.voting_layout, container, false);
-
-        if (VotingUtils.isVotingGoingOn()) {
-            final Handler handler = new Handler();
-            Runnable runnable = new Runnable() {
-                @Override
-                public void run() {
-                    Log.d(TAG, "Searching for new votes...");
-
-                    if (VotingUtils.isVotingGoingOn()) {
-                        RestClient.getAllVotes(VotingFragment.this);
-                        handler.postDelayed(this, PULLING_INTERVAL);
-                    } else {
-                        Log.d(TAG, "Voting finished");
-                    }
-                }
-            };
-            handler.postDelayed(runnable, 1);
-        }
+        SenatorsManager.getInstance().setVotingView(votingView);
 
         return votingView;
     }
@@ -93,24 +71,19 @@ public class VotingFragment extends Fragment implements SenatorsCallbackInterfac
         tvAbsence.setText(String.format(Locale.getDefault(), "%d", countAbsence));
 
         if (total >= VotingUtils.TOTAL_VOTES) {
-            buildNotification(String.format(Locale.getDefault(), "Votação encerrada! Sim: %d; Não: %d", countYes, countNo));
+            buildNotification(String.format(Locale.getDefault(), getString(R.string.notification_message), countYes, countNo));
             AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
-            alertDialogBuilder.setTitle("Votação encerrada");
+            alertDialogBuilder.setTitle(getString(R.string.dialog_title));
             alertDialogBuilder
                     .setCancelable(true)
-                    .setNeutralButton("OK", new DialogInterface.OnClickListener() {
+                    .setNeutralButton(getString(R.string.dialog_button_ok), new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
                             dialog.cancel();
                         }
                     });
 
             if (countYes > countNo + countAbstention + countAbsence + countUnknown) {
-                Calendar calendar = Calendar.getInstance();
-                calendar.add(Calendar.DAY_OF_YEAR, VotingUtils.REMOVED_DAYS);
-                SimpleDateFormat sdfFinal = new SimpleDateFormat("HH:mm dd/MM/yyyy", Locale.getDefault());
-                String dateOut = sdfFinal.format(calendar.getTime());
-
-                alertDialogBuilder.setMessage("Dilma será afastada do seu cargo e terá seu julgamento final até o dia " + dateOut);
+                alertDialogBuilder.setMessage("Dilma será afastada do seu cargo e terá seu julgamento final em até 180 dias.");
             } else {
                 alertDialogBuilder.setMessage("Este processo será arquivado.");
             }
@@ -139,16 +112,22 @@ public class VotingFragment extends Fragment implements SenatorsCallbackInterfac
     private int[] countVotes(Senator[] senators) {
         int[] count = new int[5];
         for (Senator s : senators) {
-            if (s.getVoto() == VotingUtils.YES) {
-                ++count[VOTE_POSITION_YES];
-            } else if (s.getVoto() == VotingUtils.NO) {
-                ++count[VOTE_POSITION_NO];
-            } else if (s.getVoto() == VotingUtils.ABSTENTION) {
-                ++count[VOTE_POSITION_ABSTINENT];
-            } else if (s.getVoto() == VotingUtils.ABSENCE) {
-                ++count[VOTE_POSITION_ABSENCE];
-            } else if (s.getVoto() == VotingUtils.UNKNOWN) {
-                ++count[VOTE_POSITION_UNKNOWN];
+            switch (s.getVoto()) {
+                case VotingUtils.YES:
+                    ++count[VOTE_POSITION_YES];
+                    break;
+                case VotingUtils.NO:
+                    ++count[VOTE_POSITION_NO];
+                    break;
+                case VotingUtils.ABSTENTION:
+                    ++count[VOTE_POSITION_ABSTINENT];
+                    break;
+                case VotingUtils.ABSENCE:
+                    ++count[VOTE_POSITION_ABSENCE];
+                    break;
+                case VotingUtils.UNKNOWN:
+                    ++count[VOTE_POSITION_UNKNOWN];
+                    break;
             }
         }
         return count;

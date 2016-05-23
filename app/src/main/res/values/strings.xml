@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Peach</string>
+    <string name="app_name" translatable="false">Peach</string>
     <string name="senator_vote_desc">Voto do Senador</string>
     <string name="senator_image_desc">Imagem do Senador</string>
 
@@ -17,6 +17,7 @@
     <string name="voting_plus_abstention">+1 abstente</string>
     <string name="voting_plus_absence">+1 ausente</string>
 
+    <string name="dialog_title">Votação encerrada</string>
     <string name="dialog_voting_yes">Sim</string>
     <string name="dialog_voting_no">Não</string>
     <string name="dialog_voting_abstention">Absteve-se</string>
@@ -24,6 +25,9 @@
     <string name="dialog_voting_not_yet">\?</string>
     <string name="dialog_text_vote">Voto:</string>
     <string name="dialog_text_party_state">Filiação:</string>
+    <string name="dialog_button_ok">OK</string>
+
+    <string name="notification_message">Votação encerrada! Sim: %d; Não: %d</string>
 
     <string-array name="party_array">
         <item>Partido</item>

@@ -1,8 +1,8 @@
 package com.gustavok.peach.tabs.senators;
 
+import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.ListFragment;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
@@ -27,14 +27,12 @@ import java.util.List;
 import java.util.Locale;
 
 public class SenatorsListFragment extends ListFragment {
-    private static final int UPDATE_LIST_INTERVAL = 10000;
     private static final String TAG = "SenatorsListFragment";
 
     private SenatorsArrayAdapter adapter;
     private Spinner spinnerParty;
     private Spinner spinnerState;
     private Spinner spinnerVote;
-    private List<Senator> senatorsList;
     private List<Senator> originalSenatorsList;
 
     private String constraintParty;
@@ -44,31 +42,12 @@ public class SenatorsListFragment extends ListFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Log.d(TAG, "getAllSenators is being called");
-        senatorsList = SenatorsManager.getInstance().getVotes();
-        originalSenatorsList = new ArrayList<>(senatorsList);
         View view = inflater.inflate(R.layout.senators_list_layout, container, false);
 
-        adapter = new SenatorsArrayAdapter(getActivity(), R.layout.senator_item_layout, senatorsList);
+        adapter = new SenatorsArrayAdapter(getActivity(), R.layout.senator_item_layout, null);
         ListView listView = (ListView) view.findViewById(android.R.id.list);
         listView.setAdapter(adapter);
-
-        if (VotingUtils.isVotingGoingOn()) {
-            final Handler handler = new Handler();
-            Runnable runnable = new Runnable() {
-                @Override
-                public void run() {
-                    Log.d(TAG, "Updating adapter...");
-
-                    if (VotingUtils.isVotingGoingOn()) {
-                        adapter.notifyDataSetChanged();
-                        handler.postDelayed(this, UPDATE_LIST_INTERVAL);
-                    } else {
-                        Log.d(TAG, "Voting ended. No need to update");
-                    }
-                }
-            };
-            handler.postDelayed(runnable, 1);
-        }
+        originalSenatorsList = SenatorsManager.getInstance().setArrayAdapter(adapter);
 
         spinnerParty = (Spinner) view.findViewById(R.id.spinner_parties);
         spinnerState = (Spinner) view.findViewById(R.id.spinner_states);
@@ -154,8 +133,7 @@ public class SenatorsListFragment extends ListFragment {
         Log.d(TAG, String.format(Locale.getDefault(), "FILTERING party=%s; state=%s; vote=%s",
                 constraintParty, constraintState, constraintVote));
         Log.d(TAG, String.format(Locale.getDefault(), "Starting filter with %d senators", originalSenatorsList.size()));
-        senatorsList.clear();
-        senatorsList.addAll(originalSenatorsList);
+        List<Senator> senatorsList = new ArrayList<>(originalSenatorsList);
 
         for (Senator senator : originalSenatorsList) {
             if (constraintParty != null) {
@@ -209,6 +187,7 @@ public class SenatorsListFragment extends ListFragment {
 
         LayoutInflater factory = LayoutInflater.from(v.getContext());
 
+        @SuppressLint("InflateParams")
         RelativeLayout dialogView = (RelativeLayout) factory.inflate(R.layout.dialog_view, null);
 
         TextView nameView = (TextView) dialogView.findViewById(R.id.dialog_senator_name);
@@ -218,16 +197,22 @@ public class SenatorsListFragment extends ListFragment {
         TextView statePartyView = (TextView) dialogView.findViewById(R.id.dialog_senator_state_party);
         statePartyView.setText(String.format(Locale.getDefault(), "%s-%s", item.getPartido(), item.getEstado()));
         TextView voteView = (TextView) dialogView.findViewById(R.id.dialog_senator_vote);
-        if (item.getVoto() == VotingUtils.YES) {
-            voteView.setText(R.string.dialog_voting_yes);
-        } else if (item.getVoto() == VotingUtils.NO) {
-            voteView.setText(R.string.dialog_voting_no);
-        } else if (item.getVoto() == VotingUtils.ABSTENTION) {
-            voteView.setText(R.string.dialog_voting_abstention);
-        } else if (item.getVoto() == VotingUtils.ABSENCE) {
-            voteView.setText(R.string.dialog_voting_absence);
-        } else if (item.getVoto() == VotingUtils.DEFAULT_VALUE) {
-            voteView.setText(R.string.dialog_voting_not_yet);
+        switch (item.getVoto()) {
+            case VotingUtils.YES:
+                voteView.setText(R.string.dialog_voting_yes);
+                break;
+            case VotingUtils.NO:
+                voteView.setText(R.string.dialog_voting_no);
+                break;
+            case VotingUtils.ABSTENTION:
+                voteView.setText(R.string.dialog_voting_abstention);
+                break;
+            case VotingUtils.ABSENCE:
+                voteView.setText(R.string.dialog_voting_absence);
+                break;
+            case VotingUtils.DEFAULT_VALUE:
+                voteView.setText(R.string.dialog_voting_not_yet);
+                break;
         }
 
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
