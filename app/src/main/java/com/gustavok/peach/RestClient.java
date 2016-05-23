@@ -26,17 +26,12 @@ public final class RestClient {
         return BASE_URL + method;
     }
 
-    public static void getAllVotes(SenatorsCallbackInterface callback) {
-        RequestParams params = new RequestParams("info", "");
-        getSenatorsList(params, callback);
-    }
-
-    private static void getSenatorsList(RequestParams params, final SenatorsCallbackInterface callback) {
+    public static void getSenatorsList(final SenatorsCallbackInterface callback) {
         // SaxAsyncHttpResponseHandler saxAsyncHttpResponseHandler = new SaxAsyncHttpResponseHandler<SAXTreeStructure>(new SAXTreeStructure()) {
         JsonHttpResponseHandler jsonHttpResponseHandler = new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                Log.d(TAG, String.format("Received a response: %s", response));
+                Log.d(TAG, String.format("Received response: %s", response));
                 try {
                     JSONArray jsonArray = response.getJSONArray("senadores");
                     Senator[] senatorsArray = new Gson().fromJson(jsonArray.toString(), Senator[].class);
@@ -50,16 +45,18 @@ public final class RestClient {
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 Log.e(TAG, String.format("Failure 1. statusCode: %d; errorResponse: %s", statusCode, responseString), throwable);
+                //TODO: callback.onFailure();
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                 Log.e(TAG, String.format("Failure 2. statusCode: %d; errorResponse: %s", statusCode, errorResponse), throwable);
+                //TODO: callback.onFailure();
             }
         };
-        //jsonHttpResponseHandler.setUseSynchronousMode(true);
 
         String method = "/senadores";
+        RequestParams params = new RequestParams("info", "");
         CLIENT.get(getAbsoluteUrl(method), params, jsonHttpResponseHandler);
     }
 }
