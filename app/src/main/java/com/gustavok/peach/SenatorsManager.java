@@ -23,8 +23,8 @@ public final class SenatorsManager {
     private static final String TAG = "SenatorsManager";
     private static final SenatorsManager INSTANCE = new SenatorsManager();
     private static final String JSON_FILE_NAME = "senators.json";
-    private static SenatorsArrayAdapter senatorsArrayAdapter;
-    private static View votingView;
+    private SenatorsArrayAdapter senatorsArrayAdapter;
+    private View votingView;
 
     private final List<Senator> senators = new ArrayList<>();
 
@@ -38,11 +38,12 @@ public final class SenatorsManager {
     }
 
     public void setVotingView(View votingView) {
-        SenatorsManager.votingView = votingView;
+        this.votingView = votingView;
     }
 
     public List<Senator> setArrayAdapter(SenatorsArrayAdapter senatorsArrayAdapter) {
-        SenatorsManager.senatorsArrayAdapter = senatorsArrayAdapter;
+        this.senatorsArrayAdapter = senatorsArrayAdapter;
+        this.senatorsArrayAdapter.notifyDataSetChanged();
         return senators;
     }
 
@@ -65,7 +66,7 @@ public final class SenatorsManager {
             JSONArray jsonArray = new JSONObject(jsonString).getJSONArray("senadores");
             Senator[] senatorsArray = new Gson().fromJson(jsonArray.toString(), Senator[].class);
             Collections.addAll(senators, senatorsArray);
-            senatorsArrayAdapter.notifyDataSetChanged();
+            Log.d(TAG, String.format("Got %d senators from JSON", senators.size()));
         } catch (JSONException e) {
             Log.e(TAG, "Error loading JSON", e);
         }

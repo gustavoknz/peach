@@ -19,7 +19,7 @@ import android.widget.TextView;
 import com.gustavok.peach.R;
 import com.gustavok.peach.Senator;
 import com.gustavok.peach.SenatorsManager;
-import com.gustavok.peach.VotingUtils;
+import com.gustavok.peach.Constants;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -33,7 +33,8 @@ public class SenatorsListFragment extends ListFragment {
     private Spinner spinnerParty;
     private Spinner spinnerState;
     private Spinner spinnerVote;
-    private List<Senator> originalSenatorsList;
+    private List<Senator> viewSenatorsList = new ArrayList<>();
+    private List<Senator> immutableSenatorsList = new ArrayList<>();
 
     private String constraintParty;
     private String constraintState;
@@ -44,10 +45,11 @@ public class SenatorsListFragment extends ListFragment {
         Log.d(TAG, "getAllSenators is being called");
         View view = inflater.inflate(R.layout.senators_list_layout, container, false);
 
-        adapter = new SenatorsArrayAdapter(getActivity(), R.layout.senator_item_layout, null);
+        adapter = new SenatorsArrayAdapter(getActivity(), R.layout.senator_item_layout, viewSenatorsList);
         ListView listView = (ListView) view.findViewById(android.R.id.list);
         listView.setAdapter(adapter);
-        originalSenatorsList = SenatorsManager.getInstance().setArrayAdapter(adapter);
+        viewSenatorsList.addAll(SenatorsManager.getInstance().setArrayAdapter(adapter));
+        immutableSenatorsList.addAll(viewSenatorsList);
 
         spinnerParty = (Spinner) view.findViewById(R.id.spinner_parties);
         spinnerState = (Spinner) view.findViewById(R.id.spinner_states);
@@ -99,22 +101,22 @@ public class SenatorsListFragment extends ListFragment {
 
                 switch (position) {
                     case 0:
-                        constraintVote = VotingUtils.CONSTRAINT_ALL;
+                        constraintVote = Constants.VOTE_CONSTRAINT_ALL;
                         break;
                     case 1:
-                        constraintVote = VotingUtils.CONSTRAINT_NO_VOTE;
+                        constraintVote = Constants.VOTE_CONSTRAINT_NO_VOTE;
                         break;
                     case 2:
-                        constraintVote = VotingUtils.CONSTRAINT_YES;
+                        constraintVote = Constants.VOTE_CONSTRAINT_YES;
                         break;
                     case 3:
-                        constraintVote = VotingUtils.CONSTRAINT_NO;
+                        constraintVote = Constants.VOTE_CONSTRAINT_NO;
                         break;
                     case 4:
-                        constraintVote = VotingUtils.CONSTRAINT_ABSTENTION;
+                        constraintVote = Constants.VOTE_CONSTRAINT_ABSTENTION;
                         break;
                     case 5:
-                        constraintVote = VotingUtils.CONSTRAINT_ABSENCE;
+                        constraintVote = Constants.VOTE_CONSTRAINT_ABSENCE;
                         break;
                 }
                 updateList();
@@ -132,51 +134,52 @@ public class SenatorsListFragment extends ListFragment {
     private void updateList() {
         Log.d(TAG, String.format(Locale.getDefault(), "FILTERING party=%s; state=%s; vote=%s",
                 constraintParty, constraintState, constraintVote));
-        Log.d(TAG, String.format(Locale.getDefault(), "Starting filter with %d senators", originalSenatorsList.size()));
-        List<Senator> senatorsList = new ArrayList<>(originalSenatorsList);
+        Log.d(TAG, String.format(Locale.getDefault(), "Starting filter with %d senators", immutableSenatorsList.size()));
+        viewSenatorsList.clear();
+        viewSenatorsList.addAll(immutableSenatorsList);
 
-        for (Senator senator : originalSenatorsList) {
+        for (Senator senator : immutableSenatorsList) {
             if (constraintParty != null) {
                 if (!constraintParty.equals(senator.getPartido())) {
-                    senatorsList.remove(senator);
+                    viewSenatorsList.remove(senator);
                 }
             }
             if (constraintState != null) {
                 if (!constraintState.equals(senator.getEstado())) {
-                    senatorsList.remove(senator);
+                    viewSenatorsList.remove(senator);
                 }
             }
             switch (constraintVote) {
-                case VotingUtils.CONSTRAINT_ALL:
+                case Constants.VOTE_CONSTRAINT_ALL:
                     break;
-                case VotingUtils.CONSTRAINT_NO_VOTE:
-                    if (senator.getVoto() != VotingUtils.DEFAULT_VALUE) {
-                        senatorsList.remove(senator);
+                case Constants.VOTE_CONSTRAINT_NO_VOTE:
+                    if (senator.getVoto() != Constants.VOTE_DEFAULT_VALUE) {
+                        viewSenatorsList.remove(senator);
                     }
                     break;
-                case VotingUtils.CONSTRAINT_YES:
-                    if (senator.getVoto() != VotingUtils.YES) {
-                        senatorsList.remove(senator);
+                case Constants.VOTE_CONSTRAINT_YES:
+                    if (senator.getVoto() != Constants.VOTE_YES) {
+                        viewSenatorsList.remove(senator);
                     }
                     break;
-                case VotingUtils.CONSTRAINT_NO:
-                    if (senator.getVoto() != VotingUtils.NO) {
-                        senatorsList.remove(senator);
+                case Constants.VOTE_CONSTRAINT_NO:
+                    if (senator.getVoto() != Constants.VOTE_NO) {
+                        viewSenatorsList.remove(senator);
                     }
                     break;
-                case VotingUtils.CONSTRAINT_ABSTENTION:
-                    if (senator.getVoto() != VotingUtils.ABSTENTION) {
-                        senatorsList.remove(senator);
+                case Constants.VOTE_CONSTRAINT_ABSTENTION:
+                    if (senator.getVoto() != Constants.VOTE_ABSTENTION) {
+                        viewSenatorsList.remove(senator);
                     }
                     break;
-                case VotingUtils.CONSTRAINT_ABSENCE:
-                    if (senator.getVoto() != VotingUtils.ABSENCE) {
-                        senatorsList.remove(senator);
+                case Constants.VOTE_CONSTRAINT_ABSENCE:
+                    if (senator.getVoto() != Constants.VOTE_ABSENCE) {
+                        viewSenatorsList.remove(senator);
                     }
                     break;
             }
         }
-        Log.d(TAG, String.format(Locale.getDefault(), "Finish filter with %d senators", senatorsList.size()));
+        Log.d(TAG, String.format(Locale.getDefault(), "Finish filter with %d senators", viewSenatorsList.size()));
         adapter.notifyDataSetChanged();
     }
 
@@ -198,19 +201,19 @@ public class SenatorsListFragment extends ListFragment {
         statePartyView.setText(String.format(Locale.getDefault(), "%s-%s", item.getPartido(), item.getEstado()));
         TextView voteView = (TextView) dialogView.findViewById(R.id.dialog_senator_vote);
         switch (item.getVoto()) {
-            case VotingUtils.YES:
+            case Constants.VOTE_YES:
                 voteView.setText(R.string.dialog_voting_yes);
                 break;
-            case VotingUtils.NO:
+            case Constants.VOTE_NO:
                 voteView.setText(R.string.dialog_voting_no);
                 break;
-            case VotingUtils.ABSTENTION:
+            case Constants.VOTE_ABSTENTION:
                 voteView.setText(R.string.dialog_voting_abstention);
                 break;
-            case VotingUtils.ABSENCE:
+            case Constants.VOTE_ABSENCE:
                 voteView.setText(R.string.dialog_voting_absence);
                 break;
-            case VotingUtils.DEFAULT_VALUE:
+            case Constants.VOTE_DEFAULT_VALUE:
                 voteView.setText(R.string.dialog_voting_not_yet);
                 break;
         }

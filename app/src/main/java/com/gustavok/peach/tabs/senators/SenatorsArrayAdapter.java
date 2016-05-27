@@ -12,7 +12,7 @@ import android.widget.TextView;
 
 import com.gustavok.peach.R;
 import com.gustavok.peach.Senator;
-import com.gustavok.peach.VotingUtils;
+import com.gustavok.peach.Constants;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -55,13 +55,13 @@ public final class SenatorsArrayAdapter extends ArrayAdapter<Senator> {
 
         Log.d(TAG, String.format(Locale.getDefault(), "Senator id=%d (%s) voted %d", sen.getId(), sen.getNome(), sen.getVoto()));
         holder.vote.setImageResource(0);
-        if (VotingUtils.YES == sen.getVoto()) {
+        if (Constants.VOTE_YES == sen.getVoto()) {
             holder.vote.setImageResource(R.drawable.vote_yes);
-        } else if (VotingUtils.NO == sen.getVoto()) {
+        } else if (Constants.VOTE_NO == sen.getVoto()) {
             holder.vote.setImageResource(R.drawable.vote_no);
-        } else if (VotingUtils.ABSTENTION == sen.getVoto()) {
+        } else if (Constants.VOTE_ABSTENTION == sen.getVoto()) {
             holder.vote.setImageResource(R.drawable.vote_abstention);
-        } else if (VotingUtils.ABSENCE == sen.getVoto()) {
+        } else if (Constants.VOTE_ABSENCE == sen.getVoto()) {
             holder.vote.setImageResource(R.drawable.vote_absence);
         }
 

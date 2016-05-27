@@ -1,27 +1,39 @@
 package com.gustavok.peach;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.TranslateAnimation;
-import android.widget.TextView;
+import android.util.Log;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.gcm.GoogleCloudMessaging;
+import com.google.android.gms.iid.InstanceID;
+import com.gustavok.peach.notification.RegistrationIntentService;
+import com.gustavok.peach.tabs.CustomTabLayout;
 import com.gustavok.peach.tabs.senators.SenatorsListFragment;
 import com.gustavok.peach.tabs.voting.VotingFragment;
-import com.gustavok.peach.tabs.CustomTabLayout;
-
-import java.util.Locale;
 
 //TODO: animações pro: "Fora Dilma!", "Tchau, querida!", "+1 coxinha"
 //TODO: animações contra: "Golpe não!", "Vai ter luta!", "+1 mortadela"
 //TODO: animações neutra: "+1 (Nome do Fulano)", "(miniatura da foto)"
-//TODO: Check for Google Play Services APK
 public class MainActivity extends AppCompatActivity {
+
+    private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
+    private static final String TAG = "MainActivity";
+
+    private BroadcastReceiver mRegistrationBroadcastReceiver;
+    private boolean isReceiverRegistered;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,9 +56,73 @@ public class MainActivity extends AppCompatActivity {
         if (tabLayout != null) {
             tabLayout.setupWithViewPager(mViewPager);
         }
+
+        // Notification
+        mRegistrationBroadcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+                boolean sentToken = sharedPreferences.getBoolean(Constants.SENT_TOKEN_TO_SERVER, false);
+                if (sentToken) {
+                    Log.d(TAG, "Device registered successfully in GCM");
+                } else {
+                    Log.d(TAG, "Failed registering in GCM");
+                }
+            }
+        };
+        registerReceiver();
+
+        boolean playServices = checkPlayServices();
+        Log.d(TAG, "playServices = " + playServices);
+        if (playServices) {
+            // Start IntentService to register this application with GCM
+            Intent intent = new Intent(this, RegistrationIntentService.class);
+            startService(intent);
+        }
     }
 
-    public void yesTapped(View view) {
+    @Override
+    protected void onResume() {
+        super.onResume();
+        registerReceiver();
+    }
+
+    @Override
+    protected void onPause() {
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mRegistrationBroadcastReceiver);
+        isReceiverRegistered = false;
+        super.onPause();
+    }
+
+    private void registerReceiver() {
+        if (!isReceiverRegistered) {
+            LocalBroadcastManager.getInstance(this).registerReceiver(mRegistrationBroadcastReceiver,
+                    new IntentFilter(Constants.REGISTRATION_COMPLETE));
+            isReceiverRegistered = true;
+        }
+    }
+
+    /**
+     * Check the device to make sure it has the Google Play Services APK. If
+     * it doesn't, display a dialog that allows users to download the APK from
+     * the Google Play Store or enable it in the device's system settings.
+     */
+    private boolean checkPlayServices() {
+        GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
+        int resultCode = apiAvailability.isGooglePlayServicesAvailable(this);
+        if (resultCode != ConnectionResult.SUCCESS) {
+            if (apiAvailability.isUserResolvableError(resultCode)) {
+                apiAvailability.getErrorDialog(this, resultCode, PLAY_SERVICES_RESOLUTION_REQUEST).show();
+            } else {
+                Log.i(TAG, "This device is not supported.");
+                finish();
+            }
+            return false;
+        }
+        return true;
+    }
+
+    /*public void yesTapped(View view) {
         upVote(view, R.id.voting_count_yes, R.id.voting_animation_yes);
     }
 
@@ -77,7 +153,7 @@ public class MainActivity extends AppCompatActivity {
         tvAnimation.setAnimation(translateAnimation);
         translateAnimation.setDuration(2000);
         tvAnimation.startAnimation(translateAnimation);
-    }
+    }*/
 
     /**
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to

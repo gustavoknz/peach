@@ -21,7 +21,7 @@ import com.gustavok.peach.R;
 import com.gustavok.peach.Senator;
 import com.gustavok.peach.SenatorsCallbackInterface;
 import com.gustavok.peach.SenatorsManager;
-import com.gustavok.peach.VotingUtils;
+import com.gustavok.peach.Constants;
 
 import java.util.Locale;
 
@@ -70,7 +70,7 @@ public class VotingFragment extends Fragment implements SenatorsCallbackInterfac
         tvAbstention.setText(String.format(Locale.getDefault(), "%d", countAbstention));
         tvAbsence.setText(String.format(Locale.getDefault(), "%d", countAbsence));
 
-        if (total >= VotingUtils.TOTAL_VOTES) {
+        if (total >= Constants.TOTAL_VOTES) {
             buildNotification(String.format(Locale.getDefault(), getString(R.string.notification_message), countYes, countNo));
             AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
             alertDialogBuilder.setTitle(getString(R.string.dialog_title));
@@ -89,7 +89,6 @@ public class VotingFragment extends Fragment implements SenatorsCallbackInterfac
             }
             AlertDialog alertDialog = alertDialogBuilder.create();
             alertDialog.show();
-            VotingUtils.votingFinished();
         }
     }
 
@@ -113,19 +112,19 @@ public class VotingFragment extends Fragment implements SenatorsCallbackInterfac
         int[] count = new int[5];
         for (Senator s : senators) {
             switch (s.getVoto()) {
-                case VotingUtils.YES:
+                case Constants.VOTE_YES:
                     ++count[VOTE_POSITION_YES];
                     break;
-                case VotingUtils.NO:
+                case Constants.VOTE_NO:
                     ++count[VOTE_POSITION_NO];
                     break;
-                case VotingUtils.ABSTENTION:
+                case Constants.VOTE_ABSTENTION:
                     ++count[VOTE_POSITION_ABSTINENT];
                     break;
-                case VotingUtils.ABSENCE:
+                case Constants.VOTE_ABSENCE:
                     ++count[VOTE_POSITION_ABSENCE];
                     break;
-                case VotingUtils.UNKNOWN:
+                case Constants.VOTE_UNKNOWN:
                     ++count[VOTE_POSITION_UNKNOWN];
                     break;
             }

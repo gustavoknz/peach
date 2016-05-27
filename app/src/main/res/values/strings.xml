@@ -27,7 +27,8 @@
     <string name="dialog_text_party_state">Filiação:</string>
     <string name="dialog_button_ok">OK</string>
 
-    <string name="notification_message">Votação encerrada! Sim: %d; Não: %d</string>
+    <string name="notification_message" formatted="false">Votação encerrada! Sim: %d; Não: %d</string>
+    <string name="notification_defaultSenderId">AIzaSyALsqeGh6tZJFI3U07YjLxkA1cmQm5ldqQ</string>
 
     <string-array name="party_array">
         <item>Partido</item>
