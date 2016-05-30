@@ -17,8 +17,6 @@ import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
-import com.google.android.gms.gcm.GoogleCloudMessaging;
-import com.google.android.gms.iid.InstanceID;
 import com.gustavok.peach.notification.RegistrationIntentService;
 import com.gustavok.peach.tabs.CustomTabLayout;
 import com.gustavok.peach.tabs.senators.SenatorsListFragment;
@@ -39,8 +37,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Log.d(TAG, "GCM gcm");
 
-        ContextHolder.setContext(getApplicationContext());
+        SenatorsManager.getInstance().setContext(getApplicationContext());
+        SenatorsManager.getInstance().init();
 
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
@@ -73,8 +73,9 @@ public class MainActivity extends AppCompatActivity {
         registerReceiver();
 
         boolean playServices = checkPlayServices();
-        Log.d(TAG, "playServices = " + playServices);
+        Log.d(TAG, "GCM playServices = " + playServices);
         if (playServices) {
+            Log.d(TAG, "GCM calling RegistrationIntentService");
             // Start IntentService to register this application with GCM
             Intent intent = new Intent(this, RegistrationIntentService.class);
             startService(intent);
@@ -95,7 +96,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void registerReceiver() {
+        Log.d(TAG, "GCM isReceiverRegistered? " + isReceiverRegistered);
         if (!isReceiverRegistered) {
+            Log.d(TAG, "GCM registering...");
             LocalBroadcastManager.getInstance(this).registerReceiver(mRegistrationBroadcastReceiver,
                     new IntentFilter(Constants.REGISTRATION_COMPLETE));
             isReceiverRegistered = true;
@@ -113,8 +116,9 @@ public class MainActivity extends AppCompatActivity {
         if (resultCode != ConnectionResult.SUCCESS) {
             if (apiAvailability.isUserResolvableError(resultCode)) {
                 apiAvailability.getErrorDialog(this, resultCode, PLAY_SERVICES_RESOLUTION_REQUEST).show();
+                Log.i(TAG, "GCM This device is supported.");
             } else {
-                Log.i(TAG, "This device is not supported.");
+                Log.i(TAG, "GCM This device is NOT supported.");
                 finish();
             }
             return false;

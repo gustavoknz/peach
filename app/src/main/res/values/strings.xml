@@ -28,7 +28,8 @@
     <string name="dialog_button_ok">OK</string>
 
     <string name="notification_message" formatted="false">Votação encerrada! Sim: %d; Não: %d</string>
-    <string name="notification_defaultSenderId">AIzaSyALsqeGh6tZJFI3U07YjLxkA1cmQm5ldqQ</string>
+    <string name="notification_server_api_key">AIzaSyAJdxetTCSIbzxxOquO04TP1ndJdniL4h0</string>
+    <string name="notification_default_sender_id">661679756685</string>
 
     <string-array name="party_array">
         <item>Partido</item>
