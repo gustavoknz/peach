@@ -8,6 +8,7 @@
 
     <string name="voting_init">0</string>
     <string name="voting_versus">x</string>
+    <string name="voting_yes_desc">sim</string>
     <string name="voting_yes">SIM</string>
     <string name="voting_no">NÃO</string>
     <string name="voting_abstention">Abstenção:</string>

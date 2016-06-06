@@ -6,6 +6,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.AssetManager;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.AlertDialog;
@@ -102,7 +104,7 @@ public final class SenatorsManager implements SenatorsCallbackInterface {
         TextView tvNo = (TextView) votingView.findViewById(R.id.voting_count_no);
         TextView tvAbstention = (TextView) votingView.findViewById(R.id.voting_count_abstention);
         TextView tvAbsence = (TextView) votingView.findViewById(R.id.voting_count_absence);
-        Log.d(TAG, String.format("Updating senatorVotes to (%d) yes=%d; no=%d; abstention=%d; absence:%d; unknown:%d",
+        Log.d(TAG, String.format("Updating senatorVotes to (%d) yes=%d; no=%d; abstention=%d; absence=%d; unknown=%d",
                 total, countYes, countNo, countAbstention, countAbsence, countUnknown));
         tvYes.setText(String.format(Locale.getDefault(), "%d", countYes));
         tvNo.setText(String.format(Locale.getDefault(), "%d", countNo));
@@ -203,6 +205,23 @@ public final class SenatorsManager implements SenatorsCallbackInterface {
         }
 
         return str;
+    }
+
+    public String addVote(int id, int vote) {
+        for (Senator s : senators) {
+            if (s.getId() == id) {
+                s.setVoto(vote);
+                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                    @Override
+                    public void run() {
+                        senatorsArrayAdapter.notifyDataSetChanged();
+                        updateVotes(senators.toArray(new Senator[senators.size()]));
+                    }
+                });
+                return s.getNome();
+            }
+        }
+        return null;
     }
     //endregion
 }

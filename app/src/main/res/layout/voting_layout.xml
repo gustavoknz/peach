@@ -27,20 +27,21 @@
                 android:gravity="center"
                 android:orientation="horizontal">
 
-                <TextView
+                <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="@string/voting_yes"
-                    android:textColor="@color/voting_yes"
-                    android:textSize="@dimen/yes_no_text_size" />
+                    android:background="@drawable/new_voting_background"
+                    android:contentDescription="@string/voting_yes_desc"
+                    android:src="@drawable/new_voting_yes" />
 
                 <TextView
                     android:id="@+id/voting_count_yes"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="25dp"
-                    android:layout_marginStart="25dp"
+                    android:layout_marginBottom="-25dp"
+                    android:layout_marginLeft="-25dp"
+                    android:layout_marginStart="-25dp"
                     android:layout_weight="1"
                     android:text="@string/voting_init"
                     android:textColor="@color/voting_yes"
@@ -69,7 +70,7 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="@string/voting_versus"
-            android:textColor="#000000"
+            android:textColor="#666666"
             android:textSize="40sp" />
 
         <RelativeLayout

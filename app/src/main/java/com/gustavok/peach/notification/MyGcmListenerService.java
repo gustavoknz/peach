@@ -13,9 +13,12 @@ import android.util.Log;
 import com.google.android.gms.gcm.GcmListenerService;
 import com.gustavok.peach.MainActivity;
 import com.gustavok.peach.R;
+import com.gustavok.peach.SenatorsManager;
+
+import java.util.Locale;
 
 public class MyGcmListenerService extends GcmListenerService {
-
+    private static int msgId = 1;
     private static final String TAG = "GCMListenerService";
 
     /**
@@ -27,24 +30,14 @@ public class MyGcmListenerService extends GcmListenerService {
      */
     @Override
     public void onMessageReceived(String from, Bundle data) {
-        String message = data.getString("message");
         Log.d(TAG, "From: " + from);
-        Log.d(TAG, "Message: " + message);
+        int id = Integer.parseInt(data.getString("id"));
+        Log.d(TAG, "id: " + id);
+        int vote = Integer.parseInt(data.getString("vote"));
+        Log.d(TAG, "vote: " + vote);
 
-        // [START_EXCLUDE]
-        /**
-         * Production applications would usually process the message here.
-         * Eg: - Syncing with server.
-         *     - Store message in local database.
-         *     - Update UI.
-         */
-
-        /**
-         * In some cases it may be useful to show a notification indicating to the user
-         * that a message was received.
-         */
-        sendNotification(message);
-        // [END_EXCLUDE]
+        String senatorName = SenatorsManager.getInstance().addVote(id, vote);
+        sendNotification(String.format(Locale.getDefault(), "%s votou %d", senatorName, vote));
     }
 
     /**
@@ -60,7 +53,7 @@ public class MyGcmListenerService extends GcmListenerService {
         Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
                 .setSmallIcon(R.mipmap.ic_logo)
-                .setContentTitle("GCM Message")
+                .setContentTitle("Peach")
                 .setContentText(message)
                 .setAutoCancel(true)
                 .setSound(defaultSoundUri)
@@ -68,6 +61,6 @@ public class MyGcmListenerService extends GcmListenerService {
 
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
-        notificationManager.notify(0 /* ID of notification */, notificationBuilder.build());
+        notificationManager.notify(msgId++, notificationBuilder.build());
     }
 }
