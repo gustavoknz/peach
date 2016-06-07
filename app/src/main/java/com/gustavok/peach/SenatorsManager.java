@@ -2,10 +2,12 @@ package com.gustavok.peach;
 
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.AssetManager;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.v4.app.NotificationCompat;
@@ -15,18 +17,9 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
 import com.gustavok.peach.tabs.senators.SenatorsArrayAdapter;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
@@ -37,7 +30,6 @@ public final class SenatorsManager implements SenatorsCallbackInterface {
     private static final int VOTE_POSITION_ABSENCE = 3;
     private static final int VOTE_POSITION_UNKNOWN = 4;
     private static final String TAG = "SenatorsManager";
-    private static final String JSON_FILE_NAME = "senators.json";
     private static final SenatorsManager INSTANCE = new SenatorsManager();
     private final List<Senator> senators = new ArrayList<>();
     private SenatorsArrayAdapter senatorsArrayAdapter;
@@ -54,15 +46,59 @@ public final class SenatorsManager implements SenatorsCallbackInterface {
     @Override
     public void onSuccess(Senator[] senatorVotes) {
         Log.d(TAG, String.format(Locale.getDefault(), "Received %d votes", senatorVotes.length));
-        setSenatorVotes(senatorVotes);
-        senatorsArrayAdapter.notifyDataSetChanged();
         updateVotes(senatorVotes);
     }
 
     public void init() {
-        Log.d(TAG, "Loading from static JSON file");
-        loadFromStaticJson();
-        RestClient.getSenatorsList(this);
+        if (dbExists()) {
+            loadSenatorsFromDb();
+        } else {
+            Log.d(TAG, "Calling REST...");
+            RestClient.getSenatorsList(this);
+        }
+    }
+
+    private void loadSenatorsFromDb() {
+
+    }
+
+    public long insertSenator(int id, int name, int party, int state, int vote, int url) {
+        SenatorDbHelper mDbHelper = new SenatorDbHelper(context);
+
+        // Gets the data repository in write mode
+        SQLiteDatabase db = mDbHelper.getWritableDatabase();
+
+        // Create a new map of values, where column names are the keys
+        ContentValues values = new ContentValues();
+        values.put(SenatorDbHelper.SenatorEntry.COLUMN_NAME_ID, id);
+        values.put(SenatorDbHelper.SenatorEntry.COLUMN_NAME_NAME, name);
+        values.put(SenatorDbHelper.SenatorEntry.COLUMN_NAME_PARTY, party);
+        values.put(SenatorDbHelper.SenatorEntry.COLUMN_NAME_STATE, state);
+        values.put(SenatorDbHelper.SenatorEntry.COLUMN_NAME_VOTE, vote);
+        values.put(SenatorDbHelper.SenatorEntry.COLUMN_NAME_URL, url);
+
+        // Insert the new row, returning the primary key value of the new row
+        return db.insert(SenatorDbHelper.SenatorEntry.TABLE_NAME, null, values);
+    }
+
+    public boolean dbExists() {
+        SenatorDbHelper mDbHelper = new SenatorDbHelper(context);
+
+        // Gets the data repository in write mode
+        SQLiteDatabase db = mDbHelper.getReadableDatabase();
+        String query = "SELECT count(*) FROM table";
+        Cursor cursor = null;
+        try {
+            cursor = db.rawQuery(query, null);
+            cursor.moveToFirst();
+            int count = cursor.getInt(0);
+            Log.d(TAG, "My count was: " + count);
+            return (count > 0);
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
     }
 
     public void setVotingView(View votingView) {
@@ -84,6 +120,7 @@ public final class SenatorsManager implements SenatorsCallbackInterface {
             for (Senator s2 : senatorVotes) {
                 if (s1.getId() == s2.getId()) {
                     s1.setVoto(s2.getVoto());
+
                     break;
                 }
             }
@@ -92,6 +129,10 @@ public final class SenatorsManager implements SenatorsCallbackInterface {
 
     private void updateVotes(Senator[] senatorVotes) {
         Log.d(TAG, "Updating votes...");
+
+        setSenatorVotes(senatorVotes);
+        senatorsArrayAdapter.notifyDataSetChanged();
+
         int[] votes = countVotes(senatorVotes);
         int countYes = votes[VOTE_POSITION_YES];
         int countNo = votes[VOTE_POSITION_NO];
@@ -171,40 +212,6 @@ public final class SenatorsManager implements SenatorsCallbackInterface {
             }
         }
         return count;
-    }
-
-    //region Load info from static json
-    private void loadFromStaticJson() {
-        Log.d(TAG, "Loading senators from JSON");
-        String jsonString = getJSONString();
-
-        try {
-            JSONArray jsonArray = new JSONObject(jsonString).getJSONArray("senadores");
-            Senator[] senatorsArray = new Gson().fromJson(jsonArray.toString(), Senator[].class);
-            Collections.addAll(senators, senatorsArray);
-            Log.d(TAG, String.format("Got %d senators from JSON", senators.size()));
-        } catch (JSONException e) {
-            Log.e(TAG, "Error loading JSON", e);
-        }
-    }
-
-    private String getJSONString() {
-        String str = "";
-        try {
-            AssetManager assetManager = context.getAssets();
-            InputStream in = assetManager.open(JSON_FILE_NAME);
-            InputStreamReader isr = new InputStreamReader(in);
-            char[] inputBuffer = new char[100];
-
-            int charRead;
-            while ((charRead = isr.read(inputBuffer)) > 0) {
-                str += String.copyValueOf(inputBuffer, 0, charRead);
-            }
-        } catch (IOException e) {
-            Log.e(TAG, "Error loading JSON", e);
-        }
-
-        return str;
     }
 
     public String addVote(int id, int vote) {
