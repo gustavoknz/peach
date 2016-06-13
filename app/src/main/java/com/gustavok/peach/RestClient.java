@@ -56,7 +56,6 @@ public final class RestClient {
         };
 
         String method = "/senadores";
-        RequestParams params = new RequestParams("info", "");
-        CLIENT.get(getAbsoluteUrl(method), params, jsonHttpResponseHandler);
+        CLIENT.get(getAbsoluteUrl(method), null, jsonHttpResponseHandler);
     }
 }

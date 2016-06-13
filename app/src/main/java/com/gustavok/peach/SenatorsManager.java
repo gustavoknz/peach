@@ -1,18 +1,11 @@
 package com.gustavok.peach;
 
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Handler;
 import android.os.Looper;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.TaskStackBuilder;
-import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -44,9 +37,12 @@ public final class SenatorsManager implements SenatorsCallbackInterface {
     }
 
     @Override
-    public void onSuccess(Senator[] senatorVotes) {
-        Log.d(TAG, String.format(Locale.getDefault(), "Received %d votes", senatorVotes.length));
-        updateVotes(senatorVotes);
+    public void onSuccess(Senator[] senators) {
+        Log.d(TAG, String.format(Locale.getDefault(), "Received %d senators", senators.length));
+        updateVotes(senators);
+        for (Senator s : senators) {
+            insertSenator(s);
+        }
     }
 
     public void init() {
@@ -58,11 +54,7 @@ public final class SenatorsManager implements SenatorsCallbackInterface {
         }
     }
 
-    private void loadSenatorsFromDb() {
-
-    }
-
-    public long insertSenator(int id, int name, int party, int state, int vote, int url) {
+    public long insertSenator(Senator senator) {
         SenatorDbHelper mDbHelper = new SenatorDbHelper(context);
 
         // Gets the data repository in write mode
@@ -70,12 +62,12 @@ public final class SenatorsManager implements SenatorsCallbackInterface {
 
         // Create a new map of values, where column names are the keys
         ContentValues values = new ContentValues();
-        values.put(SenatorDbHelper.SenatorEntry.COLUMN_NAME_ID, id);
-        values.put(SenatorDbHelper.SenatorEntry.COLUMN_NAME_NAME, name);
-        values.put(SenatorDbHelper.SenatorEntry.COLUMN_NAME_PARTY, party);
-        values.put(SenatorDbHelper.SenatorEntry.COLUMN_NAME_STATE, state);
-        values.put(SenatorDbHelper.SenatorEntry.COLUMN_NAME_VOTE, vote);
-        values.put(SenatorDbHelper.SenatorEntry.COLUMN_NAME_URL, url);
+        values.put(SenatorDbHelper.SenatorEntry.COLUMN_NAME_ID, senator.getId());
+        values.put(SenatorDbHelper.SenatorEntry.COLUMN_NAME_NAME, senator.getNome());
+        values.put(SenatorDbHelper.SenatorEntry.COLUMN_NAME_PARTY, senator.getPartido());
+        values.put(SenatorDbHelper.SenatorEntry.COLUMN_NAME_STATE, senator.getPartido());
+        values.put(SenatorDbHelper.SenatorEntry.COLUMN_NAME_VOTE, senator.getVoto());
+        values.put(SenatorDbHelper.SenatorEntry.COLUMN_NAME_URL, senator.getUrl());
 
         // Insert the new row, returning the primary key value of the new row
         return db.insert(SenatorDbHelper.SenatorEntry.TABLE_NAME, null, values);
@@ -86,7 +78,7 @@ public final class SenatorsManager implements SenatorsCallbackInterface {
 
         // Gets the data repository in write mode
         SQLiteDatabase db = mDbHelper.getReadableDatabase();
-        String query = "SELECT count(*) FROM table";
+        String query = "SELECT count(*) FROM " + SenatorDbHelper.SenatorEntry.TABLE_NAME;
         Cursor cursor = null;
         try {
             cursor = db.rawQuery(query, null);
@@ -120,20 +112,23 @@ public final class SenatorsManager implements SenatorsCallbackInterface {
             for (Senator s2 : senatorVotes) {
                 if (s1.getId() == s2.getId()) {
                     s1.setVoto(s2.getVoto());
-
                     break;
                 }
             }
         }
     }
 
-    private void updateVotes(Senator[] senatorVotes) {
+    private void loadSenatorsFromDb() {
+
+    }
+
+    private void updateVotes(Senator[] senators) {
         Log.d(TAG, "Updating votes...");
 
-        setSenatorVotes(senatorVotes);
+        setSenatorVotes(senators);
         senatorsArrayAdapter.notifyDataSetChanged();
 
-        int[] votes = countVotes(senatorVotes);
+        int[] votes = countVotes(senators);
         int countYes = votes[VOTE_POSITION_YES];
         int countNo = votes[VOTE_POSITION_NO];
         int countAbstention = votes[VOTE_POSITION_ABSTINENT];
@@ -151,43 +146,6 @@ public final class SenatorsManager implements SenatorsCallbackInterface {
         tvNo.setText(String.format(Locale.getDefault(), "%d", countNo));
         tvAbstention.setText(String.format(Locale.getDefault(), "%d", countAbstention));
         tvAbsence.setText(String.format(Locale.getDefault(), "%d", countAbsence));
-
-        if (total >= Constants.TOTAL_VOTES) {
-            buildNotification(String.format(Locale.getDefault(), context.getString(R.string.notification_message), countYes, countNo));
-            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
-            alertDialogBuilder.setTitle(context.getString(R.string.dialog_title));
-            alertDialogBuilder
-                    .setCancelable(true)
-                    .setNeutralButton(context.getString(R.string.dialog_button_ok), new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            dialog.cancel();
-                        }
-                    });
-
-            if (countYes > countNo + countAbstention + countAbsence + countUnknown) {
-                alertDialogBuilder.setMessage("Dilma será definitivamente afastada do cargo da presidência.");
-            } else {
-                alertDialogBuilder.setMessage("Este processo de impeachment será arquivado.");
-            }
-            //AlertDialog alertDialog = alertDialogBuilder.create();
-            //alertDialog.show();
-        }
-    }
-
-    private void buildNotification(String text) {
-        NotificationCompat.Builder mBuilder =
-                new NotificationCompat.Builder(context)
-                        .setSmallIcon(R.mipmap.ic_logo)
-                        .setContentTitle(context.getResources().getString(R.string.app_name))
-                        .setContentText(text);
-        Intent resultIntent = new Intent(context, MainActivity.class);
-        TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
-        stackBuilder.addParentStack(MainActivity.class);
-        stackBuilder.addNextIntent(resultIntent);
-        PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
-        mBuilder.setContentIntent(resultPendingIntent);
-        NotificationManager mNotificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        mNotificationManager.notify(1, mBuilder.build());
     }
 
     private int[] countVotes(Senator[] senators) {
@@ -214,7 +172,7 @@ public final class SenatorsManager implements SenatorsCallbackInterface {
         return count;
     }
 
-    public String addVote(int id, int vote) {
+    public void addVote(int id, int vote) {
         for (Senator s : senators) {
             if (s.getId() == id) {
                 s.setVoto(vote);
@@ -225,10 +183,8 @@ public final class SenatorsManager implements SenatorsCallbackInterface {
                         updateVotes(senators.toArray(new Senator[senators.size()]));
                     }
                 });
-                return s.getNome();
             }
         }
-        return null;
     }
     //endregion
 }

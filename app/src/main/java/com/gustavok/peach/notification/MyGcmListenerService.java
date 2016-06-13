@@ -35,9 +35,16 @@ public class MyGcmListenerService extends GcmListenerService {
         Log.d(TAG, "id: " + id);
         int vote = Integer.parseInt(data.getString("vote"));
         Log.d(TAG, "vote: " + vote);
+        boolean notify = Boolean.parseBoolean(data.getString("notify"));
+        Log.d(TAG, "notify: " + notify);
+        String msg = data.getString("msg");
+        Log.d(TAG, "msg: " + msg);
 
-        String senatorName = SenatorsManager.getInstance().addVote(id, vote);
-        sendNotification(String.format(Locale.getDefault(), "%s votou %d", senatorName, vote));
+        if (notify) {
+            sendNotification(msg);
+        } else {
+            SenatorsManager.getInstance().addVote(id, vote);
+        }
     }
 
     /**
@@ -60,7 +67,6 @@ public class MyGcmListenerService extends GcmListenerService {
                 .setContentIntent(pendingIntent);
 
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-
         notificationManager.notify(msgId++, notificationBuilder.build());
     }
 }

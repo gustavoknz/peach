@@ -2,6 +2,7 @@
     <string name="app_name" translatable="false">Peach</string>
     <string name="senator_vote_desc">Voto do Senador</string>
     <string name="senator_image_desc">Imagem do Senador</string>
+    <string name="noInternetMessage">É necessário conexão ativa com a Internet para a atualização dos votos</string>
 
     <string name="page_title_voting">Votação</string>
     <string name="page_title_senators">Senadores</string>
