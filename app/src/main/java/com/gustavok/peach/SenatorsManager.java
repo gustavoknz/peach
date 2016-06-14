@@ -1,32 +1,18 @@
 package com.gustavok.peach;
 
-import android.app.NotificationManager;
-import android.app.PendingIntent;
+import android.content.ContentValues;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.res.AssetManager;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Handler;
 import android.os.Looper;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.TaskStackBuilder;
-import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
 import com.gustavok.peach.tabs.senators.SenatorsArrayAdapter;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
@@ -37,7 +23,6 @@ public final class SenatorsManager implements SenatorsCallbackInterface {
     private static final int VOTE_POSITION_ABSENCE = 3;
     private static final int VOTE_POSITION_UNKNOWN = 4;
     private static final String TAG = "SenatorsManager";
-    private static final String JSON_FILE_NAME = "senators.json";
     private static final SenatorsManager INSTANCE = new SenatorsManager();
     private final List<Senator> senators = new ArrayList<>();
     private SenatorsArrayAdapter senatorsArrayAdapter;
@@ -52,17 +37,60 @@ public final class SenatorsManager implements SenatorsCallbackInterface {
     }
 
     @Override
-    public void onSuccess(Senator[] senatorVotes) {
-        Log.d(TAG, String.format(Locale.getDefault(), "Received %d votes", senatorVotes.length));
-        setSenatorVotes(senatorVotes);
-        senatorsArrayAdapter.notifyDataSetChanged();
-        updateVotes(senatorVotes);
+    public void onSuccess(Senator[] senators) {
+        Log.d(TAG, String.format(Locale.getDefault(), "Received %d senators", senators.length));
+        updateVotes(senators);
+        for (Senator s : senators) {
+            insertSenator(s);
+        }
     }
 
     public void init() {
-        Log.d(TAG, "Loading from static JSON file");
-        loadFromStaticJson();
-        RestClient.getSenatorsList(this);
+        if (dbExists()) {
+            loadSenatorsFromDb();
+        } else {
+            Log.d(TAG, "Calling REST...");
+            RestClient.getSenatorsList(this);
+        }
+    }
+
+    public long insertSenator(Senator senator) {
+        SenatorDbHelper mDbHelper = new SenatorDbHelper(context);
+
+        // Gets the data repository in write mode
+        SQLiteDatabase db = mDbHelper.getWritableDatabase();
+
+        // Create a new map of values, where column names are the keys
+        ContentValues values = new ContentValues();
+        values.put(SenatorDbHelper.SenatorEntry.COLUMN_NAME_ID, senator.getId());
+        values.put(SenatorDbHelper.SenatorEntry.COLUMN_NAME_NAME, senator.getNome());
+        values.put(SenatorDbHelper.SenatorEntry.COLUMN_NAME_PARTY, senator.getPartido());
+        values.put(SenatorDbHelper.SenatorEntry.COLUMN_NAME_STATE, senator.getPartido());
+        values.put(SenatorDbHelper.SenatorEntry.COLUMN_NAME_VOTE, senator.getVoto());
+        values.put(SenatorDbHelper.SenatorEntry.COLUMN_NAME_URL, senator.getUrl());
+
+        // Insert the new row, returning the primary key value of the new row
+        return db.insert(SenatorDbHelper.SenatorEntry.TABLE_NAME, null, values);
+    }
+
+    public boolean dbExists() {
+        SenatorDbHelper mDbHelper = new SenatorDbHelper(context);
+
+        // Gets the data repository in write mode
+        SQLiteDatabase db = mDbHelper.getReadableDatabase();
+        String query = "SELECT count(*) FROM " + SenatorDbHelper.SenatorEntry.TABLE_NAME;
+        Cursor cursor = null;
+        try {
+            cursor = db.rawQuery(query, null);
+            cursor.moveToFirst();
+            int count = cursor.getInt(0);
+            Log.d(TAG, "My count was: " + count);
+            return (count > 0);
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
     }
 
     public void setVotingView(View votingView) {
@@ -90,9 +118,17 @@ public final class SenatorsManager implements SenatorsCallbackInterface {
         }
     }
 
-    private void updateVotes(Senator[] senatorVotes) {
+    private void loadSenatorsFromDb() {
+
+    }
+
+    private void updateVotes(Senator[] senators) {
         Log.d(TAG, "Updating votes...");
-        int[] votes = countVotes(senatorVotes);
+
+        setSenatorVotes(senators);
+        senatorsArrayAdapter.notifyDataSetChanged();
+
+        int[] votes = countVotes(senators);
         int countYes = votes[VOTE_POSITION_YES];
         int countNo = votes[VOTE_POSITION_NO];
         int countAbstention = votes[VOTE_POSITION_ABSTINENT];
@@ -110,43 +146,6 @@ public final class SenatorsManager implements SenatorsCallbackInterface {
         tvNo.setText(String.format(Locale.getDefault(), "%d", countNo));
         tvAbstention.setText(String.format(Locale.getDefault(), "%d", countAbstention));
         tvAbsence.setText(String.format(Locale.getDefault(), "%d", countAbsence));
-
-        if (total >= Constants.TOTAL_VOTES) {
-            buildNotification(String.format(Locale.getDefault(), context.getString(R.string.notification_message), countYes, countNo));
-            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
-            alertDialogBuilder.setTitle(context.getString(R.string.dialog_title));
-            alertDialogBuilder
-                    .setCancelable(true)
-                    .setNeutralButton(context.getString(R.string.dialog_button_ok), new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            dialog.cancel();
-                        }
-                    });
-
-            if (countYes > countNo + countAbstention + countAbsence + countUnknown) {
-                alertDialogBuilder.setMessage("Dilma será definitivamente afastada do cargo da presidência.");
-            } else {
-                alertDialogBuilder.setMessage("Este processo de impeachment será arquivado.");
-            }
-            //AlertDialog alertDialog = alertDialogBuilder.create();
-            //alertDialog.show();
-        }
-    }
-
-    private void buildNotification(String text) {
-        NotificationCompat.Builder mBuilder =
-                new NotificationCompat.Builder(context)
-                        .setSmallIcon(R.mipmap.ic_logo)
-                        .setContentTitle(context.getResources().getString(R.string.app_name))
-                        .setContentText(text);
-        Intent resultIntent = new Intent(context, MainActivity.class);
-        TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
-        stackBuilder.addParentStack(MainActivity.class);
-        stackBuilder.addNextIntent(resultIntent);
-        PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
-        mBuilder.setContentIntent(resultPendingIntent);
-        NotificationManager mNotificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        mNotificationManager.notify(1, mBuilder.build());
     }
 
     private int[] countVotes(Senator[] senators) {
@@ -173,41 +172,7 @@ public final class SenatorsManager implements SenatorsCallbackInterface {
         return count;
     }
 
-    //region Load info from static json
-    private void loadFromStaticJson() {
-        Log.d(TAG, "Loading senators from JSON");
-        String jsonString = getJSONString();
-
-        try {
-            JSONArray jsonArray = new JSONObject(jsonString).getJSONArray("senadores");
-            Senator[] senatorsArray = new Gson().fromJson(jsonArray.toString(), Senator[].class);
-            Collections.addAll(senators, senatorsArray);
-            Log.d(TAG, String.format("Got %d senators from JSON", senators.size()));
-        } catch (JSONException e) {
-            Log.e(TAG, "Error loading JSON", e);
-        }
-    }
-
-    private String getJSONString() {
-        String str = "";
-        try {
-            AssetManager assetManager = context.getAssets();
-            InputStream in = assetManager.open(JSON_FILE_NAME);
-            InputStreamReader isr = new InputStreamReader(in);
-            char[] inputBuffer = new char[100];
-
-            int charRead;
-            while ((charRead = isr.read(inputBuffer)) > 0) {
-                str += String.copyValueOf(inputBuffer, 0, charRead);
-            }
-        } catch (IOException e) {
-            Log.e(TAG, "Error loading JSON", e);
-        }
-
-        return str;
-    }
-
-    public String addVote(int id, int vote) {
+    public void addVote(int id, int vote) {
         for (Senator s : senators) {
             if (s.getId() == id) {
                 s.setVoto(vote);
@@ -218,10 +183,8 @@ public final class SenatorsManager implements SenatorsCallbackInterface {
                         updateVotes(senators.toArray(new Senator[senators.size()]));
                     }
                 });
-                return s.getNome();
             }
         }
-        return null;
     }
     //endregion
 }

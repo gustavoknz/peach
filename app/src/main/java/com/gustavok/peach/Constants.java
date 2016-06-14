@@ -1,13 +1,11 @@
 package com.gustavok.peach;
 
 public final class Constants {
-    public static final int TOTAL_VOTES = 81;
-
     public static final int VOTE_DEFAULT_VALUE = 0;
     public static final int VOTE_YES = 1;
     public static final int VOTE_NO = 2;
-    public static final int VOTE_ABSENCE = 3;
-    public static final int VOTE_ABSTENTION = 4;
+    public static final int VOTE_ABSTENTION = 3;
+    public static final int VOTE_ABSENCE = 4;
     public static final int VOTE_UNKNOWN = 5;
 
     public static final int VOTE_CONSTRAINT_ALL = 0;

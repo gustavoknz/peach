@@ -1,10 +1,15 @@
 package com.gustavok.peach;
 
 import android.content.BroadcastReceiver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
@@ -14,6 +19,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -38,6 +44,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Log.d(TAG, "GCM gcm");
+
+        if (!checkConnectivity()) {
+            Toast.makeText(this, R.string.noInternetMessage, Toast.LENGTH_LONG).show();
+            //TODO Snackbar.make(this, "", Toast.LENGTH_LONG).show();
+        }
 
         SenatorsManager.getInstance().setContext(getApplicationContext());
         SenatorsManager.getInstance().init();
@@ -124,6 +135,12 @@ public class MainActivity extends AppCompatActivity {
             return false;
         }
         return true;
+    }
+
+    private boolean checkConnectivity() {
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 
     /*public void yesTapped(View view) {
