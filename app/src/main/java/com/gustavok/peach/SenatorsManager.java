@@ -119,7 +119,35 @@ public final class SenatorsManager implements SenatorsCallbackInterface {
     }
 
     private void loadSenatorsFromDb() {
-
+        SenatorDbHelper dbHelper = new SenatorDbHelper(context);
+        int id;
+        int vote;
+        String name;
+        String party;
+        String state;
+        String url;
+        SQLiteDatabase sqliteDatabase = null;
+        Cursor cursor = null;
+        try {
+            sqliteDatabase = dbHelper.getReadableDatabase();
+            cursor = sqliteDatabase.query(SenatorDbHelper.SenatorEntry.TABLE_NAME, null, null, null, null, null, null);
+            while (cursor.moveToNext()) {
+                id = cursor.getInt(cursor.getColumnIndex(SenatorDbHelper.SenatorEntry.COLUMN_NAME_ID));
+                name = cursor.getString(cursor.getColumnIndex(SenatorDbHelper.SenatorEntry.COLUMN_NAME_NAME));
+                party = cursor.getString(cursor.getColumnIndex(SenatorDbHelper.SenatorEntry.COLUMN_NAME_PARTY));
+                state = cursor.getString(cursor.getColumnIndex(SenatorDbHelper.SenatorEntry.COLUMN_NAME_STATE));
+                url = cursor.getString(cursor.getColumnIndex(SenatorDbHelper.SenatorEntry.COLUMN_NAME_URL));
+                vote = cursor.getInt(cursor.getColumnIndex(SenatorDbHelper.SenatorEntry.COLUMN_NAME_VOTE));
+                senators.add(new Senator(id, name, party, state, vote, url));
+            }
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+            if (sqliteDatabase != null) {
+                sqliteDatabase.close();
+            }
+        }
     }
 
     private void updateVotes(Senator[] senators) {

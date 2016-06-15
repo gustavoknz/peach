@@ -16,10 +16,10 @@ import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.gustavok.peach.Constants;
 import com.gustavok.peach.R;
 import com.gustavok.peach.Senator;
 import com.gustavok.peach.SenatorsManager;
-import com.gustavok.peach.Constants;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -42,7 +42,6 @@ public class SenatorsListFragment extends ListFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        Log.d(TAG, "getAllSenators is being called");
         View view = inflater.inflate(R.layout.senators_list_layout, container, false);
 
         adapter = new SenatorsArrayAdapter(getActivity(), R.layout.senator_item_layout, viewSenatorsList);

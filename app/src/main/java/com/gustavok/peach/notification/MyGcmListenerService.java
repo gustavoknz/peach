@@ -15,8 +15,6 @@ import com.gustavok.peach.MainActivity;
 import com.gustavok.peach.R;
 import com.gustavok.peach.SenatorsManager;
 
-import java.util.Locale;
-
 public class MyGcmListenerService extends GcmListenerService {
     private static int msgId = 1;
     private static final String TAG = "GCMListenerService";
