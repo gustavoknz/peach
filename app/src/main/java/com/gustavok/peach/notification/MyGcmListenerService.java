@@ -11,29 +11,29 @@ import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import com.google.android.gms.gcm.GcmListenerService;
-import com.google.firebase.messaging.FirebaseMessagingService;
-import com.google.firebase.messaging.RemoteMessage;
 import com.gustavok.peach.MainActivity;
 import com.gustavok.peach.R;
 import com.gustavok.peach.SenatorsManager;
 
 import java.util.Locale;
 
-public class MyFcmListenerService extends FirebaseMessagingService {
+public class MyGcmListenerService extends GcmListenerService {
     private static int msgId = 1;
-    private static final String TAG = "FirebaseMsgService";
+    private static final String TAG = "GCMListenerService";
 
     /**
      * Called when message is received.
      *
-     * @param message Message body received
+     * @param from SenderID of the sender.
+     * @param data Data bundle containing message data as key/value pairs.
+     *             For Set of keys use data.keySet().
      */
     @Override
-    public void onMessageReceived(RemoteMessage message) {
-        Log.d(TAG, "From: " + message.getFrom());
-        int id = Integer.parseInt(message.getData().get("id"));
+    public void onMessageReceived(String from, Bundle data) {
+        Log.d(TAG, "From: " + from);
+        int id = Integer.parseInt(data.getString("id"));
         Log.d(TAG, "id: " + id);
-        int vote = Integer.parseInt(message.getData().get("vote"));
+        int vote = Integer.parseInt(data.getString("vote"));
         Log.d(TAG, "vote: " + vote);
         boolean notify = Boolean.parseBoolean(data.getString("notify"));
         Log.d(TAG, "notify: " + notify);
