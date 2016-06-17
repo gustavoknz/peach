@@ -48,6 +48,7 @@ public class SenatorsListFragment extends ListFragment {
         ListView listView = (ListView) view.findViewById(android.R.id.list);
         listView.setAdapter(adapter);
         viewSenatorsList.addAll(SenatorsManager.getInstance().setArrayAdapter(adapter));
+        SenatorsManager.getInstance().updateVotes();
         immutableSenatorsList.addAll(viewSenatorsList);
 
         spinnerParty = (Spinner) view.findViewById(R.id.spinner_parties);

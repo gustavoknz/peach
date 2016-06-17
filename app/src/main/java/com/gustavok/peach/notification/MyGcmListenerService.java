@@ -41,7 +41,7 @@ public class MyGcmListenerService extends GcmListenerService {
         if (notify) {
             sendNotification(msg);
         } else {
-            SenatorsManager.getInstance().addVote(id, vote);
+            SenatorsManager.getInstance().updateVote(id, vote);
         }
     }
 

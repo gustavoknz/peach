@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.gustavok.peach.tabs.senators.SenatorsArrayAdapter;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
@@ -39,7 +40,9 @@ public final class SenatorsManager implements SenatorsCallbackInterface {
     @Override
     public void onSuccess(Senator[] senators) {
         Log.d(TAG, String.format(Locale.getDefault(), "Received %d senators", senators.length));
-        updateVotes(senators);
+        this.senators.clear();
+        this.senators.addAll(Arrays.asList(senators));
+        updateVotes();
         for (Senator s : senators) {
             insertSenator(s);
         }
@@ -54,7 +57,7 @@ public final class SenatorsManager implements SenatorsCallbackInterface {
         }
     }
 
-    public long insertSenator(Senator senator) {
+    private long insertSenator(Senator senator) {
         SenatorDbHelper mDbHelper = new SenatorDbHelper(context);
 
         // Gets the data repository in write mode
@@ -73,7 +76,7 @@ public final class SenatorsManager implements SenatorsCallbackInterface {
         return db.insert(SenatorDbHelper.SenatorEntry.TABLE_NAME, null, values);
     }
 
-    public boolean dbExists() {
+    private boolean dbExists() {
         SenatorDbHelper mDbHelper = new SenatorDbHelper(context);
 
         // Gets the data repository in write mode
@@ -107,19 +110,7 @@ public final class SenatorsManager implements SenatorsCallbackInterface {
         return senators;
     }
 
-    public void setSenatorVotes(Senator[] senatorVotes) {
-        for (Senator s1 : senators) {
-            for (Senator s2 : senatorVotes) {
-                if (s1.getId() == s2.getId()) {
-                    s1.setVoto(s2.getVoto());
-                    break;
-                }
-            }
-        }
-    }
-
     private void loadSenatorsFromDb() {
-        SenatorDbHelper dbHelper = new SenatorDbHelper(context);
         int id;
         int vote;
         String name;
@@ -128,6 +119,7 @@ public final class SenatorsManager implements SenatorsCallbackInterface {
         String url;
         SQLiteDatabase sqliteDatabase = null;
         Cursor cursor = null;
+        SenatorDbHelper dbHelper = new SenatorDbHelper(context);
         try {
             sqliteDatabase = dbHelper.getReadableDatabase();
             cursor = sqliteDatabase.query(SenatorDbHelper.SenatorEntry.TABLE_NAME, null, null, null, null, null, null);
@@ -150,33 +142,37 @@ public final class SenatorsManager implements SenatorsCallbackInterface {
         }
     }
 
-    private void updateVotes(Senator[] senators) {
+    public void updateVotes() {
         Log.d(TAG, "Updating votes...");
+        if (senatorsArrayAdapter != null) {
+            Log.d(TAG, "Updating senators list");
+            senatorsArrayAdapter.notifyDataSetChanged();
+        }
 
-        setSenatorVotes(senators);
-        senatorsArrayAdapter.notifyDataSetChanged();
+        if (votingView != null) {
+            Log.d(TAG, "Updating voting view");
+            int[] votes = countVotes(senators);
+            int countYes = votes[VOTE_POSITION_YES];
+            int countNo = votes[VOTE_POSITION_NO];
+            int countAbstention = votes[VOTE_POSITION_ABSTINENT];
+            int countAbsence = votes[VOTE_POSITION_ABSENCE];
+            int countUnknown = votes[VOTE_POSITION_UNKNOWN];
+            int total = countYes + countNo + countAbstention + countAbsence + countUnknown;
 
-        int[] votes = countVotes(senators);
-        int countYes = votes[VOTE_POSITION_YES];
-        int countNo = votes[VOTE_POSITION_NO];
-        int countAbstention = votes[VOTE_POSITION_ABSTINENT];
-        int countAbsence = votes[VOTE_POSITION_ABSENCE];
-        int countUnknown = votes[VOTE_POSITION_UNKNOWN];
-        int total = countYes + countNo + countAbstention + countAbsence + countUnknown;
-
-        TextView tvYes = (TextView) votingView.findViewById(R.id.voting_count_yes);
-        TextView tvNo = (TextView) votingView.findViewById(R.id.voting_count_no);
-        TextView tvAbstention = (TextView) votingView.findViewById(R.id.voting_count_abstention);
-        TextView tvAbsence = (TextView) votingView.findViewById(R.id.voting_count_absence);
-        Log.d(TAG, String.format("Updating senatorVotes to (%d) yes=%d; no=%d; abstention=%d; absence=%d; unknown=%d",
-                total, countYes, countNo, countAbstention, countAbsence, countUnknown));
-        tvYes.setText(String.format(Locale.getDefault(), "%d", countYes));
-        tvNo.setText(String.format(Locale.getDefault(), "%d", countNo));
-        tvAbstention.setText(String.format(Locale.getDefault(), "%d", countAbstention));
-        tvAbsence.setText(String.format(Locale.getDefault(), "%d", countAbsence));
+            TextView tvYes = (TextView) votingView.findViewById(R.id.voting_count_yes);
+            TextView tvNo = (TextView) votingView.findViewById(R.id.voting_count_no);
+            TextView tvAbstention = (TextView) votingView.findViewById(R.id.voting_count_abstention);
+            TextView tvAbsence = (TextView) votingView.findViewById(R.id.voting_count_absence);
+            Log.d(TAG, String.format("Updating senatorVotes to (%d) yes=%d; no=%d; abstention=%d; absence=%d; unknown=%d",
+                    total, countYes, countNo, countAbstention, countAbsence, countUnknown));
+            tvYes.setText(String.format(Locale.getDefault(), "%d", countYes));
+            tvNo.setText(String.format(Locale.getDefault(), "%d", countNo));
+            tvAbstention.setText(String.format(Locale.getDefault(), "%d", countAbstention));
+            tvAbsence.setText(String.format(Locale.getDefault(), "%d", countAbsence));
+        }
     }
 
-    private int[] countVotes(Senator[] senators) {
+    private int[] countVotes(List<Senator> senators) {
         int[] count = new int[5];
         for (Senator s : senators) {
             switch (s.getVoto()) {
@@ -200,7 +196,7 @@ public final class SenatorsManager implements SenatorsCallbackInterface {
         return count;
     }
 
-    public void addVote(int id, int vote) {
+    public void updateVote(int id, int vote) {
         for (Senator s : senators) {
             if (s.getId() == id) {
                 s.setVoto(vote);
@@ -208,11 +204,17 @@ public final class SenatorsManager implements SenatorsCallbackInterface {
                     @Override
                     public void run() {
                         senatorsArrayAdapter.notifyDataSetChanged();
-                        updateVotes(senators.toArray(new Senator[senators.size()]));
+                        updateVotes();
                     }
                 });
             }
         }
+        String whereClause = String.format(Locale.getDefault(), "%s=%d", SenatorDbHelper.SenatorEntry.COLUMN_NAME_ID, id);
+        ContentValues values = new ContentValues();
+        values.put(SenatorDbHelper.SenatorEntry.COLUMN_NAME_VOTE, vote);
+        SenatorDbHelper dbHelper = new SenatorDbHelper(context);
+        SQLiteDatabase sqliteDatabase = dbHelper.getWritableDatabase();
+        int updated = sqliteDatabase.update(SenatorDbHelper.SenatorEntry.TABLE_NAME, values, whereClause, null);
+        Log.d(TAG, "Updated " + updated + " rows");
     }
-    //endregion
 }

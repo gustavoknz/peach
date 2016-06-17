@@ -39,8 +39,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d(TAG, "*****************************************************************************");
+        Log.d(TAG, "********************************* PEACH init ********************************");
+        Log.d(TAG, "*****************************************************************************");
         setContentView(R.layout.activity_main);
-        Log.d(TAG, "GCM gcm");
 
         if (!checkConnectivity()) {
             Toast.makeText(this, R.string.noInternetMessage, Toast.LENGTH_LONG).show();

@@ -16,6 +16,7 @@ public class VotingFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View votingView = inflater.inflate(R.layout.voting_layout, container, false);
         SenatorsManager.getInstance().setVotingView(votingView);
+        SenatorsManager.getInstance().updateVotes();
 
         return votingView;
     }
