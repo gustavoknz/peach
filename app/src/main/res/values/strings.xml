@@ -33,6 +33,8 @@
     <string name="notification_server_api_key">AIzaSyAJdxetTCSIbzxxOquO04TP1ndJdniL4h0</string>
     <string name="notification_default_sender_id">661679756685</string>
 
+    <string name="facebook_app_id">1204570789565950</string>
+
     <string-array name="party_array">
         <item>Partido</item>
         <item>DEM</item>

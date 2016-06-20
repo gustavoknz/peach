@@ -65,7 +65,7 @@ public final class SenatorsManager implements SenatorsCallbackInterface {
         values.put(SenatorDbHelper.SenatorEntry.COLUMN_NAME_ID, senator.getId());
         values.put(SenatorDbHelper.SenatorEntry.COLUMN_NAME_NAME, senator.getNome());
         values.put(SenatorDbHelper.SenatorEntry.COLUMN_NAME_PARTY, senator.getPartido());
-        values.put(SenatorDbHelper.SenatorEntry.COLUMN_NAME_STATE, senator.getPartido());
+        values.put(SenatorDbHelper.SenatorEntry.COLUMN_NAME_STATE, senator.getEstado());
         values.put(SenatorDbHelper.SenatorEntry.COLUMN_NAME_VOTE, senator.getVoto());
         values.put(SenatorDbHelper.SenatorEntry.COLUMN_NAME_URL, senator.getUrl());
 
