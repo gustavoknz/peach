@@ -28,12 +28,11 @@
                 android:orientation="horizontal">
 
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
                     android:layout_weight="1"
-                    android:background="@drawable/new_voting_background"
                     android:contentDescription="@string/voting_yes_desc"
-                    android:src="@drawable/new_voting_yes" />
+                    android:src="@mipmap/ic_favor" />
 
                 <TextView
                     android:id="@+id/voting_count_yes"
@@ -43,6 +42,10 @@
                     android:layout_marginLeft="-25dp"
                     android:layout_marginStart="-25dp"
                     android:layout_weight="1"
+                    android:shadowColor="#FFFFFF"
+                    android:shadowDx="0"
+                    android:shadowDy="0"
+                    android:shadowRadius="10"
                     android:text="@string/voting_init"
                     android:textColor="@color/voting_yes"
                     android:textSize="@dimen/yes_no_text_size" />
@@ -87,21 +90,25 @@
                 android:gravity="center"
                 android:orientation="horizontal">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                <ImageView
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
                     android:layout_weight="1"
-                    android:text="@string/voting_no"
-                    android:textColor="@color/voting_no"
-                    android:textSize="@dimen/yes_no_text_size" />
+                    android:contentDescription="@string/voting_yes_desc"
+                    android:src="@mipmap/ic_contra" />
 
                 <TextView
                     android:id="@+id/voting_count_no"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="25dp"
-                    android:layout_marginStart="25dp"
+                    android:layout_marginBottom="-25dp"
+                    android:layout_marginLeft="-25dp"
+                    android:layout_marginStart="-25dp"
                     android:layout_weight="1"
+                    android:shadowColor="#FFFFFF"
+                    android:shadowDx="0"
+                    android:shadowDy="0"
+                    android:shadowRadius="10"
                     android:text="@string/voting_init"
                     android:textColor="@color/voting_no"
                     android:textSize="@dimen/yes_no_text_size" />
