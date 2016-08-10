@@ -14,7 +14,7 @@ import java.util.Locale;
 
 import cz.msebera.android.httpclient.Header;
 
-public final class RestClient {
+final class RestClient {
     private static final int PORT = 31189;
     private static final String BASE_URL = "http://ojur.com.br";
     private static final String TAG = "RestClient";

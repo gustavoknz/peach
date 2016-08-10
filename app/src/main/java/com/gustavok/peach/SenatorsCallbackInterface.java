@@ -1,5 +1,5 @@
 package com.gustavok.peach;
 
-public interface SenatorsCallbackInterface {
+interface SenatorsCallbackInterface {
     void onSuccess(Senator[] senators);
 }

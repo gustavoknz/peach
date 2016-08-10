@@ -16,6 +16,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -142,38 +143,13 @@ public class MainActivity extends AppCompatActivity {
         return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 
-    /*public void yesTapped(View view) {
-        upVote(view, R.id.voting_count_yes, R.id.voting_animation_yes);
+    public void shareIt(View view) {
+        Intent shareIntent = new Intent();
+        shareIntent.setAction(Intent.ACTION_SEND);
+        shareIntent.setType("text/plain");
+        shareIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.share_message));
+        startActivity(Intent.createChooser(shareIntent, getString(R.string.share_title)));
     }
-
-    public void noTapped(View view) {
-        upVote(view, R.id.voting_count_no, R.id.voting_animation_no);
-    }
-
-    public void abstentionTapped(View view) {
-        upVote(view, R.id.voting_count_abstention, R.id.voting_animation_abstention);
-    }
-
-    public void absenceTapped(View view) {
-        upVote(view, R.id.voting_count_absence, R.id.voting_animation_absence);
-    }
-
-    private void upVote(View view, int votingCountId, int votingAnimationId) {
-        TextView tv = (TextView) view.findViewById(votingCountId);
-        int count = Integer.parseInt(tv.getText().toString());
-        tv.setText(String.format(Locale.getDefault(), "%d", ++count));
-
-        TextView tvAnimation = (TextView) view.getRootView().findViewById(votingAnimationId);
-        Animation translateAnimation = new TranslateAnimation(
-                TranslateAnimation.RELATIVE_TO_SELF, 0f,
-                TranslateAnimation.RELATIVE_TO_SELF, 0f,
-                TranslateAnimation.RELATIVE_TO_SELF, 0f,
-                TranslateAnimation.RELATIVE_TO_SELF, -0.5f);
-        translateAnimation.setFillAfter(false);
-        tvAnimation.setAnimation(translateAnimation);
-        translateAnimation.setDuration(2000);
-        tvAnimation.startAnimation(translateAnimation);
-    }*/
 
     /**
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to

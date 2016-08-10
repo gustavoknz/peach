@@ -10,7 +10,6 @@ import com.gustavok.peach.R;
 import com.gustavok.peach.SenatorsManager;
 
 public class VotingFragment extends Fragment {
-    private static final String TAG = "VotingFragment";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

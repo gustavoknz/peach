@@ -20,8 +20,8 @@ import java.util.Locale;
 
 public final class SenatorsArrayAdapter extends ArrayAdapter<Senator> {
     private static final String TAG = "SenatorsArrayAdapter";
-    private Context context;
-    private int layoutResId;
+    private final Context context;
+    private final int layoutResId;
     private List<Senator> data = null;
 
     public SenatorsArrayAdapter(Activity context, int layoutResId, List<Senator> data) {

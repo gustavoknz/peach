@@ -10,8 +10,6 @@
     <string name="voting_init">0</string>
     <string name="voting_versus">x</string>
     <string name="voting_yes_desc">sim</string>
-    <string name="voting_yes">SIM</string>
-    <string name="voting_no">NÃO</string>
     <string name="voting_abstention">Abstenção:</string>
     <string name="voting_absence">Ausência:</string>
     <string name="voting_plus_yes">+1 coxinha</string>
@@ -19,7 +17,6 @@
     <string name="voting_plus_abstention">+1 abstente</string>
     <string name="voting_plus_absence">+1 ausente</string>
 
-    <string name="dialog_title">Votação encerrada</string>
     <string name="dialog_voting_yes">Sim</string>
     <string name="dialog_voting_no">Não</string>
     <string name="dialog_voting_abstention">Absteve-se</string>
@@ -33,7 +30,9 @@
     <string name="notification_server_api_key">AIzaSyAJdxetTCSIbzxxOquO04TP1ndJdniL4h0</string>
     <string name="notification_default_sender_id">661679756685</string>
 
-    <string name="facebook_app_id">1204570789565950</string>
+    <string name="share_button_desc">Compartilhe</string>
+    <string name="share_message">Acompanhe a votação de Impeachment de Dilma Rousseff voto a voto pelo aplicativo Peach. Baixe aqui: https://goo.gl/ZQQZYO</string>
+    <string name="share_title">Compartilhe com seus amigos</string>
 
     <string-array name="party_array">
         <item>Partido</item>

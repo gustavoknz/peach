@@ -42,6 +42,7 @@ public final class SenatorsManager implements SenatorsCallbackInterface {
         Log.d(TAG, String.format(Locale.getDefault(), "Received %d senators", senators.length));
         this.senators.clear();
         this.senators.addAll(Arrays.asList(senators));
+        this.senatorsArrayAdapter.addAll(this.senators);
         updateVotes();
         for (Senator s : senators) {
             insertSenator(s);
@@ -57,7 +58,7 @@ public final class SenatorsManager implements SenatorsCallbackInterface {
         }
     }
 
-    private long insertSenator(Senator senator) {
+    private void insertSenator(Senator senator) {
         SenatorDbHelper mDbHelper = new SenatorDbHelper(context);
 
         // Gets the data repository in write mode
@@ -73,7 +74,7 @@ public final class SenatorsManager implements SenatorsCallbackInterface {
         values.put(SenatorDbHelper.SenatorEntry.COLUMN_NAME_URL, senator.getUrl());
 
         // Insert the new row, returning the primary key value of the new row
-        return db.insert(SenatorDbHelper.SenatorEntry.TABLE_NAME, null, values);
+        db.insert(SenatorDbHelper.SenatorEntry.TABLE_NAME, null, values);
     }
 
     private boolean dbExists() {
@@ -145,7 +146,7 @@ public final class SenatorsManager implements SenatorsCallbackInterface {
     public void updateVotes() {
         Log.d(TAG, "Updating votes...");
         if (senatorsArrayAdapter != null) {
-            Log.d(TAG, "Updating senators list");
+            Log.d(TAG, String.format("Updating senators list with %d senators", senatorsArrayAdapter.getCount()));
             senatorsArrayAdapter.notifyDataSetChanged();
         }
 

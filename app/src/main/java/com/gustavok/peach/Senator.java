@@ -1,12 +1,12 @@
 package com.gustavok.peach;
 
 public class Senator {
-    private int id;
-    private String nome;
-    private String partido;
-    private String estado;
+    private final int id;
+    private final String nome;
+    private final String partido;
+    private final String estado;
     private int voto;
-    private String url;
+    private final String url;
 
     public Senator(int id, String nome, String partido, String estado, int voto, String url) {
         this.id = id;

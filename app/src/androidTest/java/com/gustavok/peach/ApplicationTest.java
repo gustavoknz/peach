@@ -21,7 +21,6 @@ import org.junit.runner.RunWith;
 import java.util.Random;
 
 import cz.msebera.android.httpclient.Header;
-import cz.msebera.android.httpclient.client.ResponseHandler;
 import cz.msebera.android.httpclient.entity.StringEntity;
 
 /**
@@ -73,11 +72,6 @@ public class ApplicationTest extends ApplicationTestCase<Application> {
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-                }
-
-                @Override
-                public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                    super.onFailure(statusCode, headers, responseString, throwable);
                 }
             };
             client.post(getContext(), restApiUrl, entity, "application/json", responseHandler);

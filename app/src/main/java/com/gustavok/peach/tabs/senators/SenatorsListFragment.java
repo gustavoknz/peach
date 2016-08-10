@@ -29,12 +29,12 @@ import java.util.Locale;
 public class SenatorsListFragment extends ListFragment {
     private static final String TAG = "SenatorsListFragment";
 
+    private final List<Senator> viewSenatorsList = new ArrayList<>();
+    private final List<Senator> immutableSenatorsList = new ArrayList<>();
     private SenatorsArrayAdapter adapter;
     private Spinner spinnerParty;
     private Spinner spinnerState;
     private Spinner spinnerVote;
-    private List<Senator> viewSenatorsList = new ArrayList<>();
-    private List<Senator> immutableSenatorsList = new ArrayList<>();
 
     private String constraintParty;
     private String constraintState;
@@ -222,7 +222,7 @@ public class SenatorsListFragment extends ListFragment {
         alertDialogBuilder.setView(dialogView);
         alertDialogBuilder
                 .setCancelable(true)
-                .setNeutralButton("OK", new DialogInterface.OnClickListener() {
+                .setNeutralButton(R.string.dialog_button_ok, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
                     }
