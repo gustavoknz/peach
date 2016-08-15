@@ -11,8 +11,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -191,7 +191,7 @@ public class SenatorsListFragment extends ListFragment {
         LayoutInflater factory = LayoutInflater.from(v.getContext());
 
         @SuppressLint("InflateParams")
-        RelativeLayout dialogView = (RelativeLayout) factory.inflate(R.layout.dialog_view, null);
+        LinearLayout dialogView = (LinearLayout) factory.inflate(R.layout.dialog_view, null);
 
         TextView nameView = (TextView) dialogView.findViewById(R.id.dialog_senator_name);
         nameView.setText(item.getNome());
@@ -229,11 +229,5 @@ public class SenatorsListFragment extends ListFragment {
                 });
         AlertDialog alertDialog = alertDialogBuilder.create();
         alertDialog.show();
-
-        // TODO: not working
-        // final Button positiveButton = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
-        // LinearLayout.LayoutParams positiveButtonLL = (LinearLayout.LayoutParams) positiveButton.getLayoutParams();
-        // positiveButtonLL.gravity = Gravity.CENTER;
-        // positiveButton.setLayoutParams(positiveButtonLL);
     }
 }

@@ -42,7 +42,9 @@ public final class SenatorsManager implements SenatorsCallbackInterface {
         Log.d(TAG, String.format(Locale.getDefault(), "Received %d senators", senators.length));
         this.senators.clear();
         this.senators.addAll(Arrays.asList(senators));
-        this.senatorsArrayAdapter.addAll(this.senators);
+        for (Senator s : this.senators) {
+            this.senatorsArrayAdapter.add(s);
+        }
         updateVotes();
         for (Senator s : senators) {
             insertSenator(s);

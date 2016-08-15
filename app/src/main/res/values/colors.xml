@@ -11,5 +11,6 @@
 
     <color name="dialog_senator_name">#CC2211</color>
     <color name="dialog_senator_party_state">#1122CC</color>
-    <color name="dialog_senator_vote">#BBC11C</color>
+    <color name="dialog_senator_vote">#1122CC</color>
+    <color name="dialog_senator_vote_old">#BBC11C</color>
 </resources>

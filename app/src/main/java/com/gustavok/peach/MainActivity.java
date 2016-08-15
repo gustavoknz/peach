@@ -26,9 +26,6 @@ import com.gustavok.peach.tabs.CustomTabLayout;
 import com.gustavok.peach.tabs.senators.SenatorsListFragment;
 import com.gustavok.peach.tabs.voting.VotingFragment;
 
-//TODO: animações pro: "Fora Dilma!", "Tchau, querida!", "+1 coxinha"
-//TODO: animações contra: "Golpe não!", "Vai ter luta!", "+1 mortadela"
-//TODO: animações neutra: "+1 (Nome do Fulano)", "(miniatura da foto)"
 public class MainActivity extends AppCompatActivity {
 
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
