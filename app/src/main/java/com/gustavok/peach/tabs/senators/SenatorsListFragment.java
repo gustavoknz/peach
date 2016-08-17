@@ -44,9 +44,11 @@ public class SenatorsListFragment extends ListFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.senators_list_layout, container, false);
 
+        Log.d(TAG, "Setting adapter with " + viewSenatorsList.size() + " senators");
         adapter = new SenatorsArrayAdapter(getActivity(), R.layout.senator_item_layout, viewSenatorsList);
         ListView listView = (ListView) view.findViewById(android.R.id.list);
         listView.setAdapter(adapter);
+
         viewSenatorsList.addAll(SenatorsManager.getInstance().setArrayAdapter(adapter));
         SenatorsManager.getInstance().updateVotes();
         immutableSenatorsList.addAll(viewSenatorsList);

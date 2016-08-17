@@ -108,6 +108,7 @@ public final class SenatorsManager implements SenatorsCallbackInterface {
     }
 
     public List<Senator> setArrayAdapter(SenatorsArrayAdapter senatorsArrayAdapter) {
+        Log.d(TAG, "Initializing array adapter with " + senatorsArrayAdapter.getCount() + " senators");
         this.senatorsArrayAdapter = senatorsArrayAdapter;
         this.senatorsArrayAdapter.notifyDataSetChanged();
         return senators;
