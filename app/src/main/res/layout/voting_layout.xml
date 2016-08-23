@@ -18,17 +18,6 @@
             android:layout_height="0dp"
             android:layout_weight="3">
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentTop="true"
-                android:contentDescription="@string/share_button_desc"
-                android:onClick="shareIt"
-                android:padding="16dp"
-                android:src="@drawable/share_button" />
-
             <LinearLayout
                 android:id="@+id/voting_layout_yes"
                 android:layout_width="wrap_content"
@@ -41,7 +30,6 @@
                 <ImageView
                     android:layout_width="100dp"
                     android:layout_height="100dp"
-                    android:layout_weight="1"
                     android:contentDescription="@string/voting_yes_desc"
                     android:src="@mipmap/ic_favor" />
 
@@ -52,7 +40,6 @@
                     android:layout_marginBottom="-25dp"
                     android:layout_marginLeft="-25dp"
                     android:layout_marginStart="-25dp"
-                    android:layout_weight="1"
                     android:shadowColor="#FFFFFF"
                     android:shadowDx="0"
                     android:shadowDy="0"
@@ -60,6 +47,22 @@
                     android:text="@string/voting_init"
                     android:textColor="@color/voting_yes"
                     android:textSize="@dimen/yes_no_text_size" />
+
+                <TextView
+                    android:id="@+id/voting_percentage_yes"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="-25dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_weight="1"
+                    android:shadowColor="#FFFFFF"
+                    android:shadowDx="0"
+                    android:shadowDy="0"
+                    android:shadowRadius="10"
+                    android:text="@string/voting_percentage_text"
+                    android:textColor="@color/voting_no"
+                    android:textSize="@dimen/yes_no_percentage_size" />
             </LinearLayout>
 
             <TextView
@@ -104,7 +107,6 @@
                 <ImageView
                     android:layout_width="100dp"
                     android:layout_height="100dp"
-                    android:layout_weight="1"
                     android:contentDescription="@string/voting_yes_desc"
                     android:src="@mipmap/ic_contra" />
 
@@ -115,7 +117,6 @@
                     android:layout_marginBottom="-25dp"
                     android:layout_marginLeft="-25dp"
                     android:layout_marginStart="-25dp"
-                    android:layout_weight="1"
                     android:shadowColor="#FFFFFF"
                     android:shadowDx="0"
                     android:shadowDy="0"
@@ -123,6 +124,22 @@
                     android:text="@string/voting_init"
                     android:textColor="@color/voting_no"
                     android:textSize="@dimen/yes_no_text_size" />
+
+                <TextView
+                    android:id="@+id/voting_percentage_no"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="-25dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_weight="1"
+                    android:shadowColor="#FFFFFF"
+                    android:shadowDx="0"
+                    android:shadowDy="0"
+                    android:shadowRadius="10"
+                    android:text="@string/voting_percentage_text"
+                    android:textColor="@color/voting_no"
+                    android:textSize="@dimen/yes_no_percentage_size" />
             </LinearLayout>
 
             <TextView

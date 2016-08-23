@@ -19,7 +19,8 @@ class SenatorDbHelper extends SQLiteOpenHelper {
                     SenatorEntry.COLUMN_NAME_NAME + TEXT_TYPE + COMMA_SEP +
                     SenatorEntry.COLUMN_NAME_PARTY + TEXT_TYPE + COMMA_SEP +
                     SenatorEntry.COLUMN_NAME_STATE + TEXT_TYPE + COMMA_SEP +
-                    SenatorEntry.COLUMN_NAME_VOTE + INT_TYPE + COMMA_SEP +
+                    SenatorEntry.COLUMN_NAME_VOTE1 + INT_TYPE + COMMA_SEP +
+                    SenatorEntry.COLUMN_NAME_VOTE2 + INT_TYPE + COMMA_SEP +
                     SenatorEntry.COLUMN_NAME_URL + TEXT_TYPE + ")";
     private static final String SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS " + SenatorEntry.TABLE_NAME;
 
@@ -48,7 +49,8 @@ class SenatorDbHelper extends SQLiteOpenHelper {
         public static final String COLUMN_NAME_NAME = "name";
         public static final String COLUMN_NAME_PARTY = "party";
         public static final String COLUMN_NAME_STATE = "state";
-        public static final String COLUMN_NAME_VOTE = "vote";
+        public static final String COLUMN_NAME_VOTE1 = "vote1";
+        public static final String COLUMN_NAME_VOTE2 = "vote2";
         public static final String COLUMN_NAME_URL = "url";
     }
 }

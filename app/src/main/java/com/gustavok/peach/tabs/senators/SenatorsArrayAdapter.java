@@ -43,7 +43,8 @@ public final class SenatorsArrayAdapter extends ArrayAdapter<Senator> {
             holder.imageUrl = (ImageView) convertView.findViewById(R.id.senator_image);
             holder.name = (TextView) convertView.findViewById(R.id.senator_name);
             holder.partyState = (TextView) convertView.findViewById(R.id.senator_party_state);
-            holder.vote = (ImageView) convertView.findViewById(R.id.senator_vote);
+            holder.vote1 = (ImageView) convertView.findViewById(R.id.senator_vote1);
+            holder.vote2 = (ImageView) convertView.findViewById(R.id.senator_vote2);
             convertView.setTag(holder);
         } else {
             holder = (SenatorHolder) convertView.getTag();
@@ -53,16 +54,26 @@ public final class SenatorsArrayAdapter extends ArrayAdapter<Senator> {
         holder.name.setText(sen.getNome());
         holder.partyState.setText(String.format("%s - %s", sen.getPartido(), sen.getEstado()));
 
-        Log.d(TAG, String.format(Locale.getDefault(), "Senator id=%d (%s) voted %d", sen.getId(), sen.getNome(), sen.getVoto()));
-        holder.vote.setImageResource(0);
+        Log.d(TAG, String.format(Locale.getDefault(), "Senator id=%d (%s) voted 11/5 %d and %d now", sen.getId(), sen.getNome(), sen.getVoto(), sen.getVoto2()));
+        holder.vote1.setImageResource(0);
         if (Constants.VOTE_YES == sen.getVoto()) {
-            holder.vote.setImageResource(R.drawable.vote_yes);
+            holder.vote1.setImageResource(R.drawable.vote_yes);
         } else if (Constants.VOTE_NO == sen.getVoto()) {
-            holder.vote.setImageResource(R.drawable.vote_no);
+            holder.vote1.setImageResource(R.drawable.vote_no);
         } else if (Constants.VOTE_ABSTENTION == sen.getVoto()) {
-            holder.vote.setImageResource(R.drawable.vote_abstention);
+            holder.vote1.setImageResource(R.drawable.vote_abstention);
         } else if (Constants.VOTE_ABSENCE == sen.getVoto()) {
-            holder.vote.setImageResource(R.drawable.vote_absence);
+            holder.vote1.setImageResource(R.drawable.vote_absence);
+        }
+        holder.vote2.setImageResource(0);
+        if (Constants.VOTE_YES == sen.getVoto2()) {
+            holder.vote2.setImageResource(R.drawable.vote_yes);
+        } else if (Constants.VOTE_NO == sen.getVoto2()) {
+            holder.vote2.setImageResource(R.drawable.vote_no);
+        } else if (Constants.VOTE_ABSTENTION == sen.getVoto2()) {
+            holder.vote2.setImageResource(R.drawable.vote_abstention);
+        } else if (Constants.VOTE_ABSENCE == sen.getVoto2()) {
+            holder.vote2.setImageResource(R.drawable.vote_absence);
         }
 
         return convertView;
@@ -72,6 +83,7 @@ public final class SenatorsArrayAdapter extends ArrayAdapter<Senator> {
         ImageView imageUrl;
         TextView name;
         TextView partyState;
-        ImageView vote;
+        ImageView vote1;
+        ImageView vote2;
     }
 }

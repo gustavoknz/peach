@@ -36,7 +36,7 @@ public class ApplicationTest extends ApplicationTestCase<Application> {
 
     @Test
     public void testParse() throws Exception {
-        JSONObject json = new JSONObject("{\"senadores\":[{\"id\":1,\"nome\":\"Acir Gurgacz\",\"estado\":\"TO\",\"partido\":\"PDT\",\"voto\":\"1\",\"url\":\"http://www.senado.leg.br/senadores/img/fotos-oficiais/senador4981.jpg\"}]}");
+        JSONObject json = new JSONObject("{\"senadores\":[{\"id\":1,\"nome\":\"Acir Gurgacz\",\"estado\":\"TO\",\"partido\":\"PDT\",\"voto1\":\"1\",\"voto2\":\"2\",\"url\":\"http://www.senado.leg.br/senadores/img/fotos-oficiais/senador4981.jpg\"}]}");
         JSONArray jsonArray = json.getJSONArray("senadores");
         Senator[] senatorsArray = new Gson().fromJson(jsonArray.toString(), Senator[].class);
         Senator s = senatorsArray[0];
@@ -45,7 +45,8 @@ public class ApplicationTest extends ApplicationTestCase<Application> {
         Assert.assertEquals("Expected different name.", "Acir Gurgacz", s.getNome());
         Assert.assertEquals("Expected different state.", "TO", s.getEstado());
         Assert.assertEquals("Expected different party.", "PDT", s.getPartido());
-        Assert.assertEquals("Expected different vote.", 1, s.getVoto());
+        Assert.assertEquals("Expected different vote1.", 1, s.getVoto());
+        Assert.assertEquals("Expected different vote2.", 2, s.getVoto2());
         Assert.assertEquals("Expected different url.", "http://www.senado.leg.br/senadores/img/fotos-oficiais/senador4981.jpg", s.getUrl());
     }
 
@@ -60,7 +61,8 @@ public class ApplicationTest extends ApplicationTestCase<Application> {
         for (int i = 50; i <= 81; i++) {
             jsonParams = new JSONObject();
             jsonParams.put("id", i);
-            jsonParams.put("voto", random.nextInt(4));
+            jsonParams.put("voto1", random.nextInt(4));
+            jsonParams.put("voto2", random.nextInt(4));
             entity = new StringEntity(jsonParams.toString());
             AsyncHttpResponseHandler responseHandler = new JsonHttpResponseHandler() {
                 @Override

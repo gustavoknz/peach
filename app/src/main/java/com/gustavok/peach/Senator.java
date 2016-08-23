@@ -6,14 +6,16 @@ public class Senator {
     private final String partido;
     private final String estado;
     private int voto;
+    private int voto2;
     private final String url;
 
-    public Senator(int id, String nome, String partido, String estado, int voto, String url) {
+    public Senator(int id, String nome, String partido, String estado, int voto, int voto2, String url) {
         this.id = id;
         this.nome = nome;
         this.partido = partido;
         this.estado = estado;
         this.voto = voto;
+        this.voto2 = voto2;
         this.url = url;
     }
 
@@ -37,11 +39,19 @@ public class Senator {
         return voto;
     }
 
-    public String getUrl() {
-        return url;
-    }
-
     public void setVoto(int voto) {
         this.voto = voto;
+    }
+
+    public int getVoto2() {
+        return voto2;
+    }
+
+    public void setVoto2(int voto2) {
+        this.voto2 = voto2;
+    }
+
+    public String getUrl() {
+        return url;
     }
 }

@@ -5,10 +5,22 @@
     android:padding="7dp">
 
     <ImageView
+        android:id="@+id/senator_vote1"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_centerVertical="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:alpha="0.7"
+        android:contentDescription="@string/senator_vote1_desc" />
+
+    <ImageView
         android:id="@+id/senator_image"
         android:layout_width="65dp"
         android:layout_height="65dp"
         android:layout_centerVertical="true"
+        android:layout_toEndOf="@id/senator_vote1"
+        android:layout_toRightOf="@id/senator_vote1"
         android:contentDescription="@string/senator_image_desc" />
 
     <LinearLayout
@@ -36,12 +48,12 @@
     </LinearLayout>
 
     <ImageView
-        android:id="@+id/senator_vote"
+        android:id="@+id/senator_vote2"
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:contentDescription="@string/senator_vote_desc" />
+        android:contentDescription="@string/senator_vote2_desc" />
 
 </RelativeLayout>

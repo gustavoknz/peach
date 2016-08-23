@@ -30,15 +30,16 @@ public class SenatorsListFragment extends ListFragment {
     private static final String TAG = "SenatorsListFragment";
 
     private final List<Senator> viewSenatorsList = new ArrayList<>();
-    private final List<Senator> immutableSenatorsList = new ArrayList<>();
     private SenatorsArrayAdapter adapter;
     private Spinner spinnerParty;
     private Spinner spinnerState;
-    private Spinner spinnerVote;
+    private Spinner spinnerVote1;
+    private Spinner spinnerVote2;
 
     private String constraintParty;
     private String constraintState;
-    private int constraintVote;
+    private int constraintVote1;
+    private int constraintVote2;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -51,11 +52,11 @@ public class SenatorsListFragment extends ListFragment {
 
         viewSenatorsList.addAll(SenatorsManager.getInstance().setArrayAdapter(adapter));
         SenatorsManager.getInstance().updateVotes();
-        immutableSenatorsList.addAll(viewSenatorsList);
 
         spinnerParty = (Spinner) view.findViewById(R.id.spinner_parties);
         spinnerState = (Spinner) view.findViewById(R.id.spinner_states);
-        spinnerVote = (Spinner) view.findViewById(R.id.spinner_votes);
+        spinnerVote1 = (Spinner) view.findViewById(R.id.spinner_votes1);
+        spinnerVote2 = (Spinner) view.findViewById(R.id.spinner_votes2);
 
         spinnerParty.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -95,30 +96,30 @@ public class SenatorsListFragment extends ListFragment {
                 Log.d(TAG, "No state selected");
             }
         });
-        spinnerVote.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        spinnerVote1.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String selectedVote = (String) spinnerVote.getSelectedItem();
-                Log.d(TAG, String.format("Selected position: %d; id: %d; vote=%s", position, id, selectedVote));
+                String selectedVote = (String) spinnerVote1.getSelectedItem();
+                Log.d(TAG, String.format("Selected position: %d; id: %d; vote1=%s", position, id, selectedVote));
 
                 switch (position) {
                     case 0:
-                        constraintVote = Constants.VOTE_CONSTRAINT_ALL;
+                        constraintVote1 = Constants.VOTE_CONSTRAINT_ALL;
                         break;
                     case 1:
-                        constraintVote = Constants.VOTE_CONSTRAINT_NO_VOTE;
+                        constraintVote1 = Constants.VOTE_CONSTRAINT_NO_VOTE;
                         break;
                     case 2:
-                        constraintVote = Constants.VOTE_CONSTRAINT_YES;
+                        constraintVote1 = Constants.VOTE_CONSTRAINT_YES;
                         break;
                     case 3:
-                        constraintVote = Constants.VOTE_CONSTRAINT_NO;
+                        constraintVote1 = Constants.VOTE_CONSTRAINT_NO;
                         break;
                     case 4:
-                        constraintVote = Constants.VOTE_CONSTRAINT_ABSTENTION;
+                        constraintVote1 = Constants.VOTE_CONSTRAINT_ABSTENTION;
                         break;
                     case 5:
-                        constraintVote = Constants.VOTE_CONSTRAINT_ABSENCE;
+                        constraintVote1 = Constants.VOTE_CONSTRAINT_ABSENCE;
                         break;
                 }
                 updateList();
@@ -126,7 +127,41 @@ public class SenatorsListFragment extends ListFragment {
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-                Log.d(TAG, "No vote selected");
+                Log.d(TAG, "No vote1 selected");
+            }
+        });
+        spinnerVote2.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String selectedVote = (String) spinnerVote2.getSelectedItem();
+                Log.d(TAG, String.format("Selected position: %d; id: %d; vote2=%s", position, id, selectedVote));
+
+                switch (position) {
+                    case 0:
+                        constraintVote2 = Constants.VOTE_CONSTRAINT_ALL;
+                        break;
+                    case 1:
+                        constraintVote2 = Constants.VOTE_CONSTRAINT_NO_VOTE;
+                        break;
+                    case 2:
+                        constraintVote2 = Constants.VOTE_CONSTRAINT_YES;
+                        break;
+                    case 3:
+                        constraintVote2 = Constants.VOTE_CONSTRAINT_NO;
+                        break;
+                    case 4:
+                        constraintVote2 = Constants.VOTE_CONSTRAINT_ABSTENTION;
+                        break;
+                    case 5:
+                        constraintVote2 = Constants.VOTE_CONSTRAINT_ABSENCE;
+                        break;
+                }
+                updateList();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                Log.d(TAG, "No vote2 selected");
             }
         });
 
@@ -134,13 +169,14 @@ public class SenatorsListFragment extends ListFragment {
     }
 
     private void updateList() {
-        Log.d(TAG, String.format(Locale.getDefault(), "FILTERING party=%s; state=%s; vote=%s",
-                constraintParty, constraintState, constraintVote));
-        Log.d(TAG, String.format(Locale.getDefault(), "Starting filter with %d senators", immutableSenatorsList.size()));
+        Log.d(TAG, String.format(Locale.getDefault(), "FILTERING party=%s; state=%s; vote1=%s; vote2=%s",
+                constraintParty, constraintState, constraintVote1, constraintVote2));
+        List<Senator> senatorsList = SenatorsManager.getInstance().getAllSenators();
+        Log.d(TAG, String.format(Locale.getDefault(), "Starting filter with %d senators", senatorsList.size()));
         viewSenatorsList.clear();
-        viewSenatorsList.addAll(immutableSenatorsList);
+        viewSenatorsList.addAll(senatorsList);
 
-        for (Senator senator : immutableSenatorsList) {
+        for (Senator senator : senatorsList) {
             if (constraintParty != null) {
                 if (!constraintParty.equals(senator.getPartido())) {
                     viewSenatorsList.remove(senator);
@@ -151,7 +187,7 @@ public class SenatorsListFragment extends ListFragment {
                     viewSenatorsList.remove(senator);
                 }
             }
-            switch (constraintVote) {
+            switch (constraintVote1) {
                 case Constants.VOTE_CONSTRAINT_ALL:
                     break;
                 case Constants.VOTE_CONSTRAINT_NO_VOTE:
@@ -180,6 +216,35 @@ public class SenatorsListFragment extends ListFragment {
                     }
                     break;
             }
+            switch (constraintVote2) {
+                case Constants.VOTE_CONSTRAINT_ALL:
+                    break;
+                case Constants.VOTE_CONSTRAINT_NO_VOTE:
+                    if (senator.getVoto2() != Constants.VOTE_DEFAULT_VALUE) {
+                        viewSenatorsList.remove(senator);
+                    }
+                    break;
+                case Constants.VOTE_CONSTRAINT_YES:
+                    if (senator.getVoto2() != Constants.VOTE_YES) {
+                        viewSenatorsList.remove(senator);
+                    }
+                    break;
+                case Constants.VOTE_CONSTRAINT_NO:
+                    if (senator.getVoto2() != Constants.VOTE_NO) {
+                        viewSenatorsList.remove(senator);
+                    }
+                    break;
+                case Constants.VOTE_CONSTRAINT_ABSTENTION:
+                    if (senator.getVoto2() != Constants.VOTE_ABSTENTION) {
+                        viewSenatorsList.remove(senator);
+                    }
+                    break;
+                case Constants.VOTE_CONSTRAINT_ABSENCE:
+                    if (senator.getVoto2() != Constants.VOTE_ABSENCE) {
+                        viewSenatorsList.remove(senator);
+                    }
+                    break;
+            }
         }
         Log.d(TAG, String.format(Locale.getDefault(), "Finish filter with %d senators", viewSenatorsList.size()));
         adapter.notifyDataSetChanged();
@@ -201,22 +266,40 @@ public class SenatorsListFragment extends ListFragment {
         Picasso.with(getContext()).load(item.getUrl()).into(imageView);
         TextView statePartyView = (TextView) dialogView.findViewById(R.id.dialog_senator_state_party);
         statePartyView.setText(String.format(Locale.getDefault(), "%s-%s", item.getPartido(), item.getEstado()));
-        TextView voteView = (TextView) dialogView.findViewById(R.id.dialog_senator_vote);
+        TextView vote1View = (TextView) dialogView.findViewById(R.id.dialog_senator_vote1);
         switch (item.getVoto()) {
             case Constants.VOTE_YES:
-                voteView.setText(R.string.dialog_voting_yes);
+                vote1View.setText(R.string.dialog_voting_yes);
                 break;
             case Constants.VOTE_NO:
-                voteView.setText(R.string.dialog_voting_no);
+                vote1View.setText(R.string.dialog_voting_no);
                 break;
             case Constants.VOTE_ABSTENTION:
-                voteView.setText(R.string.dialog_voting_abstention);
+                vote1View.setText(R.string.dialog_voting_abstention);
                 break;
             case Constants.VOTE_ABSENCE:
-                voteView.setText(R.string.dialog_voting_absence);
+                vote1View.setText(R.string.dialog_voting_absence);
                 break;
             case Constants.VOTE_DEFAULT_VALUE:
-                voteView.setText(R.string.dialog_voting_not_yet);
+                vote1View.setText(R.string.dialog_voting_not_yet);
+                break;
+        }
+        TextView vote2View = (TextView) dialogView.findViewById(R.id.dialog_senator_vote2);
+        switch (item.getVoto2()) {
+            case Constants.VOTE_YES:
+                vote2View.setText(R.string.dialog_voting_yes);
+                break;
+            case Constants.VOTE_NO:
+                vote2View.setText(R.string.dialog_voting_no);
+                break;
+            case Constants.VOTE_ABSTENTION:
+                vote2View.setText(R.string.dialog_voting_abstention);
+                break;
+            case Constants.VOTE_ABSENCE:
+                vote2View.setText(R.string.dialog_voting_absence);
+                break;
+            case Constants.VOTE_DEFAULT_VALUE:
+                vote2View.setText(R.string.dialog_voting_not_yet);
                 break;
         }
 
@@ -224,7 +307,7 @@ public class SenatorsListFragment extends ListFragment {
         alertDialogBuilder.setView(dialogView);
         alertDialogBuilder
                 .setCancelable(true)
-                .setNeutralButton(R.string.dialog_button_ok, new DialogInterface.OnClickListener() {
+                .setPositiveButton(R.string.dialog_button_ok, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
                     }

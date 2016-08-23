@@ -72,7 +72,8 @@ public final class SenatorsManager implements SenatorsCallbackInterface {
         values.put(SenatorDbHelper.SenatorEntry.COLUMN_NAME_NAME, senator.getNome());
         values.put(SenatorDbHelper.SenatorEntry.COLUMN_NAME_PARTY, senator.getPartido());
         values.put(SenatorDbHelper.SenatorEntry.COLUMN_NAME_STATE, senator.getEstado());
-        values.put(SenatorDbHelper.SenatorEntry.COLUMN_NAME_VOTE, senator.getVoto());
+        values.put(SenatorDbHelper.SenatorEntry.COLUMN_NAME_VOTE1, senator.getVoto());
+        values.put(SenatorDbHelper.SenatorEntry.COLUMN_NAME_VOTE2, senator.getVoto2());
         values.put(SenatorDbHelper.SenatorEntry.COLUMN_NAME_URL, senator.getUrl());
 
         // Insert the new row, returning the primary key value of the new row
@@ -116,7 +117,8 @@ public final class SenatorsManager implements SenatorsCallbackInterface {
 
     private void loadSenatorsFromDb() {
         int id;
-        int vote;
+        int vote1;
+        int vote2;
         String name;
         String party;
         String state;
@@ -133,8 +135,9 @@ public final class SenatorsManager implements SenatorsCallbackInterface {
                 party = cursor.getString(cursor.getColumnIndex(SenatorDbHelper.SenatorEntry.COLUMN_NAME_PARTY));
                 state = cursor.getString(cursor.getColumnIndex(SenatorDbHelper.SenatorEntry.COLUMN_NAME_STATE));
                 url = cursor.getString(cursor.getColumnIndex(SenatorDbHelper.SenatorEntry.COLUMN_NAME_URL));
-                vote = cursor.getInt(cursor.getColumnIndex(SenatorDbHelper.SenatorEntry.COLUMN_NAME_VOTE));
-                senators.add(new Senator(id, name, party, state, vote, url));
+                vote1 = cursor.getInt(cursor.getColumnIndex(SenatorDbHelper.SenatorEntry.COLUMN_NAME_VOTE1));
+                vote2 = cursor.getInt(cursor.getColumnIndex(SenatorDbHelper.SenatorEntry.COLUMN_NAME_VOTE2));
+                senators.add(new Senator(id, name, party, state, vote1, vote2, url));
             }
         } finally {
             if (cursor != null) {
@@ -173,6 +176,15 @@ public final class SenatorsManager implements SenatorsCallbackInterface {
             tvNo.setText(String.format(Locale.getDefault(), "%d", countNo));
             tvAbstention.setText(String.format(Locale.getDefault(), "%d", countAbstention));
             tvAbsence.setText(String.format(Locale.getDefault(), "%d", countAbsence));
+
+            TextView tvPercentYes = (TextView) votingView.findViewById(R.id.voting_percentage_yes);
+            TextView tvPercentNo = (TextView) votingView.findViewById(R.id.voting_percentage_no);
+
+            int totalValid = countYes + countNo + countAbstention + countAbsence;
+            double percentYes = ((double) countYes / totalValid) * 100f;
+            double percentNo = ((double) countNo / totalValid) * 100f;
+            tvPercentYes.setText(context.getString(R.string.voting_percentage_text, percentYes));
+            tvPercentNo.setText(context.getString(R.string.voting_percentage_text, percentNo));
         }
     }
 
@@ -200,10 +212,10 @@ public final class SenatorsManager implements SenatorsCallbackInterface {
         return count;
     }
 
-    public void updateVote(int id, int vote) {
+    public void updateVote(int id, int vote1) {
         for (Senator s : senators) {
             if (s.getId() == id) {
-                s.setVoto(vote);
+                s.setVoto(vote1);
                 new Handler(Looper.getMainLooper()).post(new Runnable() {
                     @Override
                     public void run() {
@@ -215,10 +227,14 @@ public final class SenatorsManager implements SenatorsCallbackInterface {
         }
         String whereClause = String.format(Locale.getDefault(), "%s=%d", SenatorDbHelper.SenatorEntry.COLUMN_NAME_ID, id);
         ContentValues values = new ContentValues();
-        values.put(SenatorDbHelper.SenatorEntry.COLUMN_NAME_VOTE, vote);
+        values.put(SenatorDbHelper.SenatorEntry.COLUMN_NAME_VOTE1, vote1);
         SenatorDbHelper dbHelper = new SenatorDbHelper(context);
         SQLiteDatabase sqliteDatabase = dbHelper.getWritableDatabase();
         int updated = sqliteDatabase.update(SenatorDbHelper.SenatorEntry.TABLE_NAME, values, whereClause, null);
         Log.d(TAG, "Updated " + updated + " rows");
+    }
+
+    public List<Senator> getAllSenators() {
+        return this.senators;
     }
 }
