@@ -38,7 +38,6 @@ public final class SenatorsArrayAdapter extends ArrayAdapter<Senator> {
         // Check if an existing view is being reused, otherwise inflate the view
         if (convertView == null) {
             convertView = LayoutInflater.from(context).inflate(layoutResId, parent, false);
-
             holder = new SenatorHolder();
             holder.imageUrl = (ImageView) convertView.findViewById(R.id.senator_image);
             holder.name = (TextView) convertView.findViewById(R.id.senator_name);
@@ -55,7 +54,6 @@ public final class SenatorsArrayAdapter extends ArrayAdapter<Senator> {
         holder.partyState.setText(String.format("%s - %s", sen.getPartido(), sen.getEstado()));
 
         Log.d(TAG, String.format(Locale.getDefault(), "Senator id=%d (%s) voted 11/5 %d and %d now", sen.getId(), sen.getNome(), sen.getVoto(), sen.getVoto2()));
-        holder.vote1.setImageResource(0);
         if (Constants.VOTE_YES == sen.getVoto()) {
             holder.vote1.setImageResource(R.drawable.vote_yes);
         } else if (Constants.VOTE_NO == sen.getVoto()) {
@@ -64,8 +62,9 @@ public final class SenatorsArrayAdapter extends ArrayAdapter<Senator> {
             holder.vote1.setImageResource(R.drawable.vote_abstention);
         } else if (Constants.VOTE_ABSENCE == sen.getVoto()) {
             holder.vote1.setImageResource(R.drawable.vote_absence);
+        } else {
+            holder.vote1.setImageResource(0);
         }
-        holder.vote2.setImageResource(0);
         if (Constants.VOTE_YES == sen.getVoto2()) {
             holder.vote2.setImageResource(R.drawable.vote_yes);
         } else if (Constants.VOTE_NO == sen.getVoto2()) {
@@ -74,6 +73,8 @@ public final class SenatorsArrayAdapter extends ArrayAdapter<Senator> {
             holder.vote2.setImageResource(R.drawable.vote_abstention);
         } else if (Constants.VOTE_ABSENCE == sen.getVoto2()) {
             holder.vote2.setImageResource(R.drawable.vote_absence);
+        } else {
+            holder.vote2.setImageResource(0);
         }
 
         return convertView;

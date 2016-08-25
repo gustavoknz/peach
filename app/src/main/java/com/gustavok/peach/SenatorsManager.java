@@ -25,6 +25,7 @@ public final class SenatorsManager implements SenatorsCallbackInterface {
     private static final int VOTE_POSITION_UNKNOWN = 4;
     private static final String TAG = "SenatorsManager";
     private static final SenatorsManager INSTANCE = new SenatorsManager();
+    private static SenatorDbHelper mDbHelper;
     private final List<Senator> senators = new ArrayList<>();
     private SenatorsArrayAdapter senatorsArrayAdapter;
     private View votingView;
@@ -46,26 +47,18 @@ public final class SenatorsManager implements SenatorsCallbackInterface {
             this.senatorsArrayAdapter.add(s);
         }
         updateVotes();
-        for (Senator s : senators) {
-            insertSenator(s);
-        }
     }
 
     public void init() {
+        mDbHelper = new SenatorDbHelper(context);
         if (dbExists()) {
             loadSenatorsFromDb();
-        } else {
-            Log.d(TAG, "Calling REST...");
-            RestClient.getSenatorsList(this);
         }
+        Log.d(TAG, "Calling REST...");
+        RestClient.getSenatorsList(this);
     }
 
     private void insertSenator(Senator senator) {
-        SenatorDbHelper mDbHelper = new SenatorDbHelper(context);
-
-        // Gets the data repository in write mode
-        SQLiteDatabase db = mDbHelper.getWritableDatabase();
-
         // Create a new map of values, where column names are the keys
         ContentValues values = new ContentValues();
         values.put(SenatorDbHelper.SenatorEntry.COLUMN_NAME_ID, senator.getId());
@@ -77,12 +70,11 @@ public final class SenatorsManager implements SenatorsCallbackInterface {
         values.put(SenatorDbHelper.SenatorEntry.COLUMN_NAME_URL, senator.getUrl());
 
         // Insert the new row, returning the primary key value of the new row
-        db.insert(SenatorDbHelper.SenatorEntry.TABLE_NAME, null, values);
+        SQLiteDatabase db = mDbHelper.getWritableDatabase();
+        db.insertWithOnConflict(SenatorDbHelper.SenatorEntry.TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_REPLACE);
     }
 
     private boolean dbExists() {
-        SenatorDbHelper mDbHelper = new SenatorDbHelper(context);
-
         // Gets the data repository in write mode
         SQLiteDatabase db = mDbHelper.getReadableDatabase();
         String query = "SELECT count(*) FROM " + SenatorDbHelper.SenatorEntry.TABLE_NAME;
@@ -91,7 +83,7 @@ public final class SenatorsManager implements SenatorsCallbackInterface {
             cursor = db.rawQuery(query, null);
             cursor.moveToFirst();
             int count = cursor.getInt(0);
-            Log.d(TAG, "My count was: " + count);
+            Log.d(TAG, "Rows found in DB: " + count);
             return (count > 0);
         } finally {
             if (cursor != null) {
@@ -186,12 +178,15 @@ public final class SenatorsManager implements SenatorsCallbackInterface {
             tvPercentYes.setText(context.getString(R.string.voting_percentage_text, percentYes));
             tvPercentNo.setText(context.getString(R.string.voting_percentage_text, percentNo));
         }
+        for (Senator s : senators) {
+            insertSenator(s);
+        }
     }
 
     private int[] countVotes(List<Senator> senators) {
         int[] count = new int[5];
         for (Senator s : senators) {
-            switch (s.getVoto()) {
+            switch (s.getVoto2()) {
                 case Constants.VOTE_YES:
                     ++count[VOTE_POSITION_YES];
                     break;
@@ -212,22 +207,21 @@ public final class SenatorsManager implements SenatorsCallbackInterface {
         return count;
     }
 
-    public void updateVote(int id, int vote1) {
+    public void updateVote(int id, int vote2) {
         for (Senator s : senators) {
             if (s.getId() == id) {
-                s.setVoto(vote1);
+                s.setVoto(vote2);
                 new Handler(Looper.getMainLooper()).post(new Runnable() {
                     @Override
                     public void run() {
                         senatorsArrayAdapter.notifyDataSetChanged();
-                        updateVotes();
                     }
                 });
             }
         }
         String whereClause = String.format(Locale.getDefault(), "%s=%d", SenatorDbHelper.SenatorEntry.COLUMN_NAME_ID, id);
         ContentValues values = new ContentValues();
-        values.put(SenatorDbHelper.SenatorEntry.COLUMN_NAME_VOTE1, vote1);
+        values.put(SenatorDbHelper.SenatorEntry.COLUMN_NAME_VOTE2, vote2);
         SenatorDbHelper dbHelper = new SenatorDbHelper(context);
         SQLiteDatabase sqliteDatabase = dbHelper.getWritableDatabase();
         int updated = sqliteDatabase.update(SenatorDbHelper.SenatorEntry.TABLE_NAME, values, whereClause, null);
