@@ -36,7 +36,6 @@ public class MyFirebaseInstanceIDService extends FirebaseInstanceIdService {
     public void onTokenRefresh() {
         // Get updated InstanceID token.
         String refreshedToken = FirebaseInstanceId.getInstance().getToken();
-        Toast.makeText(this, "MyFirebaseInstanceIDService.onTokenRefresh", Toast.LENGTH_SHORT).show();
         Log.i(TAG, "Refreshed token: " + refreshedToken);
 
         // If you want to send messages to this application instance or
@@ -56,7 +55,6 @@ public class MyFirebaseInstanceIDService extends FirebaseInstanceIdService {
      */
     private void sendRegistrationToServer(String token) {
         // TODO: Implement this method to send token to your app server.
-        Toast.makeText(this, "MyFirebaseInstanceIDService.sendRegistrationToServer", Toast.LENGTH_SHORT).show();
         Log.i(TAG, "sendRegistrationToServer with token = " + token);
         FirebaseMessaging.getInstance().subscribeToTopic(FRIENDLY_ENGAGE_TOPIC);
     }

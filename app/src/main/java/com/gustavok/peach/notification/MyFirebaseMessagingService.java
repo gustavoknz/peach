@@ -47,7 +47,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         // TODO(developer): Handle FCM messages here.
         // Not getting messages here? See why this may be: https://goo.gl/39bRNJ
         Log.i(TAG, "From: " + remoteMessage.getFrom());
-        Toast.makeText(this, "MyFirebaseMessagingService.onMessageReceived", Toast.LENGTH_SHORT).show();
 
         // Check if message contains a data payload.
         if (remoteMessage.getData().size() > 0) {
