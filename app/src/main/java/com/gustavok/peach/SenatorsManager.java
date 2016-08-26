@@ -4,8 +4,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.os.Handler;
-import android.os.Looper;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -212,12 +210,6 @@ public final class SenatorsManager implements SenatorsCallbackInterface {
         for (Senator s : senators) {
             if (s.getId() == id) {
                 s.setVoto(vote2);
-                new Handler(Looper.getMainLooper()).post(new Runnable() {
-                    @Override
-                    public void run() {
-                        senatorsArrayAdapter.notifyDataSetChanged();
-                    }
-                });
             }
         }
         String whereClause = String.format(Locale.getDefault(), "%s=%d", SenatorDbHelper.SenatorEntry.COLUMN_NAME_ID, id);

@@ -16,7 +16,6 @@
 package com.gustavok.peach.notification;
 
 import android.util.Log;
-import android.widget.Toast;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
@@ -54,7 +53,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
             boolean notify = Boolean.parseBoolean(dataMap.get("notify"));
             Log.d(TAG, "notify: " + notify);
-
             if (notify) {
                 String body = remoteMessage.getNotification().getBody();
                 FirebaseMessageHandler.handleNotification(this, body);
