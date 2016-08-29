@@ -172,8 +172,12 @@ public final class SenatorsManager implements SenatorsCallbackInterface {
             TextView tvPercentNo = (TextView) votingView.findViewById(R.id.voting_percentage_no);
 
             int totalValid = countYes + countNo + countAbstention + countAbsence;
-            double percentYes = ((double) countYes / totalValid) * 100f;
-            double percentNo = ((double) countNo / totalValid) * 100f;
+            double percentYes = 0f;
+            double percentNo = 0f;
+            if (totalValid > 0) {
+                percentYes = ((double) countYes / totalValid) * 100f;
+                percentNo = ((double) countNo / totalValid) * 100f;
+            }
             tvPercentYes.setText(context.getString(R.string.voting_percentage_text, percentYes));
             tvPercentNo.setText(context.getString(R.string.voting_percentage_text, percentNo));
         }

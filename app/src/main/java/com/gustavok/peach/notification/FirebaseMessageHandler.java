@@ -40,7 +40,7 @@ public class FirebaseMessageHandler {
 
         Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(context)
-                .setSmallIcon(R.drawable.ic_notification)
+                .setSmallIcon(R.drawable.ic_notification_text)
                 .setContentTitle(context.getResources().getString(R.string.app_name))
                 .setContentText(messageBody)
                 .setAutoCancel(true)

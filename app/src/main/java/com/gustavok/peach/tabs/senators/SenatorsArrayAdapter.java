@@ -10,9 +10,9 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.gustavok.peach.Constants;
 import com.gustavok.peach.R;
 import com.gustavok.peach.Senator;
-import com.gustavok.peach.Constants;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
