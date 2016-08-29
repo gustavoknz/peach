@@ -49,7 +49,11 @@ final class RestClient {
 
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                Log.e(TAG, String.format("Failure 2. statusCode: %d; errorResponse: %s", statusCode, errorResponse.toString()), throwable);
+                if (errorResponse != null) {
+                    Log.e(TAG, String.format("Failure 2. statusCode: %d; errorResponse: %s", statusCode, errorResponse.toString()), throwable);
+                } else {
+                    Log.e(TAG, String.format("Failure 2. statusCode: %d; errorResponse: null", statusCode), throwable);
+                }
                 //TODO: callback.onFailure();
             }
         };

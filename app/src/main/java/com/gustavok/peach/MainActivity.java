@@ -75,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
     private boolean checkConnectivity() {
         ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo netInfo = cm.getActiveNetworkInfo();
-        return netInfo != null && netInfo.isConnectedOrConnecting();
+        return (netInfo != null) && (netInfo.isConnectedOrConnecting());
     }
 
     public void shareIt(View view) {
