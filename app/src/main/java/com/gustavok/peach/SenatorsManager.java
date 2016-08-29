@@ -1,5 +1,6 @@
 package com.gustavok.peach;
 
+import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -116,9 +117,8 @@ public final class SenatorsManager implements SenatorsCallbackInterface {
         String url;
         SQLiteDatabase sqliteDatabase = null;
         Cursor cursor = null;
-        SenatorDbHelper dbHelper = new SenatorDbHelper(context);
         try {
-            sqliteDatabase = dbHelper.getReadableDatabase();
+            sqliteDatabase = mDbHelper.getReadableDatabase();
             cursor = sqliteDatabase.query(SenatorDbHelper.SenatorEntry.TABLE_NAME, null, null, null, null, null, null);
             while (cursor.moveToNext()) {
                 id = cursor.getInt(cursor.getColumnIndex(SenatorDbHelper.SenatorEntry.COLUMN_NAME_ID));
@@ -209,19 +209,27 @@ public final class SenatorsManager implements SenatorsCallbackInterface {
     public void updateVote(int id, int vote2) {
         for (Senator s : senators) {
             if (s.getId() == id) {
-                s.setVoto(vote2);
+                s.setVoto2(vote2);
             }
         }
         String whereClause = String.format(Locale.getDefault(), "%s=%d", SenatorDbHelper.SenatorEntry.COLUMN_NAME_ID, id);
         ContentValues values = new ContentValues();
         values.put(SenatorDbHelper.SenatorEntry.COLUMN_NAME_VOTE2, vote2);
-        SenatorDbHelper dbHelper = new SenatorDbHelper(context);
-        SQLiteDatabase sqliteDatabase = dbHelper.getWritableDatabase();
+        SQLiteDatabase sqliteDatabase = mDbHelper.getWritableDatabase();
         int updated = sqliteDatabase.update(SenatorDbHelper.SenatorEntry.TABLE_NAME, values, whereClause, null);
         Log.d(TAG, "Updated " + updated + " rows");
     }
 
     public List<Senator> getAllSenators() {
         return this.senators;
+    }
+
+    public void updateVotesFromFirebase() {
+        ((Activity) context).runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                SenatorsManager.getInstance().updateVotes();
+            }
+        });
     }
 }

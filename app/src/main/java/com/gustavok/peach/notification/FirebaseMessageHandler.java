@@ -25,7 +25,7 @@ public class FirebaseMessageHandler {
     public static void handleVote(int id, int vote) {
         Log.d(TAG, String.format("Received vote id: %d; vote: %d", id, vote));
         SenatorsManager.getInstance().updateVote(id, vote);
-        SenatorsManager.getInstance().updateVotes();
+        SenatorsManager.getInstance().updateVotesFromFirebase();
     }
 
     /**

@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
             //TODO Snackbar.make(this, "", Toast.LENGTH_LONG).show();
         }
 
-        SenatorsManager.getInstance().setContext(getApplicationContext());
+        SenatorsManager.getInstance().setContext(this);
         SenatorsManager.getInstance().init();
 
         // Create the adapter that will return a fragment for each of the three

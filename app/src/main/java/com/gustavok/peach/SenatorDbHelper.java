@@ -14,8 +14,7 @@ class SenatorDbHelper extends SQLiteOpenHelper {
     private static final String COMMA_SEP = ",";
     private static final String SQL_CREATE_ENTRIES =
             "CREATE TABLE " + SenatorEntry.TABLE_NAME + " (" +
-                    SenatorEntry._ID + " INTEGER PRIMARY KEY," +
-                    SenatorEntry.COLUMN_NAME_ID + INT_TYPE + COMMA_SEP +
+                    SenatorEntry.COLUMN_NAME_ID + INT_TYPE + " PRIMARY KEY" + COMMA_SEP +
                     SenatorEntry.COLUMN_NAME_NAME + TEXT_TYPE + COMMA_SEP +
                     SenatorEntry.COLUMN_NAME_PARTY + TEXT_TYPE + COMMA_SEP +
                     SenatorEntry.COLUMN_NAME_STATE + TEXT_TYPE + COMMA_SEP +

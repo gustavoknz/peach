@@ -23,7 +23,7 @@
     <string name="dialog_voting_no">Não</string>
     <string name="dialog_voting_abstention">Absteve-se</string>
     <string name="dialog_voting_absence">Ausente</string>
-    <string name="dialog_voting_not_yet">\?</string>
+    <string name="dialog_voting_not_yet">Ainda não votou</string>
     <string name="dialog_text_vote1">Voto 11/5:</string>
     <string name="dialog_text_vote2">Voto hoje:</string>
     <string name="dialog_text_party_state">Filiação:</string>
@@ -36,6 +36,7 @@
     <string name="share_button_desc">Compartilhe</string>
     <string name="share_message">Acompanhe a votação de Impeachment de Dilma Rousseff voto a voto pelo aplicativo Peach. Baixe aqui: https://goo.gl/ZQQZYO</string>
     <string name="share_title">Compartilhe com seus amigos</string>
+    <string name="filter_title_viewojur">Peach</string>
 
     <string-array name="party_array">
         <item>Partido</item>
