@@ -21,7 +21,8 @@ public final class SenatorsManager implements SenatorsCallbackInterface {
     private static final int VOTE_POSITION_NO = 1;
     private static final int VOTE_POSITION_ABSTINENT = 2;
     private static final int VOTE_POSITION_ABSENCE = 3;
-    private static final int VOTE_POSITION_UNKNOWN = 4;
+    private static final int VOTE_POSITION_NONE = 4;
+    private static final int VOTE_POSITION_UNKNOWN = 5;
     private static final String TAG = "SenatorsManager";
     private static final SenatorsManager INSTANCE = new SenatorsManager();
     private static SenatorDbHelper mDbHelper;
@@ -154,15 +155,16 @@ public final class SenatorsManager implements SenatorsCallbackInterface {
             int countNo = votes[VOTE_POSITION_NO];
             int countAbstention = votes[VOTE_POSITION_ABSTINENT];
             int countAbsence = votes[VOTE_POSITION_ABSENCE];
+            int countNone = votes[VOTE_POSITION_NONE];
             int countUnknown = votes[VOTE_POSITION_UNKNOWN];
-            int total = countYes + countNo + countAbstention + countAbsence + countUnknown;
+            int total = countYes + countNo + countAbstention + countAbsence + countUnknown + countNone;
+            Log.d(TAG, String.format("Updating senatorVotes to (%d) yes=%d; no=%d; abstention=%d; absence=%d; none=%d; unknown=%d",
+                    total, countYes, countNo, countAbstention, countAbsence, countNone, countUnknown));
 
             TextView tvYes = (TextView) votingView.findViewById(R.id.voting_count_yes);
             TextView tvNo = (TextView) votingView.findViewById(R.id.voting_count_no);
             TextView tvAbstention = (TextView) votingView.findViewById(R.id.voting_count_abstention);
             TextView tvAbsence = (TextView) votingView.findViewById(R.id.voting_count_absence);
-            Log.d(TAG, String.format("Updating senatorVotes to (%d) yes=%d; no=%d; abstention=%d; absence=%d; unknown=%d",
-                    total, countYes, countNo, countAbstention, countAbsence, countUnknown));
             tvYes.setText(String.format(Locale.getDefault(), "%d", countYes));
             tvNo.setText(String.format(Locale.getDefault(), "%d", countNo));
             tvAbstention.setText(String.format(Locale.getDefault(), "%d", countAbstention));
@@ -187,7 +189,7 @@ public final class SenatorsManager implements SenatorsCallbackInterface {
     }
 
     private int[] countVotes(List<Senator> senators) {
-        int[] count = new int[5];
+        int[] count = new int[6];
         for (Senator s : senators) {
             switch (s.getVoto2()) {
                 case Constants.VOTE_YES:
@@ -202,7 +204,10 @@ public final class SenatorsManager implements SenatorsCallbackInterface {
                 case Constants.VOTE_ABSENCE:
                     ++count[VOTE_POSITION_ABSENCE];
                     break;
-                case Constants.VOTE_UNKNOWN:
+                case Constants.VOTE_NONE:
+                    ++count[VOTE_POSITION_NONE];
+                    break;
+                default:
                     ++count[VOTE_POSITION_UNKNOWN];
                     break;
             }

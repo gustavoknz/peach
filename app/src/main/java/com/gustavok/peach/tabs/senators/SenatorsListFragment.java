@@ -102,26 +102,7 @@ public class SenatorsListFragment extends ListFragment {
                 String selectedVote = (String) spinnerVote1.getSelectedItem();
                 Log.d(TAG, String.format("Selected position: %d; id: %d; vote1=%s", position, id, selectedVote));
 
-                switch (position) {
-                    case 0:
-                        constraintVote1 = Constants.VOTE_CONSTRAINT_ALL;
-                        break;
-                    case 1:
-                        constraintVote1 = Constants.VOTE_CONSTRAINT_NO_VOTE;
-                        break;
-                    case 2:
-                        constraintVote1 = Constants.VOTE_CONSTRAINT_YES;
-                        break;
-                    case 3:
-                        constraintVote1 = Constants.VOTE_CONSTRAINT_NO;
-                        break;
-                    case 4:
-                        constraintVote1 = Constants.VOTE_CONSTRAINT_ABSTENTION;
-                        break;
-                    case 5:
-                        constraintVote1 = Constants.VOTE_CONSTRAINT_ABSENCE;
-                        break;
-                }
+                constraintVote1 = position;
                 updateList();
             }
 
@@ -136,26 +117,7 @@ public class SenatorsListFragment extends ListFragment {
                 String selectedVote = (String) spinnerVote2.getSelectedItem();
                 Log.d(TAG, String.format("Selected position: %d; id: %d; vote2=%s", position, id, selectedVote));
 
-                switch (position) {
-                    case 0:
-                        constraintVote2 = Constants.VOTE_CONSTRAINT_ALL;
-                        break;
-                    case 1:
-                        constraintVote2 = Constants.VOTE_CONSTRAINT_NO_VOTE;
-                        break;
-                    case 2:
-                        constraintVote2 = Constants.VOTE_CONSTRAINT_YES;
-                        break;
-                    case 3:
-                        constraintVote2 = Constants.VOTE_CONSTRAINT_NO;
-                        break;
-                    case 4:
-                        constraintVote2 = Constants.VOTE_CONSTRAINT_ABSTENTION;
-                        break;
-                    case 5:
-                        constraintVote2 = Constants.VOTE_CONSTRAINT_ABSENCE;
-                        break;
-                }
+                constraintVote2 = position;
                 updateList();
             }
 
@@ -188,59 +150,69 @@ public class SenatorsListFragment extends ListFragment {
                 }
             }
             switch (constraintVote1) {
-                case Constants.VOTE_CONSTRAINT_ALL:
+                case Constants.VOTE1_CONSTRAINT_ALL:
                     break;
-                case Constants.VOTE_CONSTRAINT_NO_VOTE:
-                    if (senator.getVoto() != Constants.VOTE_DEFAULT_VALUE) {
-                        viewSenatorsList.remove(senator);
-                    }
-                    break;
-                case Constants.VOTE_CONSTRAINT_YES:
+                case Constants.VOTE1_CONSTRAINT_YES:
                     if (senator.getVoto() != Constants.VOTE_YES) {
                         viewSenatorsList.remove(senator);
                     }
                     break;
-                case Constants.VOTE_CONSTRAINT_NO:
+                case Constants.VOTE1_CONSTRAINT_NO:
                     if (senator.getVoto() != Constants.VOTE_NO) {
                         viewSenatorsList.remove(senator);
                     }
                     break;
-                case Constants.VOTE_CONSTRAINT_ABSTENTION:
+                case Constants.VOTE1_CONSTRAINT_ABSTENTION:
                     if (senator.getVoto() != Constants.VOTE_ABSTENTION) {
                         viewSenatorsList.remove(senator);
                     }
                     break;
-                case Constants.VOTE_CONSTRAINT_ABSENCE:
+                case Constants.VOTE1_CONSTRAINT_ABSENCE:
                     if (senator.getVoto() != Constants.VOTE_ABSENCE) {
+                        viewSenatorsList.remove(senator);
+                    }
+                    break;
+                case Constants.VOTE1_CONSTRAINT_NONE:
+                    if (senator.getVoto() != Constants.VOTE_NONE) {
                         viewSenatorsList.remove(senator);
                     }
                     break;
             }
             switch (constraintVote2) {
-                case Constants.VOTE_CONSTRAINT_ALL:
+                case Constants.VOTE2_CONSTRAINT_ALL:
                     break;
-                case Constants.VOTE_CONSTRAINT_NO_VOTE:
+                case Constants.VOTE2_CONSTRAINT_WAITING:
                     if (senator.getVoto2() != Constants.VOTE_DEFAULT_VALUE) {
                         viewSenatorsList.remove(senator);
                     }
                     break;
-                case Constants.VOTE_CONSTRAINT_YES:
+                case Constants.VOTE2_CONSTRAINT_YES:
                     if (senator.getVoto2() != Constants.VOTE_YES) {
                         viewSenatorsList.remove(senator);
                     }
                     break;
-                case Constants.VOTE_CONSTRAINT_NO:
+                case Constants.VOTE2_CONSTRAINT_NO:
                     if (senator.getVoto2() != Constants.VOTE_NO) {
                         viewSenatorsList.remove(senator);
                     }
                     break;
-                case Constants.VOTE_CONSTRAINT_ABSTENTION:
+                case Constants.VOTE2_CONSTRAINT_ABSTENTION:
                     if (senator.getVoto2() != Constants.VOTE_ABSTENTION) {
                         viewSenatorsList.remove(senator);
                     }
                     break;
-                case Constants.VOTE_CONSTRAINT_ABSENCE:
+                case Constants.VOTE2_CONSTRAINT_ABSENCE:
                     if (senator.getVoto2() != Constants.VOTE_ABSENCE) {
+                        viewSenatorsList.remove(senator);
+                    }
+                    break;
+                case Constants.VOTE2_CONSTRAINT_NONE:
+                    if (senator.getVoto2() != Constants.VOTE_NONE) {
+                        viewSenatorsList.remove(senator);
+                    }
+                    break;
+                case Constants.VOTE2_CONSTRAINT_CHANGE:
+                    if ((senator.getVoto() == senator.getVoto2()) || (senator.getVoto2() == Constants.VOTE_DEFAULT_VALUE)) {
                         viewSenatorsList.remove(senator);
                     }
                     break;
@@ -280,6 +252,9 @@ public class SenatorsListFragment extends ListFragment {
             case Constants.VOTE_ABSENCE:
                 vote1View.setText(R.string.dialog_voting_absence);
                 break;
+            case Constants.VOTE_NONE:
+                vote1View.setText(R.string.dialog_voting_none);
+                break;
             case Constants.VOTE_DEFAULT_VALUE:
                 vote1View.setText(R.string.dialog_voting_not_yet);
                 break;
@@ -297,6 +272,9 @@ public class SenatorsListFragment extends ListFragment {
                 break;
             case Constants.VOTE_ABSENCE:
                 vote2View.setText(R.string.dialog_voting_absence);
+                break;
+            case Constants.VOTE_NONE:
+                vote2View.setText(R.string.dialog_voting_none);
                 break;
             case Constants.VOTE_DEFAULT_VALUE:
                 vote2View.setText(R.string.dialog_voting_not_yet);

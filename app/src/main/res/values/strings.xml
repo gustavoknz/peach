@@ -24,6 +24,7 @@
     <string name="dialog_voting_abstention">Absteve-se</string>
     <string name="dialog_voting_absence">Ausente</string>
     <string name="dialog_voting_not_yet">Ainda não votou</string>
+    <string name="dialog_voting_none">Não votou</string>
     <string name="dialog_text_vote1">Voto 11/5:</string>
     <string name="dialog_text_vote2">Voto hoje:</string>
     <string name="dialog_text_party_state">Filiação:</string>
@@ -110,11 +111,11 @@
 
     <string-array name="vote1_array">
         <item>Voto dia 11/5</item>
-        <item>Não votou</item>
         <item>Sim</item>
         <item>Não</item>
         <item>Abstenção</item>
         <item>Ausente</item>
+        <item>Não votou</item>
     </string-array>
     <string-array name="vote2_array">
         <item>Voto hoje</item>
@@ -123,5 +124,7 @@
         <item>Não</item>
         <item>Abstenção</item>
         <item>Ausente</item>
+        <item>Não votou</item>
+        <item>Trocou voto</item>
     </string-array>
 </resources>
