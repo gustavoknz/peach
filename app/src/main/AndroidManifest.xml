@@ -29,16 +29,10 @@
 
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <!-- Accepts URIs that begin with "http://www.example.com/gizmos” -->
                 <data
                     android:host="ojur.com.br"
                     android:pathPrefix="/sen"
                     android:scheme="http" />
-                <!-- note that the leading "/" is required for pathPrefix-->
-                <!-- Accepts URIs that begin with "example://gizmos” -->
-                <data
-                    android:host="gizmos"
-                    android:scheme="example" />
             </intent-filter>
         </activity>
 

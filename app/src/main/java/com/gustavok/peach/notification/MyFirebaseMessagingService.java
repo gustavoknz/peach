@@ -51,15 +51,19 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         if (remoteMessage.getData().size() > 0) {
             Map<String, String> dataMap = remoteMessage.getData();
 
-            boolean notify = Boolean.parseBoolean(dataMap.get("notify"));
-            Log.d(TAG, "notify: " + notify);
-            if (notify) {
-                String body = remoteMessage.getNotification().getBody();
-                FirebaseMessageHandler.handleNotification(this, body);
-            } else {
-                int id = Integer.parseInt(dataMap.get("id"));
-                int vote = Integer.parseInt(dataMap.get("vote"));
-                FirebaseMessageHandler.handleVote(id, vote);
+            try {
+                boolean notify = Boolean.parseBoolean(dataMap.get("notify"));
+                Log.d(TAG, "notify: " + notify);
+                if (notify) {
+                    String body = remoteMessage.getNotification().getBody();
+                    FirebaseMessageHandler.handleNotification(this, body);
+                } else {
+                    int id = Integer.parseInt(dataMap.get("id"));
+                    int vote = Integer.parseInt(dataMap.get("vote"));
+                    FirebaseMessageHandler.handleVote(id, vote);
+                }
+            } catch (Exception e) {
+                Log.e(TAG, "Error parsing message", e);
             }
         }
         // Also if you intend on generating your own notifications as a result of a received FCM
