@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#16B83E</color>
-    <color name="colorPrimaryDark">#EED11D</color>
-    <color name="colorAccent">#FF2200</color>
+    <color name="colorPrimary">#FF16B83E</color>
+    <color name="colorPrimaryDark">#FFEED11D</color>
+    <color name="colorAccent">#FFFF2200</color>
 
-    <color name="voting_yes">#444444</color>
-    <color name="voting_no">#444444</color>
-    <color name="voting_absence">#666666</color>
-    <color name="voting_abstention">#666666</color>
+    <color name="voting_yes">#FF444444</color>
+    <color name="voting_no">#FF444444</color>
+    <color name="voting_absence">#FF666666</color>
+    <color name="voting_abstention">#FF666666</color>
 
-    <color name="dialog_senator_name">#CC2211</color>
-    <color name="dialog_senator_party_state">#1122CC</color>
-    <color name="dialog_senator_vote">#1122CC</color>
-    <color name="dialog_senator_vote_old">#BBC11C</color>
+    <color name="dialog_senator_name">#FFCC2211</color>
+    <color name="dialog_senator_party_state">#FF1122CC</color>
+    <color name="dialog_senator_vote">#FF1122CC</color>
+    <color name="dialog_senator_vote_old">#FFBBC11C</color>
 </resources>

@@ -56,6 +56,11 @@ final class RestClient {
                 }
                 //TODO: callback.onFailure();
             }
+
+            @Override
+            public void onProgress(long bytesWritten, long totalSize) {
+                callback.onProgress(bytesWritten, totalSize);
+            }
         };
 
         String method = "/senadores";

@@ -12,6 +12,8 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.google.firebase.messaging.FirebaseMessaging;
@@ -37,6 +39,9 @@ public class MainActivity extends AppCompatActivity {
         }
 
         SenatorsManager.getInstance().setContext(this);
+        RelativeLayout loadingLayout = (RelativeLayout) findViewById(R.id.loadingLayout);
+        ProgressBar progressBar = (ProgressBar) findViewById(R.id.loadingBar);
+        SenatorsManager.getInstance().setLoadingViews(loadingLayout, progressBar);
         SenatorsManager.getInstance().init();
 
         // Create the adapter that will return a fragment for each of the three

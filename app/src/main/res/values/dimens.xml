@@ -4,4 +4,5 @@
     <dimen name="yes_no_text_size">60sp</dimen>
     <dimen name="yes_no_percentage_size">30sp</dimen>
     <dimen name="other_votes_text_size">20sp</dimen>
+    <dimen name="loading_bar_padding">15sp</dimen>
 </resources>

@@ -38,6 +38,7 @@
     <string name="share_message">Acompanhe a votação de Impeachment de Dilma Rousseff voto a voto pelo aplicativo Peach. Baixe aqui: https://goo.gl/ZQQZYO</string>
     <string name="share_title">Compartilhe com seus amigos</string>
     <string name="filter_title_viewojur">Peach</string>
+    <string name="loading_text">Carregando atualizações...</string>
 
     <string-array name="party_array">
         <item>Partido</item>

@@ -7,6 +7,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 import android.view.View;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.gustavok.peach.tabs.senators.SenatorsArrayAdapter;
@@ -30,12 +32,20 @@ public final class SenatorsManager implements SenatorsCallbackInterface {
     private SenatorsArrayAdapter senatorsArrayAdapter;
     private View votingView;
     private Context context;
+    private RelativeLayout loadingLayout;
+    private ProgressBar progressBar;
 
     private SenatorsManager() {
     }
 
     public static SenatorsManager getInstance() {
         return INSTANCE;
+    }
+
+    @Override
+    public void onProgress(long bytesWritten, long totalSize) {
+        Log.d(TAG, String.format(Locale.getDefault(), "Received %d bytes from total %d", bytesWritten, totalSize));
+        progressBar.setProgress((int) ((bytesWritten / totalSize) * 100));
     }
 
     @Override
@@ -48,6 +58,7 @@ public final class SenatorsManager implements SenatorsCallbackInterface {
             this.senatorsArrayAdapter.add(s);
         }
         updateVotes();
+        loadingLayout.setVisibility(View.GONE);
     }
 
     public void init() {
@@ -57,6 +68,11 @@ public final class SenatorsManager implements SenatorsCallbackInterface {
         }
         Log.d(TAG, "Calling REST...");
         RestClient.getSenatorsList(this);
+    }
+
+    public void setLoadingViews(RelativeLayout loadingLayout, ProgressBar progressBar) {
+        this.loadingLayout = loadingLayout;
+        this.progressBar = progressBar;
     }
 
     private void insertSenator(Senator senator) {
