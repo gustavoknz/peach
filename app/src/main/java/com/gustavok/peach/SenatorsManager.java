@@ -45,7 +45,9 @@ public final class SenatorsManager implements SenatorsCallbackInterface {
     @Override
     public void onProgress(long bytesWritten, long totalSize) {
         Log.d(TAG, String.format(Locale.getDefault(), "Received %d bytes from total %d", bytesWritten, totalSize));
-        progressBar.setProgress((int) ((bytesWritten / totalSize) * 100));
+        if (loadingLayout.getVisibility() == View.VISIBLE) {
+            progressBar.setProgress((int) ((bytesWritten / totalSize) * 100));
+        }
     }
 
     @Override

@@ -33,13 +33,14 @@ public class MainActivity extends AppCompatActivity {
         Log.d(TAG, "*****************************************************************************");
         setContentView(R.layout.activity_main);
 
+        RelativeLayout loadingLayout = (RelativeLayout) findViewById(R.id.loadingLayout);
         if (!checkConnectivity()) {
+            loadingLayout.setVisibility(View.GONE);
             Toast.makeText(this, R.string.noInternetMessage, Toast.LENGTH_LONG).show();
             //TODO Snackbar.make(this, "", Toast.LENGTH_LONG).show();
         }
 
         SenatorsManager.getInstance().setContext(this);
-        RelativeLayout loadingLayout = (RelativeLayout) findViewById(R.id.loadingLayout);
         ProgressBar progressBar = (ProgressBar) findViewById(R.id.loadingBar);
         SenatorsManager.getInstance().setLoadingViews(loadingLayout, progressBar);
         SenatorsManager.getInstance().init();
