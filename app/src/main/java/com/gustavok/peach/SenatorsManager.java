@@ -63,7 +63,7 @@ public final class SenatorsManager implements SenatorsCallbackInterface {
         loadingLayout.setVisibility(View.GONE);
     }
 
-    public void init() {
+    void init() {
         mDbHelper = new SenatorDbHelper(context);
         if (dbExists()) {
             loadSenatorsFromDb();
@@ -72,7 +72,7 @@ public final class SenatorsManager implements SenatorsCallbackInterface {
         RestClient.getSenatorsList(this);
     }
 
-    public void setLoadingViews(RelativeLayout loadingLayout, ProgressBar progressBar) {
+    void setLoadingViews(RelativeLayout loadingLayout, ProgressBar progressBar) {
         this.loadingLayout = loadingLayout;
         this.progressBar = progressBar;
     }

@@ -225,6 +225,10 @@ public class SenatorsListFragment extends ListFragment {
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         Senator item = adapter.getItem(position);
+        if (item == null) {
+            Log.d(TAG, String.format("Clicked item (%d) is null", position));
+            return;
+        }
         Log.i(TAG, String.format("Senator (%s) clicked. position: %d; id: %d", item.getNome(), position, id));
 
         LayoutInflater factory = LayoutInflater.from(v.getContext());

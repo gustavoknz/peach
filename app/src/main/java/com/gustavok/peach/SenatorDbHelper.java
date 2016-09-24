@@ -23,7 +23,7 @@ class SenatorDbHelper extends SQLiteOpenHelper {
                     SenatorEntry.COLUMN_NAME_URL + TEXT_TYPE + ")";
     private static final String SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS " + SenatorEntry.TABLE_NAME;
 
-    public SenatorDbHelper(Context context) {
+    SenatorDbHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
@@ -42,14 +42,14 @@ class SenatorDbHelper extends SQLiteOpenHelper {
         onUpgrade(db, oldVersion, newVersion);
     }
 
-    public static abstract class SenatorEntry implements BaseColumns {
-        public static final String TABLE_NAME = "senators";
-        public static final String COLUMN_NAME_ID = "id";
-        public static final String COLUMN_NAME_NAME = "name";
-        public static final String COLUMN_NAME_PARTY = "party";
-        public static final String COLUMN_NAME_STATE = "state";
-        public static final String COLUMN_NAME_VOTE1 = "vote1";
-        public static final String COLUMN_NAME_VOTE2 = "vote2";
-        public static final String COLUMN_NAME_URL = "url";
+    static abstract class SenatorEntry implements BaseColumns {
+        static final String TABLE_NAME = "senators";
+        static final String COLUMN_NAME_ID = "id";
+        static final String COLUMN_NAME_NAME = "name";
+        static final String COLUMN_NAME_PARTY = "party";
+        static final String COLUMN_NAME_STATE = "state";
+        static final String COLUMN_NAME_VOTE1 = "vote1";
+        static final String COLUMN_NAME_VOTE2 = "vote2";
+        static final String COLUMN_NAME_URL = "url";
     }
 }

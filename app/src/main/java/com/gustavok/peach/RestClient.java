@@ -25,7 +25,7 @@ final class RestClient {
         return BASE_URL + method;
     }
 
-    public static void getSenatorsList(final SenatorsCallbackInterface callback) {
+    static void getSenatorsList(final SenatorsCallbackInterface callback) {
         // SaxAsyncHttpResponseHandler saxAsyncHttpResponseHandler = new SaxAsyncHttpResponseHandler<SAXTreeStructure>(new SAXTreeStructure()) {
         JsonHttpResponseHandler jsonHttpResponseHandler = new JsonHttpResponseHandler() {
             @Override

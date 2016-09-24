@@ -2,6 +2,7 @@ package com.gustavok.peach.tabs.senators;
 
 import android.app.Activity;
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,15 +25,16 @@ public final class SenatorsArrayAdapter extends ArrayAdapter<Senator> {
     private final int layoutResId;
     private List<Senator> data = null;
 
-    public SenatorsArrayAdapter(Activity context, int layoutResId, List<Senator> data) {
+    SenatorsArrayAdapter(Activity context, int layoutResId, List<Senator> data) {
         super(context, layoutResId, data);
         this.context = context;
         this.layoutResId = layoutResId;
         this.data = data;
     }
 
+    @NonNull
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(int position, View convertView, @NonNull ViewGroup parent) {
         SenatorHolder holder;
 
         // Check if an existing view is being reused, otherwise inflate the view
@@ -80,7 +82,7 @@ public final class SenatorsArrayAdapter extends ArrayAdapter<Senator> {
         return convertView;
     }
 
-    class SenatorHolder {
+    private class SenatorHolder {
         ImageView imageUrl;
         TextView name;
         TextView partyState;

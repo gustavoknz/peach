@@ -3,20 +3,25 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 24
     buildToolsVersion "23.0.3"
-
     defaultConfig {
         applicationId "com.gustavok.peach"
-        minSdkVersion 9
+        minSdkVersion 14
         targetSdkVersion 24
         versionCode 9
         versionName "1.8"
     }
     buildTypes {
+        debug {
+            minifyEnabled false
+            shrinkResources false
+        }
         release {
             minifyEnabled true
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    return true
 }
 
 repositories {
@@ -34,8 +39,8 @@ dependencies {
     compile 'com.squareup.picasso:picasso:2.5.2'
 
     androidTestCompile 'com.android.support:support-annotations:24.2.1'
-    androidTestCompile 'com.android.support.test:rules:0.4'
-    androidTestCompile 'com.android.support.test:runner:0.4'
+    androidTestCompile 'com.android.support.test:rules:0.5'
+    androidTestCompile 'com.android.support.test:runner:0.5'
 
     testCompile 'junit:junit:4.12'
     testCompile 'org.hamcrest:hamcrest-library:1.3'

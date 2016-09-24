@@ -99,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
         private static final int TOTAL_PAGES_COUNT = 2;
 
-        public SectionsPagerAdapter(FragmentManager fm) {
+        SectionsPagerAdapter(FragmentManager fm) {
             super(fm);
         }
 

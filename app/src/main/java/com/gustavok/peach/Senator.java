@@ -9,7 +9,7 @@ public class Senator {
     private int voto2;
     private final String url;
 
-    public Senator(int id, String nome, String partido, String estado, int voto, int voto2, String url) {
+    Senator(int id, String nome, String partido, String estado, int voto, int voto2, String url) {
         this.id = id;
         this.nome = nome;
         this.partido = partido;
